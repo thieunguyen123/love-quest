@@ -26,6 +26,7 @@ export default async function LearnPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-extrabold text-love-700">📚 Thư viện chủ đề</h1>
+      <Link href="/learn/typing"><Card className="flex items-center gap-3 hover:shadow-md transition"><span className="text-3xl">🌧️</span><div><div className="font-extrabold">Mưa chữ</div><div className="text-sm text-love-700/70">Gõ nghĩa tiếng Việt để bắn nổ từ tiếng Anh · kiếm xu</div></div></Card></Link>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {levels?.map((l) => {
           const st = STATUS[l.status];
