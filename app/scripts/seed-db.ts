@@ -15,6 +15,8 @@ const must = <T,>(r: { data: T; error: any }) => { if (r.error) throw r.error; r
 async function main() {
   must(await sb.from("game_config").upsert(load("game_config.json").map((c: any) => ({ key: c.key, value: c.value, unit: c.unit, description: c.description }))));
 
+  must(await sb.from("shop_items").upsert(load("shop_items.json")));
+
   const levels = load("levels.json");
   must(await sb.from("levels").upsert(levels.map((l: any) => ({
     order_no: l.order_no, topic_en: l.topic_en, topic_vi: l.topic_vi, cefr: l.cefr, word_count: l.word_count,

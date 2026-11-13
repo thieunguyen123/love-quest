@@ -49,9 +49,8 @@ export default async function HubPage() {
           <ButtonLink href="/learn" ghost>Mở thư viện</ButtonLink>
         </Card>
         <Card className="space-y-3"><h2 className="font-extrabold text-love-700">🌧️ Mưa chữ</h2><p>Gõ nghĩa để bắn nổ từ rơi, kiếm xu.</p><ButtonLink href="/learn/typing" ghost>Chơi ngay</ButtonLink></Card>
-        {["🏠 Căn cứ", "🛒 Cửa hàng"].map((t) => (
-          <Card key={t} className="opacity-60"><h2 className="font-extrabold text-love-700">{t}</h2><p className="text-sm">Sắp ra mắt</p></Card>
-        ))}
+        <Card className="space-y-3"><h2 className="font-extrabold text-love-700">🏠 Căn cứ</h2><p>Nhà, thú cưng, quân đội, khiên.</p><div className="flex gap-2"><ButtonLink href="/base" ghost>Căn cứ của tôi</ButtonLink><ButtonLink href="/base/partner" ghost>⚔️ Tấn công</ButtonLink></div></Card>
+        <Card className="space-y-3"><h2 className="font-extrabold text-love-700">🛒 Cửa hàng</h2><p>Mua thú cưng, nâng cấp nhà, tuyển quân, vũ khí.</p><ButtonLink href="/shop" ghost>Vào cửa hàng</ButtonLink></Card>
       </div>
     </div>
   );

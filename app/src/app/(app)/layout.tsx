@@ -4,7 +4,7 @@ import { Avatar } from "@/components/ui";
 import { NotificationBell } from "@/components/live";
 import { signOut } from "../login/actions";
 
-const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"]];
+const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"], ["/battles", "Nhật ký"]];
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { me } = await requirePlayer();
