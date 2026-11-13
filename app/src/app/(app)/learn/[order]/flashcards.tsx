@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { speak, defaultRate } from "@/lib/tts";
 import { Card, btnGhost, btnPrimary } from "@/components/ui";
+import { StartButton } from "@/components/start-button";
 
 type Word = { id: string; word: string; ipa: string | null; part_of_speech: string | null; meanings_vi: string[]; example_en: string | null; example_vi: string | null };
 
@@ -122,6 +123,7 @@ export default function Flashcards({ level, words, known, bonusClaimed }: {
         <Card className="text-center space-y-1">
           <p className="text-lg font-extrabold text-love-700">{bonus > 0 ? `🎉 +${bonus} xu thưởng học trước!` : "✅ Đã hoàn tất chủ đề"}</p>
           <Link href="/learn" className={btnGhost}>Về thư viện</Link>
+          <StartButton levelId={level.id} order={level.order_no} mode="PRACTICE" label="🎯 Ôn tập nhanh" ghost />
         </Card>
       )}
     </div>

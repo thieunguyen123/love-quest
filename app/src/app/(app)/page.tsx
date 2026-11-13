@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { requirePlayer } from "@/lib/session";
 import { Avatar, Card, ButtonLink } from "@/components/ui";
+import { Countdown } from "@/components/countdown";
 
 const VN_TZ = "Asia/Ho_Chi_Minh";
 const dayKey = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: VN_TZ }).format(d); // yyyy-mm-dd theo giờ VN
 
 export default async function HubPage() {
   const { supabase, me, partner, couple } = await requirePlayer();
-  const { data: levels } = await supabase.from("levels").select("order_no,topic_vi,status").order("order_no");
+  await supabase.rpc("cron_tick");
+  const { data: levels } = await supabase.from("levels").select("order_no,topic_vi,status,deadline_at").order("order_no");
   const current = levels?.find((l) => l.status === "OPEN" || l.status === "COUNTDOWN");
   const days = couple ? Math.max(0, Math.round((Date.parse(dayKey(new Date())) - Date.parse(couple.started_at)) / 86400000)) : null;
 
@@ -36,8 +38,8 @@ export default async function HubPage() {
           {current ? (
             <>
               <p>Màn {current.order_no}: <b>{current.topic_vi}</b></p>
-              <p className="text-sm text-love-700/70">Thi đấu sẽ mở ở Phase 4. Bây giờ học trước nhé!</p>
-              <ButtonLink href={`/learn/${current.order_no}`}>Học trước</ButtonLink>
+              {current.status === "COUNTDOWN" && current.deadline_at && <p className="text-sm font-bold text-amber-700">⏳ Còn <Countdown deadline={current.deadline_at} /></p>}
+              <div className="flex gap-2"><ButtonLink href={`/levels/${current.order_no}`}>Vào màn</ButtonLink><ButtonLink href={`/learn/${current.order_no}`} ghost>Học trước</ButtonLink></div>
             </>
           ) : <p>Chưa có màn nào được mở.</p>}
         </Card>
@@ -47,7 +49,7 @@ export default async function HubPage() {
           <ButtonLink href="/learn" ghost>Mở thư viện</ButtonLink>
         </Card>
         <Card className="space-y-3"><h2 className="font-extrabold text-love-700">🌧️ Mưa chữ</h2><p>Gõ nghĩa để bắn nổ từ rơi, kiếm xu.</p><ButtonLink href="/learn/typing" ghost>Chơi ngay</ButtonLink></Card>
-        {["🏠 Căn cứ", "🛒 Cửa hàng", "⚔️ Đối đầu"].map((t) => (
+        {["🏠 Căn cứ", "🛒 Cửa hàng"].map((t) => (
           <Card key={t} className="opacity-60"><h2 className="font-extrabold text-love-700">{t}</h2><p className="text-sm">Sắp ra mắt</p></Card>
         ))}
       </div>

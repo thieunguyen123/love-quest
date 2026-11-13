@@ -13,7 +13,9 @@
     "db:reset": "supabase db reset && tsx scripts/seed-db.ts",
     "test:it": "tsx scripts/it-phase1.ts",
     "test:http": "tsx scripts/http-smoke.ts",
-    "test:it3": "tsx scripts/it-phase3.ts"
+    "test:it3": "tsx scripts/it-phase3.ts",
+    "db:test:reset": "cd .sbtest && supabase db reset --workdir . && cd .. && IT_ENV=.env.test tsx scripts/seed-db.ts",
+    "test:all": "IT_ENV=.env.test sh -c 'tsx scripts/it-phase1.ts && tsx scripts/it-phase3.ts && tsx scripts/it-phase4.ts'"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

@@ -2,8 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import { requirePlayer } from "@/lib/session";
 import Flashcards from "./flashcards";
 
-export default async function FlashcardPage({ params }: { params: Promise<{ order: string }> }) {
-  const { order } = await params;
+export default async function FlashcardPage({ params, searchParams }: { params: Promise<{ order: string }>; searchParams: Promise<{ only?: string }> }) {
+  const { order } = await params; const { only } = await searchParams;
   const { supabase, me } = await requirePlayer();
   const { data: level } = await supabase.from("levels").select("*").eq("order_no", Number(order)).maybeSingle();
   if (!level) notFound();
@@ -14,7 +14,7 @@ export default async function FlashcardPage({ params }: { params: Promise<{ orde
   return (
     <Flashcards
       level={{ id: level.id, order_no: level.order_no, topic_vi: level.topic_vi, topic_en: level.topic_en }}
-      words={words ?? []}
+      words={(only ? (words ?? []).filter((w) => only.split(",").includes(w.id)) : words) ?? []}
       known={(prog ?? []).filter((p) => p.status === "MASTERED").map((p) => p.word_id)}
       bonusClaimed={!!sp?.bonus_claimed}
     />

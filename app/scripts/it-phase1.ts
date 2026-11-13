@@ -3,7 +3,7 @@
 import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import path from "node:path";
-config({ path: path.resolve(__dirname, "../.env.local"), quiet: true });
+config({ path: path.resolve(__dirname, "..", process.env.IT_ENV ?? ".env.local"), quiet: true });
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL!, ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const admin = createClient(URL, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 let fails = 0;

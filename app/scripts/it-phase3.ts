@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Test tích hợp Phase 3 – mưa chữ
 import { admin, ok, done, moheoLogin, utdacLogin, ensureOnboarded, resetGame, levelId, coins } from "./it-lib";
 

@@ -5,7 +5,8 @@ import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import fs from "node:fs";
 import path from "node:path";
-config({ path: path.resolve(__dirname, "../.env.local") });
+import { parseWordsCsv } from "../src/lib/csv";
+config({ path: path.resolve(__dirname, "..", process.env.IT_ENV ?? ".env.local") });
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 const load = (f: string) => JSON.parse(fs.readFileSync(path.resolve(__dirname, "../supabase/seed", f), "utf8"));
@@ -30,6 +31,14 @@ async function main() {
     meanings_vi: w.meanings_vi, example_en: w.example_en, example_vi: w.example_vi,
   }));
   must(await sb.from("words").upsert(words, { onConflict: "level_id,word" }));
+  // Từ vựng bổ sung (màn 2, 3, 5, 6) – cùng định dạng CSV import
+  const extraText = fs.readFileSync(path.resolve(__dirname, "../supabase/seed/words_extra.csv"), "utf8");
+  for (const lvNo of [2, 3, 5, 6]) {
+    const only = extraText.split("\n").filter((l, i) => i === 0 || l.startsWith(lvNo + ",")).join("\n");
+    const r = parseWordsCsv(only, lvNo);
+    if (r.errors.length) throw new Error(r.errors.join("; "));
+    must(await sb.from("words").upsert(r.words.map((w) => ({ ...w, level_id: idOf.get(lvNo) })), { onConflict: "level_id,word" }));
+  }
 
   // 2 tài khoản dev
   const users = [
