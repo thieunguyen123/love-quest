@@ -24,7 +24,7 @@ export default async function BasePage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-extrabold text-love-700">🏠 Căn cứ của {me.display_name}</h1>
-        <Link href="/base/partner" className="font-bold text-love-600 underline">Thăm nhà người ấy →</Link>
+        <div className="flex gap-4"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Xem trong 3D</Link><Link href="/base/partner" className="font-bold text-love-600 underline">Thăm nhà người ấy →</Link></div>
       </div>
 
       <Card className={`space-y-3 ${h.hp === 0 ? "border-red-300" : ""}`}>

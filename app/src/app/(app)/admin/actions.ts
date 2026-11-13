@@ -22,6 +22,7 @@ export async function saveLevel(_: Result | undefined, form: FormData): Promise<
   const { data, error } = await supabase.from("levels").update(patch).eq("id", id).select("id");
   if (error) return { ok: false, message: "Không lưu được" };
   if (!data?.length) return { ok: false, message: "Màn đang chơi hoặc đã đóng, không được sửa" };
+  await supabase.rpc("admin_log", { p_action: "LEVEL_UPDATE", p_entity: "levels", p_entity_id: id, p_diff: patch });
   revalidatePath("/admin/levels");
   return { ok: true, message: "Đã lưu ✅" };
 }
@@ -45,13 +46,16 @@ export async function saveWord(_: Result | undefined, form: FormData): Promise<R
   const { data, error } = await q;
   if (error) return { ok: false, message: error.code === "23505" ? "Từ này đã có trong màn" : "Không lưu được" };
   if (!data?.length) return { ok: false, message: "Màn đang chơi hoặc đã đóng, không được sửa" };
+  await supabase.rpc("admin_log", { p_action: id ? "WORD_UPDATE" : "WORD_CREATE", p_entity: "words", p_entity_id: id || row.word, p_diff: row });
   revalidatePath(`/admin/levels`);
   return { ok: true, message: "Đã lưu ✅" };
 }
 
 export async function deleteWord(form: FormData) {
   const { supabase } = await requireAdmin();
-  await supabase.from("words").delete().eq("id", String(form.get("id")));
+  const id = String(form.get("id"));
+  await supabase.from("words").delete().eq("id", id);
+  await supabase.rpc("admin_log", { p_action: "WORD_DELETE", p_entity: "words", p_entity_id: id });
   revalidatePath("/admin/levels");
 }
 
@@ -66,6 +70,26 @@ export async function importWords(_: Result | undefined, form: FormData): Promis
   // 1 câu lệnh upsert = atomic: lỗi thì không nhập dòng nào
   const { error } = await supabase.from("words").upsert(words.map((w) => ({ ...w, level_id: levelId })), { onConflict: "level_id,word" });
   if (error) return { ok: false, message: "Không import được (màn có thể đang chơi hoặc đã đóng)" };
+  await supabase.rpc("admin_log", { p_action: "WORDS_IMPORT", p_entity: "levels", p_entity_id: String(levelNo), p_diff: { count: words.length } });
   revalidatePath("/admin/levels");
   return { ok: true, message: `Đã import ${words.length} từ ✅` };
+}
+
+export async function setConfig(_: Result | undefined, form: FormData): Promise<Result> {
+  const { supabase } = await requireAdmin();
+  const key = String(form.get("key")); const raw = String(form.get("value") ?? "").trim();
+  let value: unknown;
+  try { value = JSON.parse(raw); } catch { value = raw; }   // chữ thường không có nháy kép vẫn nhận là chuỗi
+  const { error } = await supabase.rpc("admin_set_config", { p_key: key, p_value: value });
+  if (error) return { ok: false, message: error.message === "TYPE_MISMATCH" ? "Sai kiểu dữ liệu (giữ nguyên số / chữ / đúng-sai như cũ)" : "Không lưu được" };
+  revalidatePath("/admin/config");
+  return { ok: true, message: `Đã lưu ${key} ✅` };
+}
+
+export async function resetSeason(_: Result | undefined, form: FormData): Promise<Result> {
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.rpc("admin_reset_season", { p_confirm: String(form.get("confirm") ?? "") });
+  if (error) return { ok: false, message: error.message === "CONFIRM_REQUIRED" ? "Hãy gõ đúng chữ RESET để xác nhận" : "Không reset được" };
+  revalidatePath("/", "layout");
+  return { ok: true, message: "Đã reset mùa giải ✅ — tài khoản, từ vựng, cấu hình được giữ nguyên." };
 }

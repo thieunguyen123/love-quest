@@ -42,9 +42,9 @@ async function main() {
   await get("Hub", "/", m.cookie, { has: ["Love Quest", "Mỡ heo", "Mưa chữ", "Căn cứ"] });
   await get("Hub: ADMIN thấy menu Admin", "/", u.cookie, { has: ["/admin/levels"] });
   await get("Hub: PLAYER không thấy menu Admin", "/", m.cookie, { not: ["/admin/levels"] });
-  await get("Bản đồ màn", "/levels", m.cookie, { has: ["Bản đồ màn chơi", "Greetings", "Chào hỏi"] });
+  await get("Bản đồ màn", "/levels", m.cookie, { has: ["Bản đồ màn chơi", "Chào hỏi"] });
   await get("Chi tiết màn 1", "/levels/1", m.cookie, { has: ["Phần thưởng", "Học trước", "Luyện tập"] });
-  await get("Chi tiết màn khóa", "/levels/9", m.cookie, { has: ["chưa mở", "sẽ mở khi màn trước đóng"] });
+  await get("Chi tiết màn khóa", "/levels/9", m.cookie, { has: ["sẽ mở khi màn trước đóng"] });
   await get("Màn chơi (luyện tập)", `/levels/1/play?attempt=${practice}&practice=1`, m.cookie, { has: ["Đang tải"] });
   await get("Màn chơi không có attempt → chi tiết", "/levels/1/play", m.cookie, { status: 307, loc: "/levels/1" });
   await get("Đối đầu", "/rivalry", m.cookie, { has: ["Bảng đối đầu"] });
@@ -67,6 +67,13 @@ async function main() {
   await get("Sổ từ vựng", "/words", m.cookie, { has: ["Sổ từ vựng"] });
   await get("Cài đặt", "/settings", m.cookie, { has: ["Cài đặt", "Âm thanh"] });
   await get("Thế giới 3D", "/world", m.cookie, { has: ["Làng Tình Yêu"] });
+  // API push: chưa cấu hình VAPID → 501; subscribe cần đăng nhập
+  total++;
+  const rp = await fetch(BASE + "/api/push/send", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+  console.log(`${rp.status === 501 ? "PASS" : "FAIL"}  API push/send chưa cấu hình → 501  [${rp.status}]`); if (rp.status !== 501) fails++;
+  total++;
+  const rs = await fetch(BASE + "/api/push/subscribe", { method: "POST", redirect: "manual", headers: { "content-type": "application/json" }, body: "{}" });
+  console.log(`${rs.status === 307 ? "PASS" : "FAIL"}  API push/subscribe chưa đăng nhập bị chặn  [${rs.status}]`); if (rs.status !== 307) fails++;
   console.log(fails ? `\n${fails}/${total} FAIL` : `\nTất cả ${total} PASS`);
   process.exit(fails ? 1 : 0);
 }

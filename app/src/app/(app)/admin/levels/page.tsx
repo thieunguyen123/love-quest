@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/session";
 import { Card } from "@/components/ui";
+import { AdminNav } from "@/components/admin-nav";
 
 export default async function AdminLevels() {
   const { supabase } = await requireAdmin();
@@ -12,6 +13,7 @@ export default async function AdminLevels() {
   words?.forEach((w) => count.set(w.level_id, (count.get(w.level_id) ?? 0) + 1));
   return (
     <div className="space-y-4">
+      <AdminNav active="levels" />
       <h1 className="text-2xl font-extrabold text-love-700">Admin – Màn & từ vựng</h1>
       <Card className="overflow-x-auto !p-0">
         <table className="w-full text-sm">

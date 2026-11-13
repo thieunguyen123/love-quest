@@ -8,12 +8,15 @@ Next.js 15 (App Router, TS, `src/`), Tailwind 4 + shadcn/ui, Framer Motion, Zust
 App nằm trong `app/`. Node 22 (`source ~/.nvm/nvm.sh && nvm use 22`).
 
 ## Lệnh (chạy trong app/)
-- `npm run dev` (cổng **3100**, vì 3000 đang bị container khác dùng) · `npm run build` · `npm run lint` · `npm test` (unit)
-- Supabase local (cần Docker Desktop chạy): `npx supabase start -x imgproxy,edge-runtime,logflare,vector,supavisor,mailpit` · `npx supabase stop` · Studio http://127.0.0.1:54323
-- `npm run db:reset` : reset DB local + chạy migration + seed (xóa sạch dữ liệu!)
-- `npm run seed:db` : nạp config/màn/từ vựng + tạo 2 tài khoản dev + cặp đôi
-- `npm run test:it` (test DB/RLS/RPC, cần seed, sẽ đổi dữ liệu của Mỡ heo) · `npm run test:http` (smoke test trang có đăng nhập, cần `npm run build && npm start`)
-- `npm run seed:export` : đọc docs/spec.xlsx → supabase/seed/*.json (game_config, levels, shop_items, words)
+- `npm run dev` (cổng **3100**, vì 3000 đang bị container khác dùng) · `npm run build` · `npm run lint` · `npm test` (44 unit test)
+- **Hai Supabase local** (cần Docker Desktop): *dev* (cổng 543xx, dữ liệu người chơi thật) và *test* (cổng 553xx, thư mục `.sbtest/`, dùng cho test tự động — test **xóa sạch dữ liệu game**, đừng chạy vào DB dev).
+  - dev: `npx supabase start -x imgproxy,edge-runtime,logflare,vector,supavisor,mailpit` · `npx supabase stop` · Studio http://127.0.0.1:54323
+  - test: `npm run db:test:start` · `npm run db:test:stop` · `npm run db:test:reset`
+- `npm run db:reset` : reset DB **dev** + migration + seed (xóa sạch!) · `npm run seed:db` : nạp config/màn/từ vựng/shop + 2 tài khoản dev
+- Test tích hợp (chạy trên DB test): `npm run test:all` (phase 1,3,4,5,6,8) · lẻ từng phase `IT_ENV=.env.test npx tsx scripts/it-phaseN.ts`
+- Smoke test HTTP có đăng nhập: bật server vào DB test `NEXT_DIST_DIR=.next-test env $(grep -v '^#' .env.test | xargs) npx next dev --turbopack -p 3101` rồi `npm run test:smoke`. Truy cập trình duyệt bằng `http://127.0.0.1:3101` (khác host với `localhost:3100` để không đè cookie đăng nhập).
+- Build kiểm tra mà không đè `.next` của server dev: `NEXT_DIST_DIR=.next-build npm run build`
+- `npm run seed:export` : đọc docs/spec.xlsx → supabase/seed/*.json
 
 ## Nguyên tắc bắt buộc
 1. Mọi thay đổi xu / token / điểm / HP phải đi qua Postgres RPC (security definer) trong 1 transaction và ghi `coin_transactions`. Client KHÔNG tự cộng trừ.
@@ -28,6 +31,16 @@ App nằm trong `app/`. Node 22 (`source ~/.nvm/nvm.sh && nvm use 22`).
 - Mỡ heo (PLAYER): moheo@lovequest.local / moheo-dev-2026
 Production: tạo user bằng Supabase dashboard (Auto Confirm), tắt "Allow new users to sign up", đổi `.env.local` sang URL/key của project cloud, chạy `supabase db push` rồi `npm run seed:db` (bỏ phần tạo user dev).
 
-## Tiến độ
-- [x] Phase 0 scaffold · [x] Phase 1 (auth, profile, onboarding, hub 2D) · [x] Phase 2 (thư viện, flashcard, admin màn/từ, import CSV)
-- [ ] Phase 3 mưa chữ · [ ] 4 màn thi đấu · [ ] 5 shop/căn cứ · [ ] 6 tấn công/khiên · [ ] 7 3D · [ ] 8 đánh bóng
+## Tiến độ (tất cả đã làm, có test)
+- [x] P0 scaffold · P1 auth/profile/onboarding/hub · P2 học (flashcard), admin màn/từ, import CSV
+- [x] P3 Mưa chữ (`lib/game/typing.ts`) · P4 màn thi đấu (engine 6 loại câu ở SQL `_build_question`, đếm ngược 48h, thưởng idempotent, thông báo realtime, đối đầu)
+- [x] P5 shop/căn cứ/quân/vũ khí · P6 tấn công + khiên (`calc_atk/calc_def/calc_battle` ở SQL, twin TS ở `lib/game/battle.ts`)
+- [x] P7 thế giới 3D `/world` (three + r3f, vật lý tự viết `components/world/physics.ts`, không dùng rapier) · P8 sổ từ, cài đặt âm thanh, PWA, admin cấu hình/nhật ký/reset mùa
+
+## Điểm cần biết / chưa hoàn hảo
+- **LISTEN** (câu nghe): từ tiếng Anh phải gửi về client để đọc TTS nên đáp án lộ trong network (các loại khác không lộ). Chấp nhận được cho game 2 người.
+- **Từ vựng**: chỉ có đủ từ cho màn 1–6 (`supabase/seed/words_extra.csv` + sheet 8). Màn 7–20 để Admin nhập/import CSV; màn chưa đủ ≥4 từ sẽ báo "chưa có đủ từ". IPA/nghĩa do AI soạn — cần người đọc lại.
+- **Cron**: `pg_cron` được thử bật trong migration; nếu không có thì `cron_tick()` được gọi mỗi lần mở Hub/Màn chơi/3D (idempotent). Production nên bật pg_cron (mỗi 5 phút).
+- **Web push** (NOT-02): đã có SW, bảng `push_subscriptions`, `/api/push/subscribe`, `/api/push/send`, trigger `notify_push` (pg_net). Để chạy thật: tạo VAPID (`npx web-push generate-vapid-keys`), đặt `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `PUSH_WEBHOOK_SECRET` trong env của app; thêm vào bảng `game_config` 2 key `PUSH_WEBHOOK_URL` (https://<domain>/api/push/send) và `PUSH_WEBHOOK_SECRET`. Chưa thử gửi push thật tới thiết bị. Khi app đang mở, thông báo hệ điều hành vẫn hiện qua Realtime.
+- **Bảng giá shop** nằm ở `supabase/seed/shop_items.json` (viết tay theo sheet 5). Đổi giá: sửa file/bảng `shop_items` và `docs/spec.xlsx`.
+- Giá trị trong `game_config` sửa được ở `/admin/config`; không tính lại kết quả cũ.

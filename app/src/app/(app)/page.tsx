@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requirePlayer } from "@/lib/session";
 import { Avatar, Card, ButtonLink } from "@/components/ui";
 import { Countdown } from "@/components/countdown";
+import { HubViewRedirect } from "@/components/hub-view";
 
 const VN_TZ = "Asia/Ho_Chi_Minh";
 const dayKey = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: VN_TZ }).format(d); // yyyy-mm-dd theo giờ VN
@@ -15,6 +16,7 @@ export default async function HubPage() {
 
   return (
     <div className="space-y-6">
+      <HubViewRedirect />
       <Card className="flex items-center justify-around gap-4 text-center">
         <Link href={`/profile/${me.id}`} className="space-y-1">
           <div className="flex justify-center"><Avatar url={me.avatar_url} name={me.display_name} color={me.favorite_color} size={64} /></div>
@@ -32,6 +34,7 @@ export default async function HubPage() {
         ) : <div className="text-sm text-love-700/70">Chưa ghép cặp</div>}
       </Card>
 
+      <ButtonLink href="/world">🌍 Vào thế giới 3D — Làng Tình Yêu</ButtonLink>
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="space-y-3">
           <h2 className="font-extrabold text-love-700">🏆 Màn hiện tại</h2>
