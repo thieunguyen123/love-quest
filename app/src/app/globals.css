@@ -128,3 +128,19 @@
     @apply font-sans;
   }
 }
+/* ---- Love Quest theme ---- */
+@theme inline {
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --color-love-50: #fff1f6;
+  --color-love-100: #ffe0ec;
+  --color-love-200: #ffc2d9;
+  --color-love-400: #f472a8;
+  --color-love-500: #ec4899;
+  --color-love-600: #d6317f;
+  --color-love-700: #ad1457;
+}
+body { background: linear-gradient(180deg, #fff1f6 0%, #fff 60%); min-height: 100vh; color: #3b1226; }
+@keyframes flip-in { from { transform: rotateY(90deg); opacity: 0 } to { transform: rotateY(0); opacity: 1 } }
+.flip-in { animation: flip-in .25s ease-out; }
+@keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+.shake { animation: shake .25s; }
