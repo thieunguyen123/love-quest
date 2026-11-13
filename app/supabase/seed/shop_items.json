@@ -1,21 +1,525 @@
 [
-  {"code":"house_0","category":"HOUSE","name_vi":"Lều tranh","price":0,"stats":{"level":0,"max_hp":200,"def":0},"unlock_level":null,"slots":0,"sort":0,"emoji":"⛺"},
-  {"code":"house_1","category":"HOUSE","name_vi":"Nhà gỗ","price":300,"stats":{"level":1,"max_hp":500,"def":20},"unlock_level":null,"slots":0,"sort":1,"emoji":"🛖"},
-  {"code":"house_2","category":"HOUSE","name_vi":"Nhà gạch","price":800,"stats":{"level":2,"max_hp":1000,"def":50},"unlock_level":null,"slots":0,"sort":2,"emoji":"🏠"},
-  {"code":"house_3","category":"HOUSE","name_vi":"Biệt thự","price":2000,"stats":{"level":3,"max_hp":2000,"def":100},"unlock_level":null,"slots":0,"sort":3,"emoji":"🏡"},
-  {"code":"house_4","category":"HOUSE","name_vi":"Lâu đài","price":4500,"stats":{"level":4,"max_hp":3500,"def":180},"unlock_level":null,"slots":0,"sort":4,"emoji":"🏰"},
-  {"code":"house_5","category":"HOUSE","name_vi":"Cung điện Tình Yêu","price":9000,"stats":{"level":5,"max_hp":6000,"def":300},"unlock_level":null,"slots":0,"sort":5,"emoji":"💒"},
-  {"code":"cat","category":"PET","name_vi":"Mèo mướp","price":200,"stats":{"coin_pct_per_level":0.03,"desc":"+3% xu nhận từ màn chơi mỗi cấp"},"unlock_level":null,"slots":0,"sort":10,"emoji":"🐱"},
-  {"code":"corgi","category":"PET","name_vi":"Chó Corgi","price":300,"stats":{"def_per_level":8,"desc":"+8 DEF mỗi cấp"},"unlock_level":null,"slots":0,"sort":11,"emoji":"🐶"},
-  {"code":"owl","category":"PET","name_vi":"Cú mèo","price":500,"stats":{"typing_slow_pct_per_level":0.04,"life_at_max":1,"desc":"Mưa chữ: từ rơi chậm hơn 4% mỗi cấp; cấp 5 +1 mạng"},"unlock_level":null,"slots":0,"sort":12,"emoji":"🦉"},
-  {"code":"dragon","category":"PET","name_vi":"Rồng con","price":1500,"stats":{"atk_pct_per_level":0.05,"desc":"+5% ATK quân mỗi cấp"},"unlock_level":5,"slots":0,"sort":13,"emoji":"🐲"},
-  {"code":"sword","category":"UNIT","name_vi":"Lính kiếm","price":50,"stats":{"atk":10},"unlock_level":null,"slots":1,"sort":20,"emoji":"🗡️"},
-  {"code":"archer","category":"UNIT","name_vi":"Cung thủ","price":120,"stats":{"atk":25},"unlock_level":3,"slots":1,"sort":21,"emoji":"🏹"},
-  {"code":"knight","category":"UNIT","name_vi":"Kỵ binh","price":300,"stats":{"atk":70},"unlock_level":6,"slots":2,"sort":22,"emoji":"🐎"},
-  {"code":"catapult","category":"UNIT","name_vi":"Máy bắn đá","price":800,"stats":{"atk":200},"unlock_level":10,"slots":3,"sort":23,"emoji":"🪨"},
-  {"code":"iron_sword","category":"WEAPON","name_vi":"Kiếm sắt","price":200,"stats":{"atk_pct":0.10},"unlock_level":null,"slots":0,"sort":30,"emoji":"⚔️"},
-  {"code":"fire_bow","category":"WEAPON","name_vi":"Cung lửa","price":500,"stats":{"atk_pct":0.20},"unlock_level":4,"slots":0,"sort":31,"emoji":"🔥"},
-  {"code":"war_hammer","category":"WEAPON","name_vi":"Búa chiến","price":1000,"stats":{"atk_pct":0.30},"unlock_level":8,"slots":0,"sort":32,"emoji":"🔨"},
-  {"code":"love_cannon","category":"WEAPON","name_vi":"Đại bác Tình Yêu","price":2500,"stats":{"atk_pct":0.50},"unlock_level":12,"slots":0,"sort":33,"emoji":"💘"},
-  {"code":"thunder_staff","category":"WEAPON","name_vi":"Trượng sấm sét","price":5000,"stats":{"atk_pct":0.80},"unlock_level":16,"slots":0,"sort":34,"emoji":"⚡"}
+  {
+    "code": "house_0",
+    "category": "HOUSE",
+    "name_vi": "Lều tranh",
+    "price": 0,
+    "stats": {
+      "level": 0,
+      "max_hp": 200,
+      "def": 0,
+      "size": 2
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 0,
+    "emoji": "⛺"
+  },
+  {
+    "code": "house_1",
+    "category": "HOUSE",
+    "name_vi": "Nhà gỗ",
+    "price": 300,
+    "stats": {
+      "level": 1,
+      "max_hp": 500,
+      "def": 20,
+      "size": 3
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 1,
+    "emoji": "🛖"
+  },
+  {
+    "code": "house_2",
+    "category": "HOUSE",
+    "name_vi": "Nhà gạch",
+    "price": 800,
+    "stats": {
+      "level": 2,
+      "max_hp": 1000,
+      "def": 50,
+      "size": 3
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 2,
+    "emoji": "🏠"
+  },
+  {
+    "code": "house_3",
+    "category": "HOUSE",
+    "name_vi": "Biệt thự",
+    "price": 2000,
+    "stats": {
+      "level": 3,
+      "max_hp": 2000,
+      "def": 100,
+      "size": 4
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 3,
+    "emoji": "🏡"
+  },
+  {
+    "code": "house_4",
+    "category": "HOUSE",
+    "name_vi": "Lâu đài",
+    "price": 4500,
+    "stats": {
+      "level": 4,
+      "max_hp": 3500,
+      "def": 180,
+      "size": 4
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 4,
+    "emoji": "🏰"
+  },
+  {
+    "code": "house_5",
+    "category": "HOUSE",
+    "name_vi": "Cung điện Tình Yêu",
+    "price": 9000,
+    "stats": {
+      "level": 5,
+      "max_hp": 6000,
+      "def": 300,
+      "size": 5
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 5,
+    "emoji": "💒"
+  },
+  {
+    "code": "cat",
+    "category": "PET",
+    "name_vi": "Mèo mướp",
+    "price": 200,
+    "stats": {
+      "coin_pct_per_level": 0.03,
+      "desc": "+3% xu nhận từ màn chơi mỗi cấp",
+      "size": 1
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 10,
+    "emoji": "🐱"
+  },
+  {
+    "code": "corgi",
+    "category": "PET",
+    "name_vi": "Chó Corgi",
+    "price": 300,
+    "stats": {
+      "def_per_level": 8,
+      "desc": "+8 DEF mỗi cấp",
+      "size": 1
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 11,
+    "emoji": "🐶"
+  },
+  {
+    "code": "owl",
+    "category": "PET",
+    "name_vi": "Cú mèo",
+    "price": 500,
+    "stats": {
+      "typing_slow_pct_per_level": 0.04,
+      "life_at_max": 1,
+      "desc": "Mưa chữ: từ rơi chậm hơn 4% mỗi cấp; cấp 5 +1 mạng",
+      "size": 1
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 12,
+    "emoji": "🦉"
+  },
+  {
+    "code": "dragon",
+    "category": "PET",
+    "name_vi": "Rồng con",
+    "price": 1500,
+    "stats": {
+      "atk_pct_per_level": 0.05,
+      "desc": "+5% ATK quân mỗi cấp",
+      "size": 1
+    },
+    "unlock_level": 5,
+    "slots": 0,
+    "sort": 13,
+    "emoji": "🐲"
+  },
+  {
+    "code": "sword",
+    "category": "UNIT",
+    "name_vi": "Lính kiếm",
+    "price": 50,
+    "stats": {
+      "atk": 10,
+      "size": 2
+    },
+    "unlock_level": null,
+    "slots": 1,
+    "sort": 20,
+    "emoji": "🗡️"
+  },
+  {
+    "code": "archer",
+    "category": "UNIT",
+    "name_vi": "Cung thủ",
+    "price": 120,
+    "stats": {
+      "atk": 25,
+      "size": 2
+    },
+    "unlock_level": 3,
+    "slots": 1,
+    "sort": 21,
+    "emoji": "🏹"
+  },
+  {
+    "code": "knight",
+    "category": "UNIT",
+    "name_vi": "Kỵ binh",
+    "price": 300,
+    "stats": {
+      "atk": 70,
+      "size": 2
+    },
+    "unlock_level": 6,
+    "slots": 2,
+    "sort": 22,
+    "emoji": "🐎"
+  },
+  {
+    "code": "catapult",
+    "category": "UNIT",
+    "name_vi": "Máy bắn đá",
+    "price": 800,
+    "stats": {
+      "atk": 200,
+      "size": 2
+    },
+    "unlock_level": 10,
+    "slots": 3,
+    "sort": 23,
+    "emoji": "🪨"
+  },
+  {
+    "code": "iron_sword",
+    "category": "WEAPON",
+    "name_vi": "Kiếm sắt",
+    "price": 200,
+    "stats": {
+      "atk_pct": 0.1,
+      "size": 1
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 30,
+    "emoji": "⚔️"
+  },
+  {
+    "code": "fire_bow",
+    "category": "WEAPON",
+    "name_vi": "Cung lửa",
+    "price": 500,
+    "stats": {
+      "atk_pct": 0.2,
+      "size": 1
+    },
+    "unlock_level": 4,
+    "slots": 0,
+    "sort": 31,
+    "emoji": "🔥"
+  },
+  {
+    "code": "war_hammer",
+    "category": "WEAPON",
+    "name_vi": "Búa chiến",
+    "price": 1000,
+    "stats": {
+      "atk_pct": 0.3,
+      "size": 1
+    },
+    "unlock_level": 8,
+    "slots": 0,
+    "sort": 32,
+    "emoji": "🔨"
+  },
+  {
+    "code": "love_cannon",
+    "category": "WEAPON",
+    "name_vi": "Đại bác Tình Yêu",
+    "price": 2500,
+    "stats": {
+      "atk_pct": 0.5,
+      "size": 1
+    },
+    "unlock_level": 12,
+    "slots": 0,
+    "sort": 33,
+    "emoji": "💘"
+  },
+  {
+    "code": "thunder_staff",
+    "category": "WEAPON",
+    "name_vi": "Trượng sấm sét",
+    "price": 5000,
+    "stats": {
+      "atk_pct": 0.8,
+      "size": 1
+    },
+    "unlock_level": 16,
+    "slots": 0,
+    "sort": 34,
+    "emoji": "⚡"
+  },
+  {
+    "code": "deco_bush",
+    "category": "DECOR",
+    "name_vi": "Bụi hoa",
+    "price": 10,
+    "stats": {
+      "size": 1,
+      "model": "bush",
+      "desc": "Bụi hoa nhỏ xinh",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 50,
+    "emoji": "🌸"
+  },
+  {
+    "code": "deco_barrel",
+    "category": "DECOR",
+    "name_vi": "Thùng gỗ",
+    "price": 10,
+    "stats": {
+      "size": 1,
+      "model": "barrel",
+      "desc": "Thùng gỗ đựng đồ",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 51,
+    "emoji": "🛢️"
+  },
+  {
+    "code": "deco_fence",
+    "category": "DECOR",
+    "name_vi": "Hàng rào gỗ",
+    "price": 15,
+    "stats": {
+      "size": 1,
+      "model": "fence_wood_straight",
+      "desc": "Ghép nhiều tấm thành tường rào",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 52,
+    "emoji": "🪵"
+  },
+  {
+    "code": "deco_lumber",
+    "category": "DECOR",
+    "name_vi": "Đống gỗ",
+    "price": 15,
+    "stats": {
+      "size": 1,
+      "model": "resource_lumber",
+      "desc": "Gỗ để dành xây nhà",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 53,
+    "emoji": "🪓"
+  },
+  {
+    "code": "deco_flag",
+    "category": "DECOR",
+    "name_vi": "Cờ tình yêu",
+    "price": 20,
+    "stats": {
+      "size": 1,
+      "model": "flag",
+      "desc": "Cờ theo màu yêu thích của bạn",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 54,
+    "emoji": "🚩"
+  },
+  {
+    "code": "deco_cart",
+    "category": "DECOR",
+    "name_vi": "Xe cút kít",
+    "price": 20,
+    "stats": {
+      "size": 1,
+      "model": "wheelbarrow",
+      "desc": "Xe chở đồ",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 55,
+    "emoji": "🛒"
+  },
+  {
+    "code": "deco_tree",
+    "category": "DECOR",
+    "name_vi": "Cây xanh",
+    "price": 25,
+    "stats": {
+      "size": 1,
+      "model": "tree_single_A",
+      "desc": "Một cây xanh",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 56,
+    "emoji": "🌳"
+  },
+  {
+    "code": "deco_bench",
+    "category": "DECOR",
+    "name_vi": "Ghế đá",
+    "price": 25,
+    "stats": {
+      "size": 1,
+      "model": "bench",
+      "desc": "Ghế ngồi hẹn hò",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 57,
+    "emoji": "🪑"
+  },
+  {
+    "code": "deco_lamp",
+    "category": "DECOR",
+    "name_vi": "Đèn đường",
+    "price": 30,
+    "stats": {
+      "size": 1,
+      "model": "streetlight",
+      "desc": "Đèn đường lung linh",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 58,
+    "emoji": "💡"
+  },
+  {
+    "code": "deco_target",
+    "category": "DECOR",
+    "name_vi": "Bia tập bắn",
+    "price": 30,
+    "stats": {
+      "size": 1,
+      "model": "target",
+      "desc": "Cho cung thủ luyện tập",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 59,
+    "emoji": "🎯"
+  },
+  {
+    "code": "deco_grove",
+    "category": "DECOR",
+    "name_vi": "Khu rừng nhỏ",
+    "price": 60,
+    "stats": {
+      "size": 2,
+      "model": "trees_A_medium",
+      "desc": "Cụm cây 2×2",
+      "max": 20
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 60,
+    "emoji": "🌲"
+  },
+  {
+    "code": "deco_tent",
+    "category": "DECOR",
+    "name_vi": "Lều trại",
+    "price": 80,
+    "stats": {
+      "size": 2,
+      "model": "tent",
+      "desc": "Lều cắm trại 2×2",
+      "max": 20
+    },
+    "unlock_level": 2,
+    "slots": 0,
+    "sort": 61,
+    "emoji": "⛺"
+  },
+  {
+    "code": "deco_well",
+    "category": "DECOR",
+    "name_vi": "Giếng ước",
+    "price": 120,
+    "stats": {
+      "size": 2,
+      "model": "well",
+      "desc": "Giếng ước nguyện 2×2",
+      "max": 20
+    },
+    "unlock_level": 2,
+    "slots": 0,
+    "sort": 62,
+    "emoji": "⛲"
+  },
+  {
+    "code": "deco_windmill",
+    "category": "DECOR",
+    "name_vi": "Cối xay gió",
+    "price": 250,
+    "stats": {
+      "size": 3,
+      "model": "windmill_yellow",
+      "desc": "Cối xay gió quay 3×3",
+      "max": 20
+    },
+    "unlock_level": 4,
+    "slots": 0,
+    "sort": 63,
+    "emoji": "🌾"
+  },
+  {
+    "code": "deco_tower",
+    "category": "DECOR",
+    "name_vi": "Tháp canh",
+    "price": 300,
+    "stats": {
+      "size": 2,
+      "model": "tower_A",
+      "desc": "Tháp canh theo màu của bạn 2×2",
+      "max": 20
+    },
+    "unlock_level": 5,
+    "slots": 0,
+    "sort": 64,
+    "emoji": "🗼"
+  }
 ]

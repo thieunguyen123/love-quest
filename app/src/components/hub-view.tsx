@@ -9,7 +9,12 @@ export function HubViewRedirect() {
     if (window.self !== window.top) return;
     try {
       if (sp.get("view") === "2d") { localStorage.setItem("view", "2d"); return; }
-      if (localStorage.getItem("view") !== "2d") router.replace("/world");
+      if (localStorage.getItem("view") !== "2d") {
+        router.replace("/world");
+        // nếu có chuyển trang/refresh khác đang chạy làm mất lệnh trên thì chuyển cứng
+        const t = setTimeout(() => { if (location.pathname === "/") location.replace("/world"); }, 2500);
+        return () => clearTimeout(t);
+      }
     } catch { /* ignore */ }
   }, [router, sp]);
   return null;

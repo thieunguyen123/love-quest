@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AvatarUploader } from "@/components/avatar-uploader";
 import { Card, btnPrimary, inputCls } from "@/components/ui";
@@ -8,7 +7,6 @@ import { Card, btnPrimary, inputCls } from "@/components/ui";
 const COLORS = ["#ec4899", "#f43f5e", "#f97316", "#eab308", "#22c55e", "#06b6d4", "#3b82f6", "#8b5cf6"];
 
 export default function OnboardingForm({ userId, initialName }: { userId: string; initialName: string }) {
-  const router = useRouter();
   const [step, setStep] = useState(1);
   const [name, setName] = useState(initialName);
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -33,7 +31,7 @@ export default function OnboardingForm({ userId, initialName }: { userId: string
         <div className="text-6xl">🎉</div>
         <h1 className="text-2xl font-extrabold text-love-700">Chào mừng {name.trim()}!</h1>
         <p>Bạn nhận được <b className="text-love-600">500 xu</b> khởi đầu. Mua thú cưng, xây nhà và thắng người ấy nhé 💕</p>
-        <button className={btnPrimary} onClick={() => { router.replace("/"); router.refresh(); }}>Vào game</button>
+        <button className={btnPrimary} onClick={() => window.location.replace("/")}>Vào game</button>
       </Card>
     );
   }

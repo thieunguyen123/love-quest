@@ -11,6 +11,8 @@ export const RPC_MSG: Record<string, string> = {
   INVALID_NAME: "Tên không hợp lệ", SHIELD_ACTIVE: "Đang có khiên rồi", NO_SHIELD: "Bạn không còn khiên", SHIELD_LIMIT: "Hôm nay bạn đã mua khiên rồi",
   ATTACK_LIMIT: "Hôm nay bạn đã hết lượt tấn công", TARGET_SHIELDED: "Người ấy đang có khiên", TARGET_PROTECTED: "Người ấy vừa bị tấn công, đang được bảo hộ",
   TARGET_RUINED: "Nhà người ấy đã đổ nát", NO_ARMY: "Bạn chưa có lính nào",
+  DECOR_LIMIT: "Đã đủ số lượng tối đa cho món này", ITEM_NOT_FOUND: "Không tìm thấy món này", INVALID_LAYOUT: "Bố cục không hợp lệ", NO_HOUSE: "Bạn chưa có nhà",
+  OUT_OF_BOUNDS: "Ra ngoài căn cứ rồi", OVERLAP_HOUSE: "Không đặt đè lên nhà được", OVERLAP: "Có vật đặt đè lên nhau", ITEM_NOT_OWNED: "Bạn không còn sở hữu vật này", DUPLICATE_ITEM: "Vật bị đặt 2 lần",
 };
 
 // Nút gọi RPC dùng chung (shop, căn cứ, khiên, tấn công)

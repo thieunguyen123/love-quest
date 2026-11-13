@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { requirePlayer } from "@/lib/session";
 import { loadBase } from "@/lib/base";
-import { formatLeft } from "@/components/countdown";
+import { formatLeft } from "@/lib/time";
 import { WorldLoader } from "@/components/world/world-loader";
 import type { HouseInfo } from "@/components/world/houses";
 
@@ -15,9 +15,10 @@ export default async function WorldPage({ searchParams }: { searchParams: Promis
   ]);
   const now = Date.now();
   const info = (b: any, name: string, color: string): HouseInfo => ({
-    name, color, level: b?.house?.level ?? 0, hpPct: b?.house ? b.house.hp / b.house.max_hp : 1,
+    name, color, exists: !!b?.house, level: b?.house?.level ?? 0, hpPct: b?.house ? b.house.hp / b.house.max_hp : 1,
     shield: !!b?.shields.some((s: any) => s.activated_at && !s.broken_at && s.expires_at && Date.parse(s.expires_at) > now),
-    pets: (b?.pets ?? []).map((p: any) => b.byCode.get(p.pet_code)?.emoji ?? "🐾"),
+    pets: (b?.pets ?? []).map((p: any) => ({ code: p.pet_code, level: p.level, nickname: p.nickname })),
+    squads: (b?.army ?? []).filter((a: any) => a.quantity > 0).sort((x: any, y: any) => y.quantity - x.quantity).map((a: any) => ({ unit: a.unit_code, qty: a.quantity })),
   });
   const c = cur?.[0];
   const arenaLabel = c ? (c.status === "COUNTDOWN" && c.deadline_at ? `Màn ${c.order_no} · còn ${formatLeft(Date.parse(c.deadline_at) - now)}` : `Màn ${c.order_no} đang mở`) : "Chưa có màn mở";

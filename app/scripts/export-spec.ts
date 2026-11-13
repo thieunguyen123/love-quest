@@ -18,8 +18,15 @@ const config = rows("3. CẤU HÌNH").slice(3).filter((r: any) => r[1] && r[2] !
   .map((r) => ({ key: r[1], value: r[2] === "TRUE" ? true : r[2], unit: r[3], description: r[4] }));
 write("game_config.json", config);
 
-// 4. MÀN CHƠI
+// 4. MÀN CHƠI — cột J–L là công thức theo sheet 3; nếu file được lưu bởi công cụ không tính công thức
+// (ô không có giá trị cache) thì tự tính lại bằng đúng công thức đó: ROUND((WIN_BASE + WIN_STEP×(màn−1)) × hệ số)
+const cfgNum = (k: string) => Number(config.find((c: any) => c.key === k)?.value);
+const xlRound = (v: number) => Math.sign(v) * Math.round(Math.abs(v));   // ROUND của Excel: làm tròn xa số 0
 const levels = rows("4. MÀN CHƠI").slice(3).filter((r: any) => typeof r[0] === "number")
+  .map((r: any) => {
+    const win = typeof r[9] === "number" ? r[9] : xlRound((cfgNum("WIN_BASE_COINS") + cfgNum("WIN_STEP_COINS") * (r[0] - 1)) * r[8]);
+    return [...r.slice(0, 9), win, typeof r[10] === "number" ? r[10] : xlRound(win * cfgNum("LOSE_RATIO")), typeof r[11] === "number" ? r[11] : xlRound(win * cfgNum("DRAW_RATIO")), ...r.slice(12)];
+  })
   .map((r) => ({
     order_no: r[0], topic_en: r[1], topic_vi: r[2], cefr: r[3], word_count: r[4], question_count: r[5],
     seconds_per_question: r[6], question_types: String(r[7]).split(",").map((s) => s.trim()),

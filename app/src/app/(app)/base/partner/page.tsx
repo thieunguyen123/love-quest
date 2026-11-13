@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { requirePlayer } from "@/lib/session";
 import { loadConfig } from "@/lib/config";
-import { loadBase } from "@/lib/base";
+import { loadBase, baseSceneData } from "@/lib/base";
+import { BaseView } from "@/components/base3d/base-view";
 import { calcAtk, calcDef, type BattleCfg } from "@/lib/game/battle";
 import { Avatar, Card } from "@/components/ui";
 import { AttackPanel } from "./attack-panel";
@@ -13,6 +14,15 @@ export default async function PartnerBasePage() {
   const { supabase, me, partner } = await requirePlayer();
   if (!partner) return <Card>Chưa ghép cặp.</Card>;
   await supabase.rpc("ensure_daily");
+  const { data: ph } = await supabase.from("user_house").select("user_id").eq("user_id", partner.id).maybeSingle();
+  if (!ph) return (
+    <Card className="space-y-2 text-center">
+      <div className="text-5xl">🏕️</div>
+      <h1 className="text-xl font-extrabold text-love-700">{partner.display_name || "Người ấy"} chưa dựng nhà</h1>
+      <p>Người ấy chưa đăng nhập lần đầu / chưa hoàn tất hồ sơ nên chưa có nhà để tấn công. Rủ người ấy vào game nhé! 💌</p>
+      <Link href="/base" className="font-bold text-love-600">← Căn cứ của tôi</Link>
+    </Card>
+  );
   const [mine, theirs, cfg, { data: daily }, { data: lastHit }] = await Promise.all([
     loadBase(supabase, me.id), loadBase(supabase, partner.id), loadConfig(supabase),
     supabase.from("daily_counters").select("attacks_used").eq("user_id", me.id).eq("day", VN()).maybeSingle(),
@@ -31,9 +41,17 @@ export default async function PartnerBasePage() {
   const t = theirs.house!;
   const reason = t.hp <= 0 ? "Nhà người ấy đã đổ nát" : shieldActive ? `🛡️ Người ấy đang có khiên (hết ${new Date(shieldActive.expires_at).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })})` : protectedUntil > now ? "Người ấy vừa bị tấn công, đang được bảo hộ" : left <= 0 ? "Hôm nay bạn đã hết lượt tấn công" : mine.army.every((a: any) => a.quantity === 0) ? "Bạn chưa có lính nào" : null;
 
+  const squads = mine.army.filter((x: any) => x.quantity > 0).map((x: any) => ({ unit: x.unit_code, qty: x.quantity }));
+  const attackInfo = { partnerId: partner.id, atk: Math.round(atk), def: Math.round(def), reason, left, total: Number(cfg.ATTACKS_PER_DAY), myShield };
   return (
     <div className="space-y-4">
-      <Link href="/base" className="text-sm font-bold text-love-600">← Căn cứ của tôi</Link>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Link href="/base" className="text-sm font-bold text-love-600">← Căn cứ của tôi</Link>
+        <Link href="/world?at=partner" className="text-sm font-bold text-love-600 underline">🌍 Ra làng</Link>
+      </div>
+      <BaseView mode="partner" data={baseSceneData(theirs, Number(cfg.BASE_GRID_SIZE ?? 20))} attack={attackInfo}
+        attacker={{ name: me.display_name, color: me.favorite_color, squads }}
+        fallback={<div className="space-y-4">
       <Card className="space-y-3">
         <div className="flex items-center gap-4">
           <Avatar url={partner.avatar_url} name={partner.display_name} color={partner.favorite_color} size={56} />
@@ -51,6 +69,7 @@ export default async function PartnerBasePage() {
         </div>
       </Card>
       <AttackPanel partnerId={partner.id} atk={Math.round(atk)} def={Math.round(def)} reason={reason} left={left} total={Number(cfg.ATTACKS_PER_DAY)} myShield={myShield} />
+        </div>} />
     </div>
   );
 }

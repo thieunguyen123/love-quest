@@ -274,5 +274,11 @@
     "value": 100,
     "unit": "xu",
     "description": "Từ cấp L lên L+1 tốn STEP × L xu + 1 token Nâng cấp thú cưng"
+  },
+  {
+    "key": "BASE_GRID_SIZE",
+    "value": 20,
+    "unit": "ô",
+    "description": "Cạnh lưới căn cứ 3D (mỗi ô 2 m). Nhà chính ở giữa."
   }
 ]

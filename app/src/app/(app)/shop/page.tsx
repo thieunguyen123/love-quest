@@ -7,7 +7,7 @@ import { Card } from "@/components/ui";
 import { RpcButton } from "@/components/rpc-button";
 import { UnitBuy } from "./unit-buy";
 
-const TABS = [["pets", "🐾 Thú cưng"], ["house", "🏠 Nhà"], ["units", "🪖 Quân đội"], ["weapons", "⚔️ Vũ khí"], ["shield", "🛡️ Khiên"]] as const;
+const TABS = [["pets", "🐾 Thú cưng"], ["house", "🏠 Nhà"], ["units", "🪖 Quân đội"], ["weapons", "⚔️ Vũ khí"], ["decor", "🌸 Trang trí"], ["shield", "🛡️ Khiên"]] as const;
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const { tab = "pets" } = await searchParams;
@@ -52,6 +52,11 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
         {tab === "weapons" && list("WEAPON").map((i: any) => {
           const reason = lockReason(i) ?? (owned(i.code) ? "Bạn đã sở hữu" : tok("WEAPON_LICENSE") < 1 ? "Cần 1 Quyền mua vũ khí" : coins < i.price ? `Thiếu ${i.price - coins} xu` : null);
           return <Card key={i.code} className="space-y-2"><div className="text-4xl">{i.emoji}</div><div className="font-extrabold">{i.name_vi}</div><div className="text-sm">+{Math.round(i.stats.atk_pct * 100)}% ATK (cộng dồn)</div><div className="font-bold text-amber-700">🪙 {i.price} + ⚔️ 1 quyền</div><RpcButton fn="buy_weapon" args={{ p_code: i.code }} label="Mua" disabledReason={reason} /></Card>;
+        })}
+        {tab === "decor" && list("DECOR").map((i: any) => {
+          const n = b.decor.filter((d: any) => d.code === i.code).length;
+          const reason = lockReason(i) ?? (n >= Number(i.stats.max ?? 20) ? "Đã đủ số lượng tối đa" : coins < i.price ? `Thiếu ${i.price - coins} xu` : null);
+          return <Card key={i.code} className="space-y-2"><div className="text-4xl">{i.emoji}</div><div className="font-extrabold">{i.name_vi}</div><div className="text-sm">{i.stats.desc} · {i.stats.size}×{i.stats.size} ô · đang có {n}</div><div className="font-bold text-amber-700">🪙 {i.price}</div><RpcButton fn="buy_decor" args={{ p_code: i.code }} label="Mua" disabledReason={reason} /><Link href="/base" className="block text-xs font-bold text-love-600 underline">🔨 Đặt vào căn cứ 3D →</Link></Card>;
         })}
         {tab === "shield" && (
           <Card className="space-y-2"><div className="text-4xl">🛡️</div><div className="font-extrabold">Khiên</div>

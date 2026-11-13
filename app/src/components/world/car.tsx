@@ -1,5 +1,7 @@
 "use client";
-import { forwardRef, useRef } from "react";
+import { Suspense, forwardRef, useEffect, useMemo, useRef } from "react";
+import { useGLTF } from "@react-three/drei";
+import { colorVariant, modelUrl, Heart } from "@/components/three/models";
 import { useFrame, useThree } from "@react-three/fiber";
 import { RigidBody, BallCollider, CuboidCollider, useRapier, type RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
@@ -10,10 +12,10 @@ export type CamMode = "iso" | "follow";
 const WHEEL_R = 0.38;
 
 // Thân xe low-poly; bánh trước bẻ lái, bánh quay theo tốc độ; đèn phanh sáng khi phanh/lùi
-export const CarMesh = forwardRef<THREE.Group, { color: string; wheels?: React.RefObject<THREE.Group[]>; brake?: React.RefObject<THREE.MeshStandardMaterial | null> }>(
-  function CarMesh({ color, wheels, brake }, ref) {
+const ProcCar = forwardRef<THREE.Group, { color: string; wheels?: React.RefObject<THREE.Group[]>; brake?: React.RefObject<THREE.MeshStandardMaterial | null> }>(
+  function ProcCar({ color, wheels, brake }, ref) {
     return (
-      <group ref={ref}>
+      <group ref={ref} position={[0, WHEEL_R - 0.05, 0]}>
         <mesh castShadow position={[0, 0.35, 0]}><boxGeometry args={[1.6, 0.55, 2.9]} /><meshStandardMaterial color={color} flatShading /></mesh>
         <mesh castShadow position={[0, 0.85, -0.15]}><boxGeometry args={[1.3, 0.5, 1.5]} /><meshStandardMaterial color={color} flatShading /></mesh>
         <mesh position={[0, 0.86, 0.61]} rotation={[-0.35, 0, 0]}><planeGeometry args={[1.2, 0.5]} /><meshStandardMaterial color="#bae6fd" metalness={0.4} roughness={0.1} /></mesh>
@@ -31,6 +33,34 @@ export const CarMesh = forwardRef<THREE.Group, { color: string; wheels?: React.R
         ))}
       </group>
     );
+  },
+);
+
+// Ô tô KayKit (bánh xe là node riêng → quay & bẻ lái được). Mẫu xe theo màu yêu thích; cờ tim cùng màu trên nóc
+const CAR_BY_COLOR = { red: "car_hatchback", blue: "car_sedan", green: "car_stationwagon", yellow: "car_taxi" } as const;
+const CAR_LEN = 3.1;
+function KayKitCar({ color, wheels, brake }: { color: string; wheels?: React.RefObject<THREE.Group[]>; brake?: React.RefObject<THREE.MeshStandardMaterial | null> }) {
+  const name = CAR_BY_COLOR[colorVariant(color)];
+  const { scene } = useGLTF(modelUrl(name));
+  const obj = useMemo(() => { const c = scene.clone(true); c.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); return c; }, [scene]);
+  useEffect(() => {
+    if (!wheels?.current) return;
+    ["front_left", "front_right", "rear_left", "rear_right"].forEach((k, i) => { const w = obj.getObjectByName(`${name}_wheel_${k}`); if (w) wheels.current[i] = w as THREE.Group; });
+  }, [obj, name, wheels]);
+  const s = CAR_LEN / 0.94;
+  return (
+    <group>
+      <primitive object={obj} scale={s} position={[0, 0.06 * s, 0]} />
+      {/* đèn phanh + cờ tim trên nóc */}
+      {[-0.42, 0.42].map((x) => <mesh key={x} position={[x, 0.62, -1.62]}><boxGeometry args={[0.3, 0.12, 0.04]} /><meshStandardMaterial ref={x < 0 ? brake : undefined} color="#7f1d1d" emissive="#ef4444" emissiveIntensity={0.3} /></mesh>)}
+      <mesh position={[0.35, 1.7, -0.6]}><cylinderGeometry args={[0.03, 0.03, 1.1, 6]} /><meshStandardMaterial color="#e5e7eb" /></mesh>
+      <Heart position={[0.35, 2.3, -0.6]} scale={0.22} color={color} />
+    </group>
+  );
+}
+export const CarMesh = forwardRef<THREE.Group, { color: string; wheels?: React.RefObject<THREE.Group[]>; brake?: React.RefObject<THREE.MeshStandardMaterial | null> }>(
+  function CarMesh(p, ref) {
+    return <group ref={ref}><Suspense fallback={<ProcCar {...p} />}><KayKitCar {...p} /></Suspense></group>;
   },
 );
 
@@ -149,7 +179,7 @@ export function Car({ color, start, input, pose, paused, cam, respawn, light }: 
         enabledRotations={[false, true, false]} angularDamping={6} linearDamping={0.1} ccd canSleep={false}>
         <BallCollider args={[0.6]} friction={0} density={3} />
         <CuboidCollider args={[0.8, 0.32, 1.4]} position={[0, 0.4, 0]} friction={0} density={3} />
-        <group ref={visual} position={[0, -0.6 + WHEEL_R - 0.05, 0]}>
+        <group ref={visual} position={[0, -0.6, 0]}>
           <group ref={tilt}><CarMesh color={color} wheels={wheels} brake={brake} /></group>
         </group>
       </RigidBody>

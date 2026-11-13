@@ -19,7 +19,9 @@
     "db:test:start": "cd .sbtest && supabase start --workdir . -x imgproxy,edge-runtime,logflare,vector,supavisor,mailpit",
     "db:test:stop": "cd .sbtest && supabase stop --workdir .",
     "test:smoke": "IT_ENV=.env.test SMOKE_BASE=http://127.0.0.1:3101 tsx scripts/http-smoke.ts",
-    "test:e2e": "IT_ENV=.env.test tsx scripts/e2e-world.ts"
+    "test:e2e": "IT_ENV=.env.test tsx scripts/e2e-world.ts",
+    "test:flow": "IT_ENV=.env.test tsx scripts/e2e-flow.ts",
+    "models:build": "tsx scripts/build-models.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -45,6 +47,9 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
     "@playwright/test": "^1.65.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -55,6 +60,7 @@
     "dotenv": "^18.0.10",
     "eslint": "^9",
     "eslint-config-next": "15.5.29",
+    "meshoptimizer": "^1.3.0",
     "supabase": "^3.1.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",

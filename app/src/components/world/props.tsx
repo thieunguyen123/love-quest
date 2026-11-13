@@ -1,8 +1,12 @@
 "use client";
+import { Suspense, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import { Html, Instances, Instance } from "@react-three/drei";
+import * as THREE from "three";
+import { Model } from "@/components/three/models";
 import { RigidBody, CuboidCollider, CylinderCollider, ConeCollider } from "@react-three/rapier";
 import { Countdown } from "@/components/countdown";
-import { BIG_ZONES, CONES, RAMP, TREES, WORLD_HALF, bowlingPins, crateStack, type Zone } from "./data";
+import { CONES, RAMP, TREES, WORLD_HALF, ZONE_MODELS, bowlingPins, crateStack, type Zone } from "./data";
 
 const GROUND = "#86d78a", ROAD = "#d9c9a8";
 
@@ -40,66 +44,72 @@ export function Ground() {
   );
 }
 
-// Cây: 1 rigid body cố định nhiều collider (rẻ hơn mỗi cây 1 body)
+// Cây KayKit: 1 rigid body cố định nhiều collider; 1/4 số cây nhuộm hồng cho "Làng Tình Yêu"
+const TREE_MODELS = ["tree_single_A", "tree_single_B", "trees_A_medium", "tree_single_A", "trees_B_medium", "tree_single_B"];
 export function Trees() {
   return (
     <>
       <RigidBody type="fixed" colliders={false}>
-        {TREES.map((t, i) => <CylinderCollider key={i} args={[1.5, 0.35 * t.s]} position={[t.x, 1.5, t.z]} />)}
+        {TREES.map((t, i) => <CylinderCollider key={i} args={[1.5, (TREE_MODELS[i % 6].startsWith("trees_") ? 1.4 : 0.45) * t.s]} position={[t.x, 1.5, t.z]} />)}
       </RigidBody>
-      {/* instancing: 70 cây chỉ tốn 3 lệnh vẽ (quan trọng cho điện thoại) */}
-      <Instances limit={TREES.length} castShadow><cylinderGeometry args={[0.2, 0.28, 1.6, 6]} /><meshStandardMaterial color="#8b5a2b" flatShading />
-        {TREES.map((t, i) => <Instance key={i} position={[t.x, 0.8 * t.s, t.z]} scale={t.s} />)}
-      </Instances>
-      {[true, false].map((pink) => (
-        <Instances key={String(pink)} limit={TREES.length} castShadow><coneGeometry args={[1.2, 2.6, 7]} /><meshStandardMaterial color={pink ? "#f9a8d4" : "#3fa34d"} flatShading />
-          {TREES.map((t, i) => (i % 4 === 0) === pink && <Instance key={i} position={[t.x, 2.4 * t.s, t.z]} scale={t.s} />)}
-        </Instances>
-      ))}
+      {TREES.map((t, i) => {
+        const m = TREE_MODELS[i % 6];
+        return <Suspense key={i} fallback={null}><Model name={m} {...(m.startsWith("trees_") ? { size: 4.6 * t.s } : { height: 5 * t.s })} position={[t.x, 0, t.z]} rotation={[0, i * 1.7, 0]} tint={i % 4 === 0 ? "#ffc2e0" : undefined} /></Suspense>;
+      })}
     </>
   );
 }
 
-// Khu chức năng: khu to là nhà khối có va chạm, khu nhỏ là biển báo. Đấu trường có cột cờ + đồng hồ màn (W3D-03)
+// Núi bao quanh làng + mây trôi (chỉ để nhìn)
+export function Backdrop() {
+  const L = WORLD_HALF;
+  const mountains = Array.from({ length: 18 }, (_, i) => { const a = (i / 18) * Math.PI * 2; const d = L + 22 + (i % 3) * 8; return { x: Math.cos(a) * d, z: Math.sin(a) * d, s: 26 + (i % 4) * 6, r: i * 0.9, m: i % 2 ? "mountain_A_grass_trees" : "mountain_B_grass_trees" }; });
+  return (
+    <>
+      {mountains.map((m, i) => <Suspense key={i} fallback={null}><Model name={m.m} size={m.s} position={[m.x, -0.5, m.z]} rotation={[0, m.r, 0]} /></Suspense>)}
+      <Clouds />
+    </>
+  );
+}
+function Clouds() {
+  const g = useRef<THREE.Group>(null);
+  useFrame((_, dt) => { if (!g.current) return; g.current.children.forEach((c, i) => { c.position.x += dt * (0.8 + (i % 3) * 0.3); if (c.position.x > WORLD_HALF + 40) c.position.x = -WORLD_HALF - 40; }); });
+  return (
+    <group ref={g}>
+      {Array.from({ length: 9 }, (_, i) => (
+        <group key={i} position={[-WORLD_HALF + i * 14, 26 + (i % 3) * 5, -WORLD_HALF + ((i * 37) % 110)]}>
+          <Suspense fallback={null}><Model name={i % 2 ? "cloud_big" : "cloud_small"} size={10 + (i % 3) * 4} shadows={false} /></Suspense>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+// Khu chức năng = nhà KayKit có va chạm (W3D-02). Đấu trường có cột cờ + đồng hồ màn (W3D-03)
 export function Building({ zone, label, deadline }: { zone: Zone; label?: string; deadline?: string | null }) {
-  const big = BIG_ZONES.has(zone.id);
-  const w = big ? zone.r * 0.9 : 2;
+  const [model, size] = ZONE_MODELS[zone.id] ?? ["tower_B_red", 6];
+  const half = size * 0.42;
   return (
     <group position={[zone.x, 0, zone.z]}>
-      {big ? (
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[half, 3, half]} position={[0, 3, 0]} />
+        {zone.id === "arena" && <CylinderCollider args={[4, 0.25]} position={[size * 0.62, 4, 0]} />}
+      </RigidBody>
+      <Suspense fallback={null}><Model name={model} size={size} rotation={[0, zone.x < 0 ? Math.PI / 2 : zone.x > 0 ? -Math.PI / 2 : 0, 0]} /></Suspense>
+      {zone.id === "arena" && (
         <>
-          <RigidBody type="fixed" colliders={false}>
-            <CuboidCollider args={[w / 2, 2.2, w * 0.4]} position={[0, 2.2, 0]} />
-            {zone.id === "arena" && <CylinderCollider args={[4, 0.2]} position={[w * 0.6, 4, 0]} />}
-          </RigidBody>
-          <mesh position={[0, 2.2, 0]} castShadow receiveShadow><boxGeometry args={[w, 4.4, w * 0.8]} /><meshStandardMaterial color={zone.color} flatShading /></mesh>
-          <mesh position={[0, 1.2, w * 0.4 + 0.01]}><planeGeometry args={[1.6, 2.4]} /><meshStandardMaterial color="#7c4a2d" /></mesh>
-          {[-1, 1].map((s) => <mesh key={s} position={[s * w * 0.28, 2.8, w * 0.4 + 0.01]}><planeGeometry args={[1.1, 1.1]} /><meshStandardMaterial color="#e0f2fe" emissive="#93c5fd" emissiveIntensity={0.3} /></mesh>)}
-          <mesh position={[0, 5.2, 0]} rotation={[0, Math.PI / 4, 0]} castShadow><coneGeometry args={[w * 0.75, 2.2, 4]} /><meshStandardMaterial color="#be185d" flatShading /></mesh>
-          {zone.id === "arena" && (
-            <>
-              <mesh position={[w * 0.6, 4, 0]} castShadow><cylinderGeometry args={[0.1, 0.1, 8, 8]} /><meshStandardMaterial color="#9ca3af" metalness={0.6} roughness={0.3} /></mesh>
-              <Flag x={w * 0.6} />
-              <Html position={[w * 0.6, 9.4, 0]} center distanceFactor={24} zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
-                <div className="rounded-xl bg-red-500 px-3 py-1 text-center text-white shadow-lg whitespace-nowrap">
-                  <div className="text-xs font-bold opacity-90">{label}</div>
-                  {deadline && <div className="text-lg font-black tabular-nums">⏳ <Countdown deadline={deadline} /></div>}
-                </div>
-              </Html>
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <RigidBody type="fixed" colliders={false}>
-            <CuboidCollider args={[0.8, 1, 0.15]} position={[0, 1, 0]} />
-          </RigidBody>
-          <mesh position={[0, 1.3, 0]} castShadow><boxGeometry args={[1.6, 1.4, 0.3]} /><meshStandardMaterial color={zone.color} /></mesh>
-          <mesh position={[0, 0.3, 0]}><cylinderGeometry args={[0.12, 0.12, 0.6, 6]} /><meshStandardMaterial color="#6b4423" /></mesh>
+          <mesh position={[size * 0.62, 4, 0]} castShadow><cylinderGeometry args={[0.12, 0.12, 8, 8]} /><meshStandardMaterial color="#9ca3af" metalness={0.6} roughness={0.3} /></mesh>
+          <Flag x={size * 0.62} />
+          <Html position={[size * 0.62, 9.6, 0]} center distanceFactor={24} zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
+            <div className="rounded-xl bg-red-500 px-3 py-1 text-center text-white shadow-lg whitespace-nowrap">
+              <div className="text-xs font-bold opacity-90">{label}</div>
+              {deadline && <div className="text-lg font-black tabular-nums">⏳ <Countdown deadline={deadline} /></div>}
+            </div>
+          </Html>
         </>
       )}
       <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[zone.r - 0.4, zone.r, 48]} /><meshBasicMaterial color={zone.color} transparent opacity={0.55} /></mesh>
-      <Html position={[0, big ? 8 : 3.2, 0]} center distanceFactor={24} zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
+      <Html position={[0, size * 0.95 + 1.5, 0]} center distanceFactor={24} zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
         <div className="rounded-full bg-white/90 px-3 py-1 text-sm font-extrabold text-pink-700 shadow whitespace-nowrap">{zone.emoji} {zone.name}</div>
       </Html>
     </group>
@@ -145,7 +155,7 @@ export function Toys() {
       {crateStack().map((c, i) => (
         <RigidBody key={`crate${i}`} colliders={false} position={[c.x, c.y, c.z]} density={0.3}>
           <CuboidCollider args={[0.6, 0.6, 0.6]} />
-          <mesh castShadow receiveShadow><boxGeometry args={[1.2, 1.2, 1.2]} /><meshStandardMaterial color={i % 2 ? "#c2410c" : "#d97706"} flatShading /></mesh>
+          <Suspense fallback={<mesh castShadow><boxGeometry args={[1.2, 1.2, 1.2]} /><meshStandardMaterial color="#d97706" /></mesh>}><Model name={i % 2 ? "crate_A_big" : "crate_B_big"} size={1.2} position={[0, -0.6, 0]} /></Suspense>
         </RigidBody>
       ))}
       {CONES.map((c, i) => (

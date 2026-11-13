@@ -1,0 +1,82 @@
+// Bố cục căn cứ kiểu Clash of Clans (BASE-07). Twin của SQL save_base_layout: cùng luật kiểm tra.
+export type Kind = "UNIT" | "PET" | "WEAPON" | "DECOR";
+export type Placed = { kind: Kind; ref: string; x: number; z: number; rot: number };
+export type Item = { kind: Kind; ref: string; size: number };
+export type Rect = { x: number; z: number; s: number };
+
+export const TILE = 2;   // mét / ô
+export const keyOf = (p: { kind: Kind; ref: string }) => `${p.kind}:${p.ref}`;
+
+export function houseRect(grid: number, houseSize: number): Rect {
+  const h0 = Math.floor((grid - houseSize) / 2);
+  return { x: h0, z: h0, s: houseSize };
+}
+export const overlap = (a: Rect, b: Rect) => a.x < b.x + b.s && a.x + a.s > b.x && a.z < b.z + b.s && a.z + a.s > b.z;
+export const inGrid = (r: Rect, grid: number) => r.x >= 0 && r.z >= 0 && r.x + r.s <= grid && r.z + r.s <= grid;
+
+export type LayoutError = "OUT_OF_BOUNDS" | "OVERLAP_HOUSE" | "OVERLAP" | "DUPLICATE_ITEM" | "ITEM_NOT_OWNED";
+
+/** Kiểm tra 1 vị trí cho `item` khi các vật khác (trừ chính nó) đã nằm trong `placed` */
+export function canPlace(item: Item, x: number, z: number, placed: Placed[], sizeOf: (p: Placed) => number, grid: number, houseSize: number): LayoutError | null {
+  const r = { x, z, s: item.size };
+  if (!inGrid(r, grid)) return "OUT_OF_BOUNDS";
+  if (overlap(r, houseRect(grid, houseSize))) return "OVERLAP_HOUSE";
+  for (const p of placed) if (keyOf(p) !== keyOf(item) && overlap(r, { x: p.x, z: p.z, s: sizeOf(p) })) return "OVERLAP";
+  return null;
+}
+
+/** Kiểm tra cả bố cục (giống server) */
+export function validateLayout(placed: Placed[], owned: Map<string, Item>, grid: number, houseSize: number): LayoutError | null {
+  const seen = new Set<string>();
+  for (const p of placed) {
+    const k = keyOf(p);
+    if (seen.has(k)) return "DUPLICATE_ITEM"; seen.add(k);
+    if (!owned.has(k)) return "ITEM_NOT_OWNED";
+  }
+  const size = (p: Placed) => owned.get(keyOf(p))!.size;
+  for (const p of placed) {
+    const e = canPlace(owned.get(keyOf(p))!, p.x, p.z, placed, size, grid, houseSize);
+    if (e) return e;
+  }
+  return null;
+}
+
+/**
+ * Đặt tự động các vật chưa có chỗ: quét các vòng quanh nhà từ trong ra ngoài, vị trí đầu tiên hợp lệ.
+ * Xác định (deterministic) để 2 máy thấy giống nhau. Vật đã đặt giữ nguyên; vật không còn sở hữu bị bỏ.
+ */
+export function autoPlace(saved: Placed[], items: Item[], grid: number, houseSize: number): { placed: Placed[]; unplaced: Item[] } {
+  const owned = new Map(items.map((i) => [keyOf(i), i]));
+  const placed: Placed[] = [];
+  const size = (p: Placed) => owned.get(keyOf(p))?.size ?? 1;
+  for (const p of saved) if (owned.has(keyOf(p)) && !canPlace(owned.get(keyOf(p))!, p.x, p.z, placed, size, grid, houseSize)) placed.push(p);
+  const done = new Set(placed.map(keyOf));
+  const h = houseRect(grid, houseSize);
+  const cx = h.x + h.s / 2, cz = h.z + h.s / 2;
+  // các ô theo khoảng cách tới tâm nhà (vòng trong trước), cố định thứ tự
+  const cells: [number, number][] = [];
+  for (let x = 0; x < grid; x++) for (let z = 0; z < grid; z++) cells.push([x, z]);
+  const unplaced: Item[] = [];
+  // vật to đặt trước để không bị vật nhỏ chiếm chỗ; trong cùng loại giữ thứ tự đầu vào
+  const order = [...items].filter((i) => !done.has(keyOf(i))).sort((a, b) => b.size - a.size);
+  for (const it of order) {
+    const sorted = cells
+      .map(([x, z]) => ({ x, z, d: Math.max(Math.abs(x + it.size / 2 - cx), Math.abs(z + it.size / 2 - cz)) + (Math.abs(x + it.size / 2 - cx) + Math.abs(z + it.size / 2 - cz)) * 0.01 }))
+      .sort((a, b) => a.d - b.d || a.z - b.z || a.x - b.x);
+    // chừa 1 ô trống quanh nhà làm "sân" cho đẹp: bắt đầu từ vòng cách nhà ≥ 1 ô
+    const spot = sorted.find((c) => c.d >= h.s / 2 + it.size / 2 + 1 && !canPlace(it, c.x, c.z, placed, size, grid, houseSize))
+      ?? sorted.find((c) => !canPlace(it, c.x, c.z, placed, size, grid, houseSize));
+    if (spot) placed.push({ kind: it.kind, ref: it.ref, x: spot.x, z: spot.z, rot: 0 });
+    else unplaced.push(it);
+  }
+  return { placed, unplaced };
+}
+
+/** Tâm (mét) của 1 vật trên lưới, gốc toạ độ = tâm lưới */
+export function cellCenter(x: number, z: number, s: number, grid: number) {
+  return { x: (x + s / 2 - grid / 2) * TILE, z: (z + s / 2 - grid / 2) * TILE };
+}
+/** Ô (góc trên-trái) gần nhất để đặt vật kích thước s có tâm gần điểm (mét) */
+export function cellFromPoint(px: number, pz: number, s: number, grid: number) {
+  return { x: Math.round(px / TILE + grid / 2 - s / 2), z: Math.round(pz / TILE + grid / 2 - s / 2) };
+}

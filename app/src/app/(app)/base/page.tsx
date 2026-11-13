@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { requirePlayer } from "@/lib/session";
 import { loadConfig } from "@/lib/config";
-import { loadBase, tokenCount } from "@/lib/base";
+import { loadBase, tokenCount, baseSceneData } from "@/lib/base";
+import { buildCatalog } from "@/lib/catalog";
+import { BaseView } from "@/components/base3d/base-view";
 import { Card } from "@/components/ui";
 import { RpcButton } from "@/components/rpc-button";
 import { BaseClient } from "./base-client";
@@ -11,7 +13,9 @@ import { ShieldPanel } from "./shield-panel";
 export default async function BasePage() {
   const { supabase, me } = await requirePlayer();
   await supabase.rpc("ensure_daily");
-  const [b, cfg] = await Promise.all([loadBase(supabase, me.id), loadConfig(supabase)]);
+  const [b, cfg, { data: closed }] = await Promise.all([loadBase(supabase, me.id), loadConfig(supabase), supabase.from("levels").select("order_no").eq("status", "CLOSED")]);
+  const grid = Number(cfg.BASE_GRID_SIZE ?? 20);
+  const catalog = buildCatalog(b, cfg, new Set((closed ?? []).map((l) => l.order_no)));
   const h = b.house!;
   const hpPct = Math.round((h.hp / h.max_hp) * 100);
   const repairCost = Number(cfg.REPAIR_COST_PER_HP);
@@ -24,8 +28,10 @@ export default async function BasePage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-extrabold text-love-700">🏠 Căn cứ của {me.display_name}</h1>
-        <div className="flex gap-4"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Xem trong 3D</Link><Link href="/base/partner" className="font-bold text-love-600 underline">Thăm nhà người ấy →</Link></div>
+        <div className="flex gap-4"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Ra làng</Link><Link href="/base/partner" className="font-bold text-love-600 underline">⚔️ Thăm nhà người ấy →</Link></div>
       </div>
+
+      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} />
 
       <Card className={`space-y-3 ${h.hp === 0 ? "border-red-300" : ""}`}>
         <div className="flex items-center gap-4">

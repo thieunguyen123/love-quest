@@ -11,8 +11,11 @@ export const ZONES: Zone[] = [
   { id: "words", name: "Sổ từ", emoji: "📒", href: "/words", x: -44, z: -36, r: 4, color: "#fb923c" },
   { id: "battles", name: "Nhật ký trận", emoji: "📜", href: "/battles", x: 44, z: -36, r: 4, color: "#f87171" },
 ];
-// Các khu "to" có nhà khối + mái (va chạm được); còn lại là biển báo
-export const BIG_ZONES = new Set(["library", "arena", "market"]);
+// Mô hình KayKit + cạnh (mét) của từng khu; đều có va chạm (hộp vuông ~0.84 × cạnh)
+export const ZONE_MODELS: Record<string, [string, number]> = {
+  library: ["church_blue", 11], arena: ["barracks_yellow", 13], market: ["market_green", 13], board: ["tower_B_red", 6],
+  mail: ["well_red", 4.5], typing: ["watermill_blue", 6.5], words: ["lumbermill_green", 6.5], battles: ["tower_catapult_red", 6.5],
+};
 export const MY_HOUSE = { x: -32, z: 26 };
 export const PARTNER_HOUSE = { x: 32, z: 26 };
 export const SPAWN = { x: 0, z: 14 };
@@ -63,7 +66,7 @@ export const TREES = makeTrees();
 
 // Vật cản cố định (dùng cho test & kiểm tra điểm xuất phát)
 export const OBSTACLES: { x: number; z: number; r: number }[] = [
-  ...ZONES.filter((z) => BIG_ZONES.has(z.id)).map((z) => ({ x: z.x, z: z.z, r: z.r * 0.55 })),
-  { x: MY_HOUSE.x, z: MY_HOUSE.z, r: 4.5 }, { x: PARTNER_HOUSE.x, z: PARTNER_HOUSE.z, r: 4.5 },
+  ...ZONES.map((z) => ({ x: z.x, z: z.z, r: (ZONE_MODELS[z.id]?.[1] ?? 6) * 0.6 })),
+  { x: MY_HOUSE.x, z: MY_HOUSE.z, r: 7.5 }, { x: PARTNER_HOUSE.x, z: PARTNER_HOUSE.z, r: 7.5 },
   ...TREES.map((t) => ({ x: t.x, z: t.z, r: 0.35 * t.s })),
 ];

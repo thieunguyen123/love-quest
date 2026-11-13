@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui";
 import { RpcButton } from "@/components/rpc-button";
-import { formatLeft } from "@/components/countdown";
+import { formatLeft } from "@/lib/time";
 
 type Shield = { id: string; source: string; granted_date: string; activated_at: string | null; expires_at: string | null; broken_at: string | null };
 
