@@ -7,11 +7,18 @@ import { signOut } from "../login/actions";
 
 const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/words", "Sổ từ"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"], ["/battles", "Nhật ký"], ["/world", "🌍 3D"]];
 
+// Chế độ nhúng: trang mở trong overlay của thế giới 3D (iframe) → ẩn menu; link về Hub/3D hoặc Esc thì đóng overlay
+const EMBED_SCRIPT = `(function(){if(window.self===window.top)return;var d=document.documentElement;d.setAttribute("data-embed","1");
+function close(){window.parent.postMessage({lq:"close"},location.origin)}
+document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a||a.target==="_top")return;var u=new URL(a.href,location.href);if(u.origin===location.origin&&(u.pathname==="/"||u.pathname==="/world")){e.preventDefault();e.stopPropagation();close()}},true);
+document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});})();`;
+
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { me } = await requirePlayer();
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-20 bg-white/85 backdrop-blur border-b border-love-100">
+      <script dangerouslySetInnerHTML={{ __html: EMBED_SCRIPT }} />
+      <header className="app-header sticky top-0 z-20 bg-white/85 backdrop-blur border-b border-love-100">
         <div className="mx-auto max-w-5xl flex items-center gap-3 px-4 h-14">
           <Link href="/?view=2d" className="font-extrabold text-love-700 text-lg">💕 Love Quest</Link>
           <nav className="hidden md:flex gap-4 ml-4 text-sm font-bold text-love-700/80">

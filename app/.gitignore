@@ -42,3 +42,5 @@ yarn-error.log*
 next-env.d.ts
 .sbtest/
 .next-*/
+.e2e-shots
+.next-build

@@ -8,7 +8,7 @@ Next.js 15 (App Router, TS, `src/`), Tailwind 4 + shadcn/ui, Framer Motion, Zust
 App nằm trong `app/`. Node 22 (`source ~/.nvm/nvm.sh && nvm use 22`).
 
 ## Lệnh (chạy trong app/)
-- `npm run dev` (cổng **3100**, vì 3000 đang bị container khác dùng) · `npm run build` · `npm run lint` · `npm test` (44 unit test)
+- `npm run dev` (cổng **3100**, vì 3000 đang bị container khác dùng) · `npm run build` · `npm run lint` · `npm test` (48 unit test)
 - **Hai Supabase local** (cần Docker Desktop): *dev* (cổng 543xx, dữ liệu người chơi thật) và *test* (cổng 553xx, thư mục `.sbtest/`, dùng cho test tự động — test **xóa sạch dữ liệu game**, đừng chạy vào DB dev).
   - dev: `npx supabase start -x imgproxy,edge-runtime,logflare,vector,supavisor,mailpit` · `npx supabase stop` · Studio http://127.0.0.1:54323
   - test: `npm run db:test:start` · `npm run db:test:stop` · `npm run db:test:reset`
@@ -16,6 +16,7 @@ App nằm trong `app/`. Node 22 (`source ~/.nvm/nvm.sh && nvm use 22`).
 - Test tích hợp (chạy trên DB test): `npm run test:all` (phase 1,3,4,5,6,8) · lẻ từng phase `IT_ENV=.env.test npx tsx scripts/it-phaseN.ts`
 - Smoke test HTTP có đăng nhập: bật server vào DB test `NEXT_DIST_DIR=.next-test env $(grep -v '^#' .env.test | xargs) npx next dev --turbopack -p 3101` rồi `npm run test:smoke`. Truy cập trình duyệt bằng `http://127.0.0.1:3101` (khác host với `localhost:3100` để không đè cookie đăng nhập).
 - Build kiểm tra mà không đè `.next` của server dev: `NEXT_DIST_DIR=.next-build npm run build`
+- E2E thế giới 3D (Chrome headless thật + Playwright, lái xe/va chạm/dốc/overlay/realtime/joystick): bật server test :3101 rồi `npm run test:e2e` (ảnh chụp ở `.e2e-shots/`). WSL này thiếu thư viện hệ thống cho Chrome: `npx playwright install-deps` (cần sudo), hoặc `apt-get download` các gói (libnss3, libgbm1, libasound2, libgtk-3-0, libfontconfig1…) rồi `dpkg -x` vào 1 thư mục và đặt `LD_LIBRARY_PATH`. Không có font emoji nên emoji hiện ô vuông trong ảnh chụp — không phải lỗi.
 - `npm run seed:export` : đọc docs/spec.xlsx → supabase/seed/*.json
 
 ## Nguyên tắc bắt buộc
@@ -35,7 +36,7 @@ Production: tạo user bằng Supabase dashboard (Auto Confirm), tắt "Allow ne
 - [x] P0 scaffold · P1 auth/profile/onboarding/hub · P2 học (flashcard), admin màn/từ, import CSV
 - [x] P3 Mưa chữ (`lib/game/typing.ts`) · P4 màn thi đấu (engine 6 loại câu ở SQL `_build_question`, đếm ngược 48h, thưởng idempotent, thông báo realtime, đối đầu)
 - [x] P5 shop/căn cứ/quân/vũ khí · P6 tấn công + khiên (`calc_atk/calc_def/calc_battle` ở SQL, twin TS ở `lib/game/battle.ts`)
-- [x] P7 thế giới 3D `/world` (three + r3f, vật lý tự viết `components/world/physics.ts`, không dùng rapier) · P8 sổ từ, cài đặt âm thanh, PWA, admin cấu hình/nhật ký/reset mùa
+- [x] P7 thế giới 3D `/world` (three + r3f + **@react-three/rapier**): xe kiểu arcade (`physics.ts: drive()` có unit test, va chạm/trọng lực do rapier), dốc nhảy, bowling, thùng, cọc; camera trên cao/sau xe (C), R về chỗ cũ, Shift tăng tốc, Space phanh, joystick ảo + nút 🚀 trên điện thoại, bản đồ nhỏ, xe người ấy realtime (kinematic, tông nhau được). Nhấn E mở trang 2D trong **overlay iframe** trên nền 3D; trang trong iframe chạy "chế độ nhúng" (script trong `(app)/layout.tsx` ẩn menu, link về `/` hoặc `/world` và Esc → đóng overlay). Hub `/` mặc định chuyển vào 3D trừ khi đã chọn 2D. `?at=home|partner|<zone>|ramp` chọn điểm xuất phát. · P8 sổ từ, cài đặt âm thanh, PWA, admin cấu hình/nhật ký/reset mùa
 
 ## Điểm cần biết / chưa hoàn hảo
 - **LISTEN** (câu nghe): từ tiếng Anh phải gửi về client để đọc TTS nên đáp án lộ trong network (các loại khác không lộ). Chấp nhận được cho game 2 người.

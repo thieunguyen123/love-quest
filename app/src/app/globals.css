@@ -144,3 +144,7 @@ body { font-family: var(--font-nunito), ui-sans-serif, system-ui, sans-serif; ba
 .flip-in { animation: flip-in .25s ease-out; }
 @keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
 .shake { animation: shake .25s; }
+/* Trang mở trong overlay của thế giới 3D */
+html[data-embed] .app-header { display: none; }
+html[data-embed] body { background: transparent; min-height: 0; }
+html[data-embed] main { padding-top: 1rem; }

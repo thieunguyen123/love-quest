@@ -18,12 +18,14 @@
     "test:all": "IT_ENV=.env.test sh -c 'tsx scripts/it-phase1.ts && tsx scripts/it-phase3.ts && tsx scripts/it-phase4.ts && tsx scripts/it-phase5.ts && tsx scripts/it-phase6.ts && tsx scripts/it-phase8.ts'",
     "db:test:start": "cd .sbtest && supabase start --workdir . -x imgproxy,edge-runtime,logflare,vector,supavisor,mailpit",
     "db:test:stop": "cd .sbtest && supabase stop --workdir .",
-    "test:smoke": "IT_ENV=.env.test SMOKE_BASE=http://127.0.0.1:3101 tsx scripts/http-smoke.ts"
+    "test:smoke": "IT_ENV=.env.test SMOKE_BASE=http://127.0.0.1:3101 tsx scripts/http-smoke.ts",
+    "test:e2e": "IT_ENV=.env.test tsx scripts/e2e-world.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
     "@react-three/drei": "^10.0.4",
     "@react-three/fiber": "^9.0.4",
+    "@react-three/rapier": "^2.2.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.109.0",
     "@tanstack/react-query": "^5.107.1",

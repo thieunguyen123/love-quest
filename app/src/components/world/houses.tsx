@@ -28,7 +28,7 @@ function Pet({ emoji, i, r }: { emoji: string; i: number; r: number }) {
     const a = clock.elapsedTime * 0.5 + i * 2.1;
     g.current?.position.set(Math.cos(a) * r, 0.35, Math.sin(a) * r);
   });
-  return <group ref={g}><mesh castShadow><sphereGeometry args={[0.35, 12, 12]} /><meshStandardMaterial color="#fbbf24" /></mesh><Html position={[0, 0.9, 0]} center distanceFactor={14} style={{ pointerEvents: "none", fontSize: 22 }}>{emoji}</Html></group>;
+  return <group ref={g}><mesh castShadow><sphereGeometry args={[0.35, 12, 12]} /><meshStandardMaterial color="#fbbf24" /></mesh><Html position={[0, 0.9, 0]} center distanceFactor={14} zIndexRange={[5, 0]} style={{ pointerEvents: "none", fontSize: 22 }}>{emoji}</Html></group>;
 }
 
 // Ngôi nhà phản ánh cấp (kích thước), hư hại (khói, nứt), đổ nát (nghiêng, xám), khiên (mái vòm), thú cưng đi quanh nhà
@@ -45,12 +45,12 @@ export function House({ x, z, info }: { x: number; z: number; info: HouseInfo })
         <mesh position={[0, h + 0.9 + lv * 0.1, 0]} rotation={[0, Math.PI / 4, 0]} castShadow><coneGeometry args={[w * 0.78, 1.8 + lv * 0.2, 4]} /><meshStandardMaterial color={ruined ? "#374151" : info.color} /></mesh>
         <mesh position={[0, 0.9, w / 2 + 0.01]}><boxGeometry args={[0.9, 1.8, 0.05]} /><meshStandardMaterial color="#7c4a2d" /></mesh>
         {lv >= 3 && [-1, 1].map((s) => <mesh key={s} position={[s * (w / 2), (h + 1.5) / 2, s * (w / 2)]} castShadow><cylinderGeometry args={[0.7, 0.8, h + 1.5, 10]} /><meshStandardMaterial color={body} /></mesh>)}
-        {lv >= 5 && <Html position={[0, h + 3.6, 0]} center distanceFactor={14} style={{ pointerEvents: "none", fontSize: 30 }}>💖</Html>}
+        {lv >= 5 && <Html position={[0, h + 3.6, 0]} center distanceFactor={14} zIndexRange={[5, 0]} style={{ pointerEvents: "none", fontSize: 30 }}>💖</Html>}
       </group>
       {info.hpPct < 0.5 && <Smoke count={ruined ? 6 : 3} />}
       {info.shield && <mesh ref={shield} position={[0, 0, 0]}><sphereGeometry args={[w * 1.35, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} /><meshBasicMaterial color="#60a5fa" transparent opacity={0.2} depthWrite={false} /></mesh>}
       {!ruined && info.pets.map((p, i) => <Pet key={i} emoji={p} i={i} r={w * 0.85 + 1.2} />)}
-      <Html position={[0, h + 3.2, 0]} center distanceFactor={22} style={{ pointerEvents: "none" }}>
+      <Html position={[0, h + 3.2, 0]} center distanceFactor={22} zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
         <div className="rounded-full bg-white/90 px-3 py-1 text-xs font-extrabold text-pink-700 shadow whitespace-nowrap">🏠 {info.name} · Cấp {lv}{info.shield ? " 🛡️" : ""}{ruined ? " 💥" : ""}</div>
       </Html>
     </group>
