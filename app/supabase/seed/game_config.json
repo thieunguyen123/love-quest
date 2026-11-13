@@ -1,0 +1,278 @@
+[
+  {
+    "key": "TIMEZONE",
+    "value": "Asia/Ho_Chi_Minh",
+    "unit": "",
+    "description": "Múi giờ tính 'ngày' (reset khiên, lượt tấn công, trần xu…) – 00:00 giờ VN"
+  },
+  {
+    "key": "STARTING_COINS",
+    "value": 500,
+    "unit": "xu",
+    "description": "Xu khởi đầu, cộng 1 lần khi hoàn tất onboarding"
+  },
+  {
+    "key": "LEVEL_LOCK_HOURS",
+    "value": 48,
+    "unit": "giờ",
+    "description": "Thời gian chờ người thứ 2 kể từ lúc người đầu tiên hoàn thành màn"
+  },
+  {
+    "key": "LEVEL_RANKED_ATTEMPTS",
+    "value": 1,
+    "unit": "lượt",
+    "description": "Số lượt TÍNH ĐIỂM mỗi người / màn (luyện tập không giới hạn)"
+  },
+  {
+    "key": "LEVEL_RESUME_MINUTES",
+    "value": 10,
+    "unit": "phút",
+    "description": "Đóng tab giữa chừng: quay lại trong thời gian này được chơi tiếp, quá hạn tự nộp bài"
+  },
+  {
+    "key": "WIN_BASE_COINS",
+    "value": 200,
+    "unit": "xu",
+    "description": "Xu thắng màn 1"
+  },
+  {
+    "key": "WIN_STEP_COINS",
+    "value": 100,
+    "unit": "xu",
+    "description": "Mỗi màn sau tăng thêm. Xu thắng màn n = (BASE + STEP×(n−1)) × hệ số thưởng"
+  },
+  {
+    "key": "LOSE_RATIO",
+    "value": 0.3,
+    "unit": "%",
+    "description": "Người thua (có chơi) nhận % xu thắng – để cả 2 luôn có động lực"
+  },
+  {
+    "key": "DRAW_RATIO",
+    "value": 0.6,
+    "unit": "%",
+    "description": "Hòa: mỗi người nhận % xu thắng"
+  },
+  {
+    "key": "FIRST_STUDY_BONUS",
+    "value": 30,
+    "unit": "xu",
+    "description": "Học hết flashcard của 1 chủ đề lần đầu"
+  },
+  {
+    "key": "ANSWER_REVEAL_MS",
+    "value": 1500,
+    "unit": "ms",
+    "description": "Thời gian hiện đáp án đúng sau mỗi câu"
+  },
+  {
+    "key": "NETWORK_GRACE_MS",
+    "value": 1000,
+    "unit": "ms",
+    "description": "Dung sai độ trễ mạng khi server kiểm tra thời gian trả lời"
+  },
+  {
+    "key": "POINTS_CORRECT",
+    "value": 100,
+    "unit": "điểm",
+    "description": "Điểm cơ bản mỗi câu đúng"
+  },
+  {
+    "key": "SPEED_BONUS_MAX",
+    "value": 50,
+    "unit": "điểm",
+    "description": "Thưởng tốc độ tối đa = ROUND(MAX × thời gian còn lại / thời gian câu)"
+  },
+  {
+    "key": "COMBO_STEP",
+    "value": 10,
+    "unit": "điểm",
+    "description": "Câu đúng liên tiếp thứ k được + MIN(STEP×(k−1), CAP)"
+  },
+  {
+    "key": "COMBO_CAP",
+    "value": 50,
+    "unit": "điểm",
+    "description": "Trần thưởng combo mỗi câu"
+  },
+  {
+    "key": "TYPING_LIVES",
+    "value": 3,
+    "unit": "mạng",
+    "description": "Số mạng; từ chạm đáy −1 mạng; hết mạng = thua"
+  },
+  {
+    "key": "TYPING_FALL_START_SEC",
+    "value": 10,
+    "unit": "giây",
+    "description": "Thời gian 1 từ rơi từ đỉnh xuống đáy lúc bắt đầu"
+  },
+  {
+    "key": "TYPING_FALL_MIN_SEC",
+    "value": 4,
+    "unit": "giây",
+    "description": "Tốc độ nhanh nhất"
+  },
+  {
+    "key": "TYPING_SPEEDUP_PCT",
+    "value": 0.08,
+    "unit": "%",
+    "description": "Mỗi lần tăng tốc giảm thời gian rơi bao nhiêu %"
+  },
+  {
+    "key": "TYPING_SPEEDUP_EVERY",
+    "value": 10,
+    "unit": "từ",
+    "description": "Tăng tốc sau mỗi N từ bắn trúng"
+  },
+  {
+    "key": "TYPING_MAX_ON_SCREEN_START",
+    "value": 3,
+    "unit": "từ",
+    "description": "Số từ rơi cùng lúc ban đầu (+1 mỗi lần tăng tốc)"
+  },
+  {
+    "key": "TYPING_MAX_ON_SCREEN_END",
+    "value": 5,
+    "unit": "từ",
+    "description": "Số từ rơi cùng lúc tối đa"
+  },
+  {
+    "key": "TYPING_REWARD_EVERY",
+    "value": 10,
+    "unit": "từ",
+    "description": "Cứ mỗi N từ bắn trúng thì được thưởng xu"
+  },
+  {
+    "key": "TYPING_REWARD_COINS",
+    "value": 20,
+    "unit": "xu",
+    "description": "Số xu mỗi mốc"
+  },
+  {
+    "key": "TYPING_DAILY_CAP",
+    "value": 300,
+    "unit": "xu",
+    "description": "Trần xu từ mưa chữ mỗi ngày mỗi người (chống cày)"
+  },
+  {
+    "key": "TYPING_ALLOW_NO_DIACRITICS",
+    "value": true,
+    "unit": "",
+    "description": "Cho phép gõ tiếng Việt không dấu (vd 'tam biet' = 'tạm biệt')"
+  },
+  {
+    "key": "ATTACKS_PER_DAY",
+    "value": 2,
+    "unit": "lần",
+    "description": "Số lần tấn công tối đa mỗi ngày"
+  },
+  {
+    "key": "ARMY_UPGRADE_ATK_PCT",
+    "value": 0.15,
+    "unit": "%",
+    "description": "Mỗi cấp quân đội +% ATK"
+  },
+  {
+    "key": "DEFENDER_ARMY_RATIO",
+    "value": 0.5,
+    "unit": "%",
+    "description": "Quân của người phòng thủ đóng góp % ATK của họ vào DEF"
+  },
+  {
+    "key": "MIN_DAMAGE_RATIO",
+    "value": 0.1,
+    "unit": "%",
+    "description": "Sát thương tối thiểu = % ATK (đánh là luôn có sát thương)"
+  },
+  {
+    "key": "DAMAGE_RANDOM_MIN",
+    "value": 0.9,
+    "unit": "x",
+    "description": "Hệ số ngẫu nhiên thấp nhất"
+  },
+  {
+    "key": "DAMAGE_RANDOM_MAX",
+    "value": 1.1,
+    "unit": "x",
+    "description": "Hệ số ngẫu nhiên cao nhất"
+  },
+  {
+    "key": "LOOT_COIN_PER_DAMAGE",
+    "value": 0.5,
+    "unit": "xu/HP",
+    "description": "Chiến lợi phẩm người đánh nhận = sát thương × hệ số (hệ thống tạo, KHÔNG trừ của người bị đánh)"
+  },
+  {
+    "key": "POST_ATTACK_PROTECT_HOURS",
+    "value": 1,
+    "unit": "giờ",
+    "description": "Sau khi bị đánh được bảo hộ (không bị đánh tiếp) trong N giờ"
+  },
+  {
+    "key": "REPAIR_COST_PER_HP",
+    "value": 2,
+    "unit": "xu/HP",
+    "description": "Chi phí sửa nhà mỗi HP"
+  },
+  {
+    "key": "FREE_SHIELDS_PER_DAY",
+    "value": 1,
+    "unit": "khiên",
+    "description": "Khiên miễn phí mỗi ngày (không cộng dồn, hết ngày mất)"
+  },
+  {
+    "key": "SHIELD_DURATION_HOURS",
+    "value": 8,
+    "unit": "giờ",
+    "description": "Hiệu lực khiên kể từ lúc bật"
+  },
+  {
+    "key": "SHIELD_PRICE",
+    "value": 150,
+    "unit": "xu",
+    "description": "Giá khiên mua thêm"
+  },
+  {
+    "key": "SHIELD_MAX_BUY_PER_DAY",
+    "value": 1,
+    "unit": "khiên",
+    "description": "Số khiên được mua thêm mỗi ngày"
+  },
+  {
+    "key": "ARMY_CAP_BASE",
+    "value": 10,
+    "unit": "chỗ",
+    "description": "Sức chứa quân khi nhà cấp 0"
+  },
+  {
+    "key": "ARMY_CAP_PER_HOUSE_LEVEL",
+    "value": 10,
+    "unit": "chỗ",
+    "description": "Mỗi cấp nhà + thêm chỗ chứa quân"
+  },
+  {
+    "key": "ARMY_MAX_LEVEL",
+    "value": 10,
+    "unit": "cấp",
+    "description": "Cấp quân đội tối đa"
+  },
+  {
+    "key": "ARMY_UPGRADE_COST_STEP",
+    "value": 150,
+    "unit": "xu",
+    "description": "Lên cấp quân L tốn STEP × L xu + 1 token Nâng cấp quân đội"
+  },
+  {
+    "key": "PET_MAX_LEVEL",
+    "value": 5,
+    "unit": "cấp",
+    "description": "Cấp thú cưng tối đa (mua về là cấp 1)"
+  },
+  {
+    "key": "PET_UPGRADE_COST_STEP",
+    "value": 100,
+    "unit": "xu",
+    "description": "Từ cấp L lên L+1 tốn STEP × L xu + 1 token Nâng cấp thú cưng"
+  }
+]

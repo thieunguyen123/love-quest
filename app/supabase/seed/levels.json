@@ -1,0 +1,414 @@
+[
+  {
+    "order_no": 1,
+    "topic_en": "Greetings & Introductions",
+    "topic_vi": "Chào hỏi & làm quen",
+    "cefr": "A1",
+    "word_count": 10,
+    "question_count": 10,
+    "seconds_per_question": 15,
+    "question_types": [
+      "MC_EN_VN"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 200,
+    "lose_coins": 60,
+    "draw_coins": 120,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 2,
+    "topic_en": "Family",
+    "topic_vi": "Gia đình",
+    "cefr": "A1",
+    "word_count": 10,
+    "question_count": 10,
+    "seconds_per_question": 15,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 300,
+    "lose_coins": 90,
+    "draw_coins": 180,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 3,
+    "topic_en": "Food & Drinks",
+    "topic_vi": "Đồ ăn & đồ uống",
+    "cefr": "A1",
+    "word_count": 12,
+    "question_count": 12,
+    "seconds_per_question": 14,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 400,
+    "lose_coins": 120,
+    "draw_coins": 240,
+    "unlock_note": "Mở lính Cung thủ"
+  },
+  {
+    "order_no": 4,
+    "topic_en": "Love & Dating",
+    "topic_vi": "Tình yêu & hẹn hò 💕",
+    "cefr": "A2",
+    "word_count": 12,
+    "question_count": 12,
+    "seconds_per_question": 14,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 500,
+    "lose_coins": 150,
+    "draw_coins": 300,
+    "unlock_note": "Mở vũ khí Cung lửa"
+  },
+  {
+    "order_no": 5,
+    "topic_en": "Home & Furniture",
+    "topic_vi": "Nhà cửa & đồ đạc",
+    "cefr": "A2",
+    "word_count": 12,
+    "question_count": 12,
+    "seconds_per_question": 13,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 600,
+    "lose_coins": 180,
+    "draw_coins": 360,
+    "unlock_note": "Mở thú cưng Rồng con"
+  },
+  {
+    "order_no": 6,
+    "topic_en": "Daily Routine",
+    "topic_vi": "Thói quen hằng ngày",
+    "cefr": "A2",
+    "word_count": 15,
+    "question_count": 15,
+    "seconds_per_question": 13,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 700,
+    "lose_coins": 210,
+    "draw_coins": 420,
+    "unlock_note": "Mở lính Kỵ binh"
+  },
+  {
+    "order_no": 7,
+    "topic_en": "Shopping & Money",
+    "topic_vi": "Mua sắm & tiền bạc",
+    "cefr": "A2",
+    "word_count": 15,
+    "question_count": 15,
+    "seconds_per_question": 12,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 800,
+    "lose_coins": 240,
+    "draw_coins": 480,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 8,
+    "topic_en": "Weather & Seasons",
+    "topic_vi": "Thời tiết & mùa",
+    "cefr": "A2",
+    "word_count": 15,
+    "question_count": 15,
+    "seconds_per_question": 12,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 900,
+    "lose_coins": 270,
+    "draw_coins": 540,
+    "unlock_note": "Mở vũ khí Búa chiến"
+  },
+  {
+    "order_no": 9,
+    "topic_en": "Travel & Transport",
+    "topic_vi": "Du lịch & phương tiện",
+    "cefr": "B1",
+    "word_count": 15,
+    "question_count": 15,
+    "seconds_per_question": 12,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1000,
+    "lose_coins": 300,
+    "draw_coins": 600,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 10,
+    "topic_en": "Health & Body",
+    "topic_vi": "Sức khỏe & cơ thể (BOSS)",
+    "cefr": "B1",
+    "word_count": 18,
+    "question_count": 18,
+    "seconds_per_question": 11,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1.5,
+    "win_coins": 1650,
+    "lose_coins": 495,
+    "draw_coins": 990,
+    "unlock_note": "Mở Máy bắn đá"
+  },
+  {
+    "order_no": 11,
+    "topic_en": "Work & Office",
+    "topic_vi": "Công việc & văn phòng",
+    "cefr": "B1",
+    "word_count": 18,
+    "question_count": 18,
+    "seconds_per_question": 11,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1200,
+    "lose_coins": 360,
+    "draw_coins": 720,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 12,
+    "topic_en": "Technology",
+    "topic_vi": "Công nghệ",
+    "cefr": "B1",
+    "word_count": 18,
+    "question_count": 18,
+    "seconds_per_question": 10,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1300,
+    "lose_coins": 390,
+    "draw_coins": 780,
+    "unlock_note": "Mở Đại bác Tình Yêu"
+  },
+  {
+    "order_no": 13,
+    "topic_en": "Feelings & Personality",
+    "topic_vi": "Cảm xúc & tính cách",
+    "cefr": "B1",
+    "word_count": 20,
+    "question_count": 20,
+    "seconds_per_question": 10,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1400,
+    "lose_coins": 420,
+    "draw_coins": 840,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 14,
+    "topic_en": "Movies, Music & Hobbies",
+    "topic_vi": "Phim, nhạc & sở thích",
+    "cefr": "B1",
+    "word_count": 20,
+    "question_count": 20,
+    "seconds_per_question": 10,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1500,
+    "lose_coins": 450,
+    "draw_coins": 900,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 15,
+    "topic_en": "Nature & Environment",
+    "topic_vi": "Thiên nhiên & môi trường",
+    "cefr": "B2",
+    "word_count": 20,
+    "question_count": 20,
+    "seconds_per_question": 9,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH",
+      "FILL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1600,
+    "lose_coins": 480,
+    "draw_coins": 960,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 16,
+    "topic_en": "Common Phrasal Verbs",
+    "topic_vi": "Cụm động từ thông dụng",
+    "cefr": "B2",
+    "word_count": 20,
+    "question_count": 20,
+    "seconds_per_question": 9,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH",
+      "FILL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1700,
+    "lose_coins": 510,
+    "draw_coins": 1020,
+    "unlock_note": "Mở Trượng sấm sét"
+  },
+  {
+    "order_no": 17,
+    "topic_en": "Business & Finance",
+    "topic_vi": "Kinh doanh & tài chính",
+    "cefr": "B2",
+    "word_count": 22,
+    "question_count": 20,
+    "seconds_per_question": 9,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH",
+      "FILL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1800,
+    "lose_coins": 540,
+    "draw_coins": 1080,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 18,
+    "topic_en": "Idioms & Expressions",
+    "topic_vi": "Thành ngữ & cách nói",
+    "cefr": "B2",
+    "word_count": 22,
+    "question_count": 20,
+    "seconds_per_question": 8,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH",
+      "FILL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 1900,
+    "lose_coins": 570,
+    "draw_coins": 1140,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 19,
+    "topic_en": "Culture & Society",
+    "topic_vi": "Văn hóa & xã hội",
+    "cefr": "C1",
+    "word_count": 25,
+    "question_count": 20,
+    "seconds_per_question": 8,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH",
+      "FILL"
+    ],
+    "reward_multiplier": 1,
+    "win_coins": 2000,
+    "lose_coins": 600,
+    "draw_coins": 1200,
+    "unlock_note": ""
+  },
+  {
+    "order_no": 20,
+    "topic_en": "Academic Words",
+    "topic_vi": "Từ học thuật (BOSS CUỐI)",
+    "cefr": "C1",
+    "word_count": 25,
+    "question_count": 20,
+    "seconds_per_question": 8,
+    "question_types": [
+      "MC_EN_VN",
+      "MC_VN_EN",
+      "LISTEN",
+      "SPELL",
+      "MATCH",
+      "FILL"
+    ],
+    "reward_multiplier": 2,
+    "win_coins": 4200,
+    "lose_coins": 1260,
+    "draw_coins": 2520,
+    "unlock_note": ""
+  }
+]

@@ -1,0 +1,261 @@
+[
+  {
+    "level": 1,
+    "word": "hello",
+    "ipa": "/həˈloʊ/",
+    "part_of_speech": "interj",
+    "meanings_vi": [
+      "xin chào",
+      "chào"
+    ],
+    "example_en": "Hello, nice to meet you.",
+    "example_vi": "Xin chào, rất vui được gặp bạn."
+  },
+  {
+    "level": 1,
+    "word": "goodbye",
+    "ipa": "/ɡʊdˈbaɪ/",
+    "part_of_speech": "interj",
+    "meanings_vi": [
+      "tạm biệt"
+    ],
+    "example_en": "Goodbye, see you tomorrow!",
+    "example_vi": "Tạm biệt, hẹn gặp lại ngày mai!"
+  },
+  {
+    "level": 1,
+    "word": "name",
+    "ipa": "/neɪm/",
+    "part_of_speech": "noun",
+    "meanings_vi": [
+      "tên"
+    ],
+    "example_en": "What is your name?",
+    "example_vi": "Tên bạn là gì?"
+  },
+  {
+    "level": 1,
+    "word": "meet",
+    "ipa": "/miːt/",
+    "part_of_speech": "verb",
+    "meanings_vi": [
+      "gặp",
+      "gặp gỡ"
+    ],
+    "example_en": "I'm so happy to meet you.",
+    "example_vi": "Mình rất vui được gặp bạn."
+  },
+  {
+    "level": 1,
+    "word": "friend",
+    "ipa": "/frend/",
+    "part_of_speech": "noun",
+    "meanings_vi": [
+      "bạn",
+      "bạn bè"
+    ],
+    "example_en": "She is my best friend.",
+    "example_vi": "Cô ấy là bạn thân nhất của tôi."
+  },
+  {
+    "level": 1,
+    "word": "introduce",
+    "ipa": "/ˌɪntrəˈduːs/",
+    "part_of_speech": "verb",
+    "meanings_vi": [
+      "giới thiệu"
+    ],
+    "example_en": "Let me introduce myself.",
+    "example_vi": "Để tôi tự giới thiệu."
+  },
+  {
+    "level": 1,
+    "word": "morning",
+    "ipa": "/ˈmɔːrnɪŋ/",
+    "part_of_speech": "noun",
+    "meanings_vi": [
+      "buổi sáng",
+      "sáng"
+    ],
+    "example_en": "Good morning, honey!",
+    "example_vi": "Chào buổi sáng, cưng!"
+  },
+  {
+    "level": 1,
+    "word": "welcome",
+    "ipa": "/ˈwelkəm/",
+    "part_of_speech": "interj",
+    "meanings_vi": [
+      "chào mừng"
+    ],
+    "example_en": "Welcome to my house.",
+    "example_vi": "Chào mừng đến nhà mình."
+  },
+  {
+    "level": 1,
+    "word": "thank",
+    "ipa": "/θæŋk/",
+    "part_of_speech": "verb",
+    "meanings_vi": [
+      "cảm ơn",
+      "cám ơn"
+    ],
+    "example_en": "Thank you so much.",
+    "example_vi": "Cảm ơn bạn rất nhiều."
+  },
+  {
+    "level": 1,
+    "word": "sorry",
+    "ipa": "/ˈsɑːri/",
+    "part_of_speech": "adj",
+    "meanings_vi": [
+      "xin lỗi"
+    ],
+    "example_en": "Sorry, I'm late.",
+    "example_vi": "Xin lỗi, mình đến muộn."
+  },
+  {
+    "level": 4,
+    "word": "love",
+    "ipa": "/lʌv/",
+    "part_of_speech": "noun/verb",
+    "meanings_vi": [
+      "yêu",
+      "tình yêu"
+    ],
+    "example_en": "I love you more every day.",
+    "example_vi": "Mỗi ngày anh yêu em nhiều hơn."
+  },
+  {
+    "level": 4,
+    "word": "date",
+    "ipa": "/deɪt/",
+    "part_of_speech": "noun",
+    "meanings_vi": [
+      "buổi hẹn hò",
+      "hẹn hò",
+      "cuộc hẹn"
+    ],
+    "example_en": "Let's go on a date tonight.",
+    "example_vi": "Tối nay mình đi hẹn hò nhé."
+  },
+  {
+    "level": 4,
+    "word": "kiss",
+    "ipa": "/kɪs/",
+    "part_of_speech": "noun/verb",
+    "meanings_vi": [
+      "hôn",
+      "nụ hôn"
+    ],
+    "example_en": "Give me a kiss.",
+    "example_vi": "Hôn em một cái đi."
+  },
+  {
+    "level": 4,
+    "word": "hug",
+    "ipa": "/hʌɡ/",
+    "part_of_speech": "noun/verb",
+    "meanings_vi": [
+      "ôm",
+      "cái ôm"
+    ],
+    "example_en": "I need a big hug.",
+    "example_vi": "Em cần một cái ôm thật chặt."
+  },
+  {
+    "level": 4,
+    "word": "miss",
+    "ipa": "/mɪs/",
+    "part_of_speech": "verb",
+    "meanings_vi": [
+      "nhớ"
+    ],
+    "example_en": "I miss you so much.",
+    "example_vi": "Anh nhớ em nhiều lắm."
+  },
+  {
+    "level": 4,
+    "word": "sweetheart",
+    "ipa": "/ˈswiːthɑːrt/",
+    "part_of_speech": "noun",
+    "meanings_vi": [
+      "người yêu",
+      "cưng",
+      "người thương"
+    ],
+    "example_en": "Good night, sweetheart.",
+    "example_vi": "Chúc ngủ ngon, người thương."
+  },
+  {
+    "level": 4,
+    "word": "romantic",
+    "ipa": "/roʊˈmæntɪk/",
+    "part_of_speech": "adj",
+    "meanings_vi": [
+      "lãng mạn"
+    ],
+    "example_en": "What a romantic dinner!",
+    "example_vi": "Bữa tối lãng mạn quá!"
+  },
+  {
+    "level": 4,
+    "word": "anniversary",
+    "ipa": "/ˌænɪˈvɜːrsəri/",
+    "part_of_speech": "noun",
+    "meanings_vi": [
+      "ngày kỷ niệm",
+      "kỷ niệm",
+      "lễ kỷ niệm"
+    ],
+    "example_en": "Happy anniversary, my love!",
+    "example_vi": "Chúc mừng ngày kỷ niệm, tình yêu của anh!"
+  },
+  {
+    "level": 4,
+    "word": "jealous",
+    "ipa": "/ˈdʒeləs/",
+    "part_of_speech": "adj",
+    "meanings_vi": [
+      "ghen",
+      "ghen tuông"
+    ],
+    "example_en": "Are you jealous?",
+    "example_vi": "Em đang ghen à?"
+  },
+  {
+    "level": 4,
+    "word": "promise",
+    "ipa": "/ˈprɑːmɪs/",
+    "part_of_speech": "noun/verb",
+    "meanings_vi": [
+      "hứa",
+      "lời hứa"
+    ],
+    "example_en": "I promise I will always be here.",
+    "example_vi": "Anh hứa sẽ luôn ở đây."
+  },
+  {
+    "level": 4,
+    "word": "forever",
+    "ipa": "/fərˈevər/",
+    "part_of_speech": "adv",
+    "meanings_vi": [
+      "mãi mãi",
+      "mãi mãi về sau"
+    ],
+    "example_en": "I want to be with you forever.",
+    "example_vi": "Anh muốn ở bên em mãi mãi."
+  },
+  {
+    "level": 4,
+    "word": "propose",
+    "ipa": "/prəˈpoʊz/",
+    "part_of_speech": "verb",
+    "meanings_vi": [
+      "cầu hôn"
+    ],
+    "example_en": "He proposed to her on the beach.",
+    "example_vi": "Anh ấy cầu hôn cô ấy trên bãi biển."
+  }
+]
