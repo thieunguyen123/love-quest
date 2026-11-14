@@ -26,8 +26,10 @@ async function main() {
 
   const bad = createClient(URL, ANON, { auth: { persistSession: false } });
   ok((await bad.auth.signInWithPassword({ email: "moheo@lovequest.local", password: "sai" })).error !== null, "TC-02 đăng nhập sai bị từ chối");
-  const su = await bad.auth.signUp({ email: "hacker@x.com", password: "password123" });
-  ok(su.error !== null, "AUTH-01 không đăng ký công khai được", su.data);
+  const su = await bad.auth.signUp({ email: "hacker@x.com", password: "password123", options: { data: { role: "ADMIN" } } });
+  ok(su.error !== null, "AUTH-01 đã đủ 2 người → người thứ 3 không đăng ký được", su.data);
+  const third = await admin.auth.admin.createUser({ email: "third@x.com", password: "password123", email_confirm: true, user_metadata: { role: "ADMIN" } });
+  ok(third.error !== null && (await admin.from("profiles").select("id", { count: "exact", head: true })).count === 2, "Trigger chặn người thứ 3 kể cả khi tạo qua admin (GAME_FULL)", third.error?.message);
 
   const moheo = await as("moheo@lovequest.local", "moheo-dev-2026");
   const utdac = await as("utdac@lovequest.local", "utdac-dev-2026");

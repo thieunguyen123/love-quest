@@ -1,5 +1,6 @@
 "use client";
 import { useActionState } from "react";
+import Link from "next/link";
 import { signIn } from "./actions";
 
 export default function LoginPage() {
@@ -27,6 +28,7 @@ export default function LoginPage() {
           className="w-full rounded-xl bg-love-500 hover:bg-love-600 text-white font-bold py-2.5 disabled:opacity-60 transition">
           {pending ? "Đang vào…" : "Đăng nhập"}
         </button>
+        <p className="text-center text-sm text-love-700/80">Chưa có tài khoản? <Link href="/signup" className="font-bold text-love-600 underline">Đăng ký</Link></p>
       </form>
     </main>
   );

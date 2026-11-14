@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Mọi trang trừ /login đều cần đăng nhập (AUTH-01)
+// Mọi trang trừ /login, /signup đều cần đăng nhập (AUTH-01)
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
   const supabase = createServerClient(
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
     },
   );
   const { data: { user } } = await supabase.auth.getUser();
-  const isLogin = request.nextUrl.pathname.startsWith("/login");
+  const isLogin = request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/signup");
   if (!user && !isLogin) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

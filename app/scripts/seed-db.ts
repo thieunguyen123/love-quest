@@ -60,6 +60,11 @@ async function main() {
   // người thứ nhất thành ADMIN, ghép đôi 2 người. Không đặt → tạo 2 tài khoản dev (chỉ dùng local).
   const ids: string[] = [];
   const { data: list } = await sb.auth.admin.listUsers({ page: 1, perPage: 200 });
+  if (process.env.SEED_SKIP_USERS) {
+    // Production với đăng ký tự do (AUTH-01): không tạo tài khoản nào — người đầu tiên đăng ký là Admin, người thứ hai tự ghép đôi
+    console.log("Seed xong (không tạo tài khoản):", { levels: levels.length, words: words.length + extra, obstacles: obs.length });
+    return;
+  }
   if (process.env.SEED_COUPLE) {
     const emails = process.env.SEED_COUPLE.split(",").map((e) => e.trim().toLowerCase());
     if (emails.length !== 2) throw new Error("SEED_COUPLE phải có đúng 2 email, cách nhau dấu phẩy");
