@@ -244,15 +244,20 @@ export function step(s: Sim, endNow = false): SimEvent[] {
 export type BattleOutcome = {
   damage: number; hpAfter: number; ticks: number; reason: EndReason;
   lost: Record<string, number>; deployed: Record<string, number>; defsDown: number; trapsHit: number; guardsDown: number; wallsDown: number;
+  /** lính gác của người bị đánh đã chết, theo loại (server trừ quân thật) */
+  guardsLost: Record<string, number>;
 };
 export function outcome(s: Sim): BattleOutcome {
   const hp0 = s.snap.house.hp;
   const damage = Math.max(0, Math.min(hp0, Math.round(hp0 - Math.max(0, s.houseHp))));
   const lost: Record<string, number> = {}, deployed: Record<string, number> = {};
   for (const g of s.atk) { deployed[g.unit] = (deployed[g.unit] ?? 0) + g.n0; lost[g.unit] = (lost[g.unit] ?? 0) + (g.n0 - aliveOf(g)); }
+  const guardsLost: Record<string, number> = {};
+  for (const g of s.guards) { const d = g.n0 - aliveOf(g); if (d > 0) guardsLost[g.unit] = (guardsLost[g.unit] ?? 0) + d; }
   return {
     damage, hpAfter: hp0 - damage, ticks: s.tick, reason: s.ended ?? "time", lost, deployed,
     defsDown: s.defs.filter((d) => d.hp <= 0).length, wallsDown: s.walls.filter((w) => w <= 0).length, trapsHit: s.traps.filter((t) => !t).length, guardsDown: s.guards.filter((g) => g.hp <= 0).length,
+    guardsLost,
   };
 }
 

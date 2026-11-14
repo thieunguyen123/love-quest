@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePlayer } from "@/lib/session";
 import { Card } from "@/components/ui";
-import { SpeakButton } from "@/app/(app)/words/speak";
+import { GrammarSpeak, SpeedPicker } from "./speed";
 import { GrammarQuiz } from "./quiz";
 
 type Section = { heading: string; text?: string; formulas?: string[]; examples?: { en: string; vi: string }[] };
@@ -37,6 +37,7 @@ export default async function GrammarLessonPage({ params }: { params: Promise<{ 
           <p className="text-sm text-love-700/70">{l.summary_vi}</p>
         </div>
       </div>
+      <SpeedPicker />
       {(l.sections as Section[]).map((s, i) => (
         <Card key={i} className="space-y-2 text-sm">
           <h2 className="text-base font-extrabold text-love-700">{s.heading}</h2>
@@ -48,7 +49,7 @@ export default async function GrammarLessonPage({ params }: { params: Promise<{ 
             <ul className="space-y-1.5">
               {s.examples.map((e, j) => (
                 <li key={j} className="rounded-xl border border-love-100 p-2">
-                  <div className="font-semibold">{e.en}<SpeakButton text={e.en} /></div>
+                  <div className="font-semibold">{e.en}<GrammarSpeak text={e.en} /></div>
                   <div className="text-xs text-slate-500">{e.vi}</div>
                 </li>
               ))}

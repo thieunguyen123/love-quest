@@ -304,6 +304,8 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
   const [saving, setSaving] = useState(false);
   const [shop, setShop] = useState(false);
   const controls = useRef<OrbitControlsImpl>(null);
+  // thông báo nhỏ tự ẩn (không đè lên nút / bảng khác)
+  useEffect(() => { if (!msg) return; const t = setTimeout(() => setMsg(null), msg.ok ? 3500 : 5000); return () => clearTimeout(t); }, [msg]);
 
   // dữ liệu server đổi (mua thêm, nâng cấp nhà…) → đặt tự động vật mới, giữ chỗ đang sửa nếu chưa lưu
   useEffect(() => {
@@ -507,6 +509,7 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
   const mountDelay = (k: string) => Math.min(1.2, (order.get(k) ?? 0) * 0.06);
   const houseC = useMemo(() => { const r = houseRect(grid, hs); return cellCenter(r.x, r.z, r.s, grid); }, [grid, hs]);   // nhà cạnh lẻ ô lệch tâm đảo 1 m
   const ringAt = editing && selItem?.range ? (() => { const p = (drag || !placedKeys.has(sel!)) && ghost ? ghost : placed.find((x) => keyOf(x) === sel); return p ? cellCenter(p.x, p.z, selItem.size, grid) : null; })() : null;
+  const msgEl = msg && <div role="status" data-testid="scene-msg" className={`pointer-events-auto max-w-full rounded-xl px-3 py-1.5 text-xs font-bold shadow ${msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>{msg.t}</div>;
   const btn = "pointer-events-auto rounded-full bg-white/90 px-3 py-1.5 text-xs font-extrabold text-pink-700 shadow hover:bg-white disabled:opacity-50";
   const btnHot = "pointer-events-auto rounded-full bg-pink-500 px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-extrabold text-white shadow-lg hover:bg-pink-600 disabled:bg-slate-400";
   const totalLeft = Object.values(left).reduce((a, b) => a + b, 0);
@@ -572,7 +575,7 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
           {mode === "own" ? "🏠 Căn cứ của tôi" : `🏡 Căn cứ của ${data.owner.name}`} · {HOUSE_NAMES[data.house.level]}{data.shield ? " · 🛡️" : ""}
         </div>
         {mode === "own" && <div className="hidden rounded-full bg-white/90 px-3 py-1 text-xs font-extrabold text-amber-700 shadow sm:block">🪙 {coins.toLocaleString("vi-VN")}</div>}
-        {msg && <div role="status" className={`pointer-events-auto rounded-xl px-3 py-1.5 text-xs font-bold shadow ${msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>{msg.t}</div>}
+        {mode !== "own" && msgEl}
       </div>
 
       {mode === "own" && !editing && !fight && extra && panels?.[extra] && (
@@ -607,21 +610,27 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
           <button className="text-lg font-black text-slate-400" onClick={() => setSelObs(null)} aria-label="Đóng">✕</button>
         </div>); })()}
       {mode === "own" && !editing && (
-        <div className="pointer-events-none absolute right-3 top-3 z-10 flex flex-wrap justify-end gap-2">
-          <button className={btnHot} onClick={() => { setEditing(true); setShop(false); setMsg(null); }} data-testid="edit-base">🔨 Xây dựng</button>
+        <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex flex-col items-end gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
+          <button className={btnHot} onClick={() => { setEditing(true); setShop(false); setMsg(null); setPicked(null); setExtra(null); setSelFac(null); setSelObs(null); }} data-testid="edit-base">🔨 Xây dựng</button>
           {panels?.shield && <button className={btnHot} onClick={() => { setExtra((v) => (v === "shield" ? null : "shield")); setPicked(null); setSelFac(null); setSelObs(null); setShop(false); }} data-testid="open-shield" aria-label="Khiên">🛡️<span className="hidden sm:inline"> Khiên</span></button>}
           {panels?.bag && <button className={btnHot} onClick={() => { setExtra((v) => (v === "bag" ? null : "bag")); setPicked(null); setSelFac(null); setSelObs(null); setShop(false); }} data-testid="open-bag" aria-label="Túi đồ">🎒<span className="hidden sm:inline"> Túi đồ</span></button>}
           <button className={btnHot} onClick={() => { setShop(true); setPicked(null); setSelFac(null); setExtra(null); }} data-testid="open-shop">🛒 Xây thêm</button>
+          </div>
+          {msgEl}
         </div>
       )}
       {mode === "own" && editing && (
-        <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex flex-wrap justify-end gap-2">
-          <button className={wallMode ? btnHot : btn} onClick={() => { setWallMode((v) => !v); setSel(null); setGhost(null); setMsg({ ok: true, t: "🧱 Chạm / vuốt ô trống để xây tường · chạm đoạn tường để gỡ" }); }} data-testid="wall-mode">🧱 Tường ({freeWalls.length})</button>
-          {wallMode && <button className={btn} onClick={ringHouse} data-testid="wall-ring">⭕ Bao quanh nhà</button>}
-          <button className={btn} disabled={!sel || !placedKeys.has(sel)} onClick={rotate}>↻ Xoay</button>
-          <button className={btn} disabled={!sel || !placedKeys.has(sel)} onClick={store}>📦 Cất vào kho</button>
-          <button className={btn} onClick={cancel}>✖ Huỷ</button>
-          <button className={btnHot} disabled={saving || !dirty} onClick={save} data-testid="save-layout">{saving ? "Đang lưu…" : "💾 Lưu bố cục"}</button>
+        <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex flex-col items-end gap-2" data-testid="edit-toolbar">
+          <div className="flex flex-wrap justify-end gap-1.5 sm:gap-2">
+          <button className={wallMode ? btnHot : btn} onClick={() => { const on = !wallMode; setWallMode(on); setSel(null); setGhost(null); setMsg(on ? { ok: true, t: "🧱 Chạm / vuốt ô trống để xây tường · chạm đoạn tường để gỡ" } : null); }} data-testid="wall-mode" aria-label="Tường">🧱<span className="hidden sm:inline"> Tường</span> ({freeWalls.length})</button>
+          {wallMode && <button className={btn} onClick={ringHouse} data-testid="wall-ring" aria-label="Bao quanh nhà">⭕<span className="hidden sm:inline"> Bao quanh nhà</span></button>}
+          {!wallMode && <button className={btn} disabled={!sel || !placedKeys.has(sel)} onClick={rotate} aria-label="Xoay">↻<span className="hidden sm:inline"> Xoay</span></button>}
+          {!wallMode && <button className={btn} disabled={!sel || !placedKeys.has(sel)} onClick={store} aria-label="Cất vào kho">📦<span className="hidden sm:inline"> Cất vào kho</span></button>}
+          <button className={btn} onClick={cancel} aria-label="Huỷ">✖<span className="hidden sm:inline"> Huỷ</span></button>
+          <button className={btnHot} disabled={saving || !dirty} onClick={save} data-testid="save-layout">{saving ? "Đang lưu…" : <>💾 Lưu<span className="hidden sm:inline"> bố cục</span></>}</button>
+          </div>
+          {msgEl}
         </div>
       )}
       {mode === "own" && editing && (
@@ -698,7 +707,7 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
               <div className="rounded-xl bg-amber-50 p-2"><div className="text-2xl font-black text-amber-600" data-testid="battle-loot">+{result.loot}</div><div className="text-[11px] font-bold">xu chiến lợi phẩm</div></div>
             </div>
             <p className="mt-2 text-sm font-semibold">HP còn lại: <b>{result.hpAfter}/{data.house.max_hp}</b>{result.shieldBroken ? " · khiên của người đánh đã vỡ" : ""}</p>
-            {result.out && <p className="mt-1 text-xs font-semibold text-slate-600">Lính ngã {sum(result.out.lost)}/{sum(result.out.deployed)} · phá {result.out.defsDown}/{fight.sim.snap.defenses.length} công trình{result.out.wallsDown ? ` · ${result.out.wallsDown} đoạn tường` : ""} · dính {result.out.trapsHit} bẫy<br />(sau trận quân và công trình tự hồi)</p>}
+            {result.out && <p className="mt-1 text-xs font-semibold text-slate-600">Lính ngã {sum(result.out.lost)}/{sum(result.out.deployed)} · phá {result.out.defsDown}/{fight.sim.snap.defenses.length} công trình{result.out.wallsDown ? ` · ${result.out.wallsDown} đoạn tường` : ""} · dính {result.out.trapsHit} bẫy{sum(result.out.guardsLost ?? {}) ? ` · hạ ${sum(result.out.guardsLost ?? {})} lính gác` : ""}<br />Lính ngã là mất thật (lính sống sót trở về) · công trình tự hồi</p>}
             <div className="mt-4 flex flex-col gap-2">
               {mode === "partner" ? <button onClick={closeFight} className={btnHot}>Xong</button> : <button onClick={replayAgain} className={btnHot}>↺ Xem lại</button>}
               {fight.id && <Link href={`/battle/${fight.id}`} className="text-sm font-bold text-pink-600 underline">🎬 Xem lại trận</Link>}

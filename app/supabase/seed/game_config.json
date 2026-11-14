@@ -424,5 +424,11 @@
     "value": 80,
     "unit": "xu",
     "description": "Thưởng lần đầu đạt mỗi bài ngữ pháp"
+  },
+  {
+    "key": "UNIT_LOSS_PCT",
+    "value": 1,
+    "unit": "%",
+    "description": "Phần lính chết trong trận bị mất thật (1 = chết bao nhiêu mất bấy nhiêu, 0 = quân tự hồi đủ) — áp cho cả lính tấn công và lính gác"
   }
 ]

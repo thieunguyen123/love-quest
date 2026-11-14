@@ -9,7 +9,9 @@ async function main() {
   await ensureOnboarded(m, "Mỡ heo"); await ensureOnboarded(u, "Út đặc");
   const err = async (p: PromiseLike<{ error: any }>) => (await p).error?.message;
   const hp = async (id: string) => (await admin.from("user_house").select("hp").eq("user_id", id).single()).data!.hp as number;
-  const resetDay = async () => { await admin.from("daily_counters").update({ attacks_used: 0 }).eq("user_id", u.id); await admin.from("attacks").update({ created_at: new Date(Date.now() - 3 * 3600000).toISOString() }).eq("defender_id", m.id); };
+  // luật mới: lính ngã là mất → nạp lại 10 Lính kiếm cho người đánh trước mỗi trận thử tiếp theo
+  const refill = async () => { await admin.from("user_army").update({ quantity: 10 }).eq("user_id", u.id).eq("unit_code", "sword"); };
+  const resetDay = async () => { await refill(); await admin.from("daily_counters").update({ attacks_used: 0 }).eq("user_id", u.id); await admin.from("attacks").update({ created_at: new Date(Date.now() - 3 * 3600000).toISOString() }).eq("defender_id", m.id); };
 
   // dữ liệu ví dụ sheet 2 mục G: 10 Lính kiếm đánh nhà cấp 1 (HP 500, DEF 20), không phòng thủ
   await admin.from("user_army").insert([{ user_id: u.id, unit_code: "sword", quantity: 10 }]);
@@ -81,7 +83,10 @@ async function main() {
   const r2 = await finishBattle(admin, u.id, { id: b2.body.id as string, deploys: two, endTick: null });
   ok(r2.status === 200 && (r2.body.damage as number) < 111 && r2.body.hp_after === hpBefore - (r2.body.damage as number) && (r2.body.out as any).trapsHit === 1 && (r2.body.out as any).lost.sword > 0,
     "Lượt 2: có phòng thủ → sát thương thấp hơn, bẫy nổ, lính ngã", r2.body);
-  ok((await admin.from("user_army").select("quantity").eq("user_id", u.id).single()).data!.quantity === 10, "Lính ngã trong trận nhưng không mất quân");
+  const lost2 = (r2.body.out as any).lost.sword as number, gl2 = ((r2.body.out as any).guardsLost?.sword ?? 0) as number;
+  ok((await admin.from("user_army").select("quantity").eq("user_id", u.id).single()).data!.quantity === 10 - lost2, `TC-61 lính ngã là mất: người đánh còn ${10 - lost2}/10 Lính kiếm`);
+  ok(((await admin.from("user_army").select("quantity").eq("user_id", m.id).maybeSingle()).data?.quantity ?? 0) === 5 - gl2, `Lính gác ngã ${gl2} → người bị đánh còn ${5 - gl2}`);
+  await refill();
   await admin.from("attacks").update({ created_at: new Date(Date.now() - 2 * 3600000).toISOString() }).eq("defender_id", m.id);
   const b3x = await begin();
   ok(b3x.status === 200, "TC-27 không giới hạn lượt: lần thứ 3 trong ngày vẫn đánh được (ATTACKS_PER_DAY = 0)", b3x.body);

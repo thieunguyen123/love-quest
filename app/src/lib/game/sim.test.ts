@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { autoDeploys, createSim, deploy, deployError, runBattle, step, type Deploy, type Snapshot } from "./sim";
+import { aliveOf, autoDeploys, createSim, deploy, deployError, runBattle, step, type Deploy, type Snapshot } from "./sim";
 import { buildSnapshot, houseArmor } from "./snapshot";
 
 const cfg = { seconds: 60, tickMs: 100, houseRatio: 0.02, aggro: 8, deployMin: 4, groupSize: 5, maxGroups: 24, splashMax: 4 };
@@ -56,6 +56,18 @@ describe("mô phỏng trận (BTL-02, TC-26)", () => {
     expect(sim.atk[0].target).toEqual({ k: "def", i: 0 }); expect(sim.atk[1].target).toEqual({ k: "house" });
     for (let i = 0; i < 30; i++) step(sim);
     expect(sim.guards[0].state).not.toBe("idle");
+  });
+  it("kết quả trận đếm lính chết 2 bên theo loại (lính chết là mất — BTL-01)", () => {
+    const s: Snapshot = { ...base, guards: [{ unit: "sword", qty: 5, x: 8, z: 3, hp: 60, dps: 5, hitSec: 1, range: 1.5, speed: 3.5 }],
+      army: [{ unit: "knight", qty: 6, hp: 320, dps: 70, hitSec: 1.2, range: 1.8, speed: 4.5, target: "any" }] };
+    const r = runBattle(s, [{ t: 0, unit: "knight", n: 5, x: 12, z: 3 }]);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const g = r.sim.guards[0];
+    expect(r.out.guardsLost.sword ?? 0).toBe(g.n0 - aliveOf(g));
+    expect(r.out.guardsLost.sword).toBeGreaterThan(0);                 // kỵ binh mạnh hạ được lính gác
+    expect(r.out.lost.knight ?? 0).toBe(r.out.deployed.knight - r.sim.atk.reduce((a, x) => a + aliveOf(x), 0));
+    expect(r.out.deployed.knight).toBe(5);                                // chỉ lính đã thả mới có thể mất
   });
   it("vùng cấm & nhật ký giả bị từ chối (BTL-07, BTL-08)", () => {
     const sim = createSim({ ...base, defenses: [tower] });

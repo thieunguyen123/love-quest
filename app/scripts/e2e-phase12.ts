@@ -95,6 +95,26 @@ async function main() {
   const w1 = await p.evaluate(() => (window as any).__base.placed.filter((x: any) => x.kind === "WALL").length);
   check(`Tường mới tự xây quanh nhà (${w0} → ${w1})`, w1 === w0 + 5, { w0, w1 });
   await p.waitForTimeout(2500); await shot("5-walls");
+
+  // ---- chế độ Xây dựng → Tường: thanh nút và thông báo không chồng lên nhau ----
+  const overlap = (a: { x: number; y: number; width: number; height: number }, b2: { x: number; y: number; width: number; height: number }) =>
+    a.x < b2.x + b2.width && b2.x < a.x + a.width && a.y < b2.y + b2.height && b2.y < a.y + a.height;
+  await p.getByTestId("edit-base").click();
+  await p.getByTestId("wall-mode").click();
+  await p.getByTestId("scene-msg").waitFor({ timeout: 10000 });
+  const btns = await p.getByTestId("edit-toolbar").locator("button").all();
+  const msgBox = (await p.getByTestId("scene-msg").boundingBox())!;
+  let clash = 0, rows = new Set<number>();
+  for (const bt of btns) { const bb = (await bt.boundingBox())!; rows.add(Math.round(bb.y)); if (overlap(bb, msgBox)) clash++; }
+  check(`Xây dựng → Tường: ${btns.length} nút trên ${rows.size} hàng, thông báo không đè nút`, clash === 0 && rows.size === 1, { clash, rows: [...rows] });
+  const tray = (await p.getByTestId("tray").boundingBox())!;
+  check("Thông báo không đè khay vật phẩm dưới đáy", !overlap(msgBox, tray));
+  await shot("6-edit-walls");
+  await p.getByTestId("wall-ring").click();
+  await p.waitForTimeout(300);
+  check("Bấm Bao quanh nhà → 1 thông báo duy nhất", (await p.getByTestId("scene-msg").count()) === 1);
+  await p.waitForTimeout(5500);
+  check("Thông báo tự ẩn sau vài giây", (await p.getByTestId("scene-msg").count()) === 0);
   await c.close();
 
   // ---- Phase 13: điểm danh & nhiệm vụ (DAY-01..03) ----
@@ -135,6 +155,9 @@ async function main() {
   await q.getByTestId("grammar-be-verb").click();
   await q.getByTestId("grammar-start").waitFor({ timeout: 60000 });
   await q.screenshot({ path: path.join(SHOTS, "p14-1-lesson.png"), fullPage: true });
+  for (const r of ["0.5", "0.75", "1"]) check(`Có nút tốc độ đọc ${r}x`, (await q.getByTestId(`speed-${r}`).count()) === 1);
+  await q.getByTestId("speed-0.75").click();
+  check("Chọn 0.75x → lưu lại", (await q.evaluate(() => localStorage.getItem("tts_rate_grammar"))) === "0.75");
   await q.getByTestId("grammar-start").click();
   for (let i = 0; i < 10; i++) {
     await q.getByTestId("grammar-opt-0").click();
