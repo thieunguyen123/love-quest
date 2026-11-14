@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Model, Fire, Heart, colorVariant } from "./models";
+import { useQuality } from "./quality";
 
 function Pedestal({ w }: { w: number }) {
   return (
@@ -41,6 +42,7 @@ function Sparks() {
 /** Vũ khí đặt trên bệ, xoay chậm và phát sáng nhẹ */
 export function WeaponStand({ code, size = 2 }: { code: string; size?: number }) {
   const spin = useRef<THREE.Group>(null);
+  const lights = useQuality().lights;   // đèn điểm rất đắt trên điện thoại → chỉ bật ở mức Cao
   useFrame((_, dt) => { if (spin.current) spin.current.rotation.y += dt * 0.6; });
   const inner = (() => {
     switch (code) {
@@ -56,7 +58,7 @@ export function WeaponStand({ code, size = 2 }: { code: string; size?: number })
     <group>
       <Pedestal w={size} />
       <group ref={spin}>{inner}</group>
-      <pointLight position={[0, 1.6, 0]} intensity={2} distance={3.5} color={code === "thunder_staff" ? "#fde047" : code === "love_cannon" ? "#f472b6" : "#fb923c"} />
+      {lights && <pointLight position={[0, 1.6, 0]} intensity={2} distance={3.5} color={code === "thunder_staff" ? "#fde047" : code === "love_cannon" ? "#f472b6" : "#fb923c"} />}
     </group>
   );
 }
@@ -64,12 +66,13 @@ export function WeaponStand({ code, size = 2 }: { code: string; size?: number })
 /** Đồ trang trí theo `stats.model`; flag / tower_A / well đổi theo màu người chơi */
 export function Decor({ model, size, color }: { model: string; size: number; color: string }) {
   const c = colorVariant(color);
+  const lights = useQuality().lights;
   const w = size * 2;   // mét
   const name = model === "flag" ? `flag_${c}` : model === "tower_A" ? `tower_A_${c}` : model === "well" ? "well_red" : model;
   switch (name.replace(/_(blue|red|green|yellow)$/, "")) {
     case "flag": return <Model name={name} height={2.4} />;
     case "fence_wood_straight": return <Model name={name} size={w} rotation={[0, Math.PI / 2, 0]} />;
-    case "streetlight": return <><Model name={name} height={3.2} /><pointLight position={[0, 3, 0.3]} intensity={3} distance={6} color="#fde68a" /></>;
+    case "streetlight": return <><Model name={name} height={3.2} />{lights ? <pointLight position={[0, 3, 0.3]} intensity={3} distance={6} color="#fde68a" /> : <mesh position={[0, 3, 0.3]}><sphereGeometry args={[0.16, 8, 6]} /><meshBasicMaterial color="#fde68a" /></mesh>}</>;
     case "bench": case "barrel": case "wheelbarrow": case "target": case "resource_lumber": return <Model name={name} size={w * 0.7} />;
     case "bush": return <Model name={name} height={1.1} />;
     case "tree_single_A": case "tree_single_B": return <Model name={name} height={3.4} />;

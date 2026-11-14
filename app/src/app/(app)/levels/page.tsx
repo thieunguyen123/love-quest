@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { requirePlayer } from "@/lib/session";
+import { loadConfig } from "@/lib/config";
 import { Avatar, Card } from "@/components/ui";
 import { Countdown } from "@/components/countdown";
+import { IslandsView } from "@/components/levels3d/islands-view";
 
 const ST: Record<string, { label: string; ring: string }> = {
   LOCKED: { label: "🔒", ring: "bg-gray-100 text-gray-400 border-gray-200" },
@@ -13,7 +15,9 @@ const ST: Record<string, { label: string; ring: string }> = {
 export default async function LevelsPage() {
   const { supabase, me, partner } = await requirePlayer();
   await supabase.rpc("cron_tick"); // đóng màn hết hạn (dự phòng khi pg_cron không chạy)
-  const { data: levels } = await supabase.from("levels").select("*").order("order_no");
+  const [{ data: levels }, cfg] = await Promise.all([supabase.from("levels").select("*").order("order_no"), loadConfig(supabase)]);
+  // xu thắng màn n = ROUND((WIN_BASE + WIN_STEP × (n − 1)) × hệ số) — sheet 3
+  const winCoins = (n: number, mult: number) => Math.round((Number(cfg.WIN_BASE_COINS ?? 200) + Number(cfg.WIN_STEP_COINS ?? 100) * (n - 1)) * mult);
   const current = levels?.find((l) => l.status === "OPEN" || l.status === "COUNTDOWN");
   const people = new Map<string, { n: string; a: string | null; c: string }>([[me.id, { n: me.display_name, a: me.avatar_url, c: me.favorite_color }]]);
   if (partner) people.set(partner.id, { n: partner.display_name, a: partner.avatar_url, c: partner.favorite_color });
@@ -27,6 +31,8 @@ export default async function LevelsPage() {
         {partner && <div><Avatar url={partner.avatar_url} name={partner.display_name} color={partner.favorite_color} size={48} /><div className="font-extrabold mt-1">{partner.display_name}</div></div>}
       </Card>
       <h1 className="text-2xl font-extrabold text-love-700">🏆 Bản đồ màn chơi</h1>
+      <IslandsView levels={(levels ?? []).map((l) => { const w = l.winner_id ? people.get(l.winner_id) : null; return { order_no: l.order_no, topic_vi: l.topic_vi, topic_en: l.topic_en, cefr: l.cefr, status: l.status, deadline_at: l.deadline_at, reward_multiplier: Number(l.reward_multiplier), win_coins: winCoins(l.order_no, Number(l.reward_multiplier)), question_count: l.question_count, is_draw: l.is_draw, winner: w ? { name: w.n, color: w.c } : null }; })} />
+      <h2 className="text-lg font-extrabold text-love-700">📋 Danh sách màn</h2>
       <div className="relative max-w-md mx-auto">
         <div className="absolute left-1/2 top-4 bottom-4 w-1 -translate-x-1/2 bg-love-200 rounded" aria-hidden />
         <ol className="relative space-y-6">

@@ -1,2 +1,11 @@
-3D models: KayKit by Kay Lousberg (www.kaylousberg.com), CC0 1.0.
-Medieval Hexagon Pack, City Builder Bits, Adventurers Character Pack.
+3D models (all CC0 1.0 / public domain):
+- KayKit by Kay Lousberg (www.kaylousberg.com): Medieval Hexagon Pack, City Builder Bits, Adventurers Character Pack.
+- Kenney — 3d castle kit
+- Kenney — 3d mini forest
+- Kenney — 3d platformer kit
+- Quaternius — 3d animated animals
+- Quaternius — 3d colorful monsters
+- Quaternius — 3d fantasy rts
+- Quaternius — 3d pirate kit
+- Quaternius — 3d stylized nature megakit
+  (Quaternius: quaternius.com · Kenney: kenney.nl — tải qua kho tài nguyên công khai của GDevelop)

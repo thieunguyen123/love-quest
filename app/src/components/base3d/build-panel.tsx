@@ -1,29 +1,30 @@
 "use client";
-// Bảng "🛒 Xây thêm" trong căn cứ 3D (BASE-08): mua lính / thú cưng / vũ khí / trang trí / nâng cấp nhà — mọi giao dịch qua RPC
+// Bảng "🛒 Xây thêm" trong căn cứ 3D (BASE-08): mua công trình phòng thủ & bẫy / lính / thú cưng / vũ khí / trang trí / nâng cấp nhà — mọi giao dịch qua RPC
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { RPC_MSG } from "@/components/rpc-button";
 import { play } from "@/lib/sfx";
 
-export type CatalogItem = { code: string; category: "UNIT" | "PET" | "WEAPON" | "DECOR" | "HOUSE"; name: string; emoji: string; price: number; size: number; desc: string; reason: string | null };
-const TABS: [CatalogItem["category"], string][] = [["UNIT", "🪖 Quân"], ["PET", "🐾 Thú cưng"], ["WEAPON", "⚔️ Vũ khí"], ["DECOR", "🌸 Trang trí"], ["HOUSE", "🏠 Nhà"]];
-const RPC: Record<CatalogItem["category"], string> = { UNIT: "buy_unit", PET: "buy_pet", WEAPON: "buy_weapon", DECOR: "buy_decor", HOUSE: "upgrade_house" };
+export type CatalogItem = { code: string; category: "UNIT" | "PET" | "WEAPON" | "DECOR" | "HOUSE" | "DEFENSE" | "STYLE" | "FACTORY" | "WALL"; name: string; emoji: string; price: number; size: number; desc: string; reason: string | null; owned?: boolean; using?: boolean; max?: number };
+const TABS: [CatalogItem["category"], string][] = [["DEFENSE", "🛡️ Phòng thủ"], ["WALL", "🧱 Tường"], ["FACTORY", "🏭 Nhà máy quân"], ["PET", "🐾 Thú cưng"], ["DECOR", "🌸 Trang trí"], ["HOUSE", "🏠 Nhà"], ["STYLE", "🎨 Kiểu nhà"]];
+const RPC: Record<CatalogItem["category"], string> = { UNIT: "buy_unit", PET: "buy_pet", WEAPON: "buy_weapon", DECOR: "buy_decor", HOUSE: "upgrade_house", DEFENSE: "buy_defense", STYLE: "buy_style", FACTORY: "buy_factory", WALL: "buy_walls" };
 
 export function BuildPanel({ catalog, coins, onClose, onBought }: { catalog: CatalogItem[]; coins: number; onClose: () => void; onBought: (it: CatalogItem) => void }) {
   const router = useRouter();
-  const [tab, setTab] = useState<CatalogItem["category"]>("UNIT");
+  const [tab, setTab] = useState<CatalogItem["category"]>("FACTORY");
   const [qty, setQty] = useState(1);
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
   async function buy(it: CatalogItem) {
     setBusy(it.code); setMsg(null);
-    const args = it.category === "HOUSE" ? {} : it.category === "UNIT" ? { p_code: it.code, p_qty: qty } : { p_code: it.code };
-    const { error } = await createClient().rpc(RPC[it.category], args);
+    const args = it.category === "HOUSE" ? {} : it.category === "WALL" ? { p_qty: qty } : it.category === "UNIT" ? { p_code: it.code, p_qty: qty } : { p_code: it.code };
+    const fn = it.category === "STYLE" && it.owned ? "set_style" : RPC[it.category];
+    const { error } = await createClient().rpc(fn, args);
     setBusy(null);
     if (error) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[error.message] ?? "Không mua được" }); }
     play("coin");
-    setMsg({ ok: true, t: it.category === "HOUSE" ? `Đã nâng cấp lên ${it.name}! 🎉` : `Đã mua ${it.category === "UNIT" ? `${qty} ` : ""}${it.name} — vật mới đã được đặt vào căn cứ` });
+    setMsg({ ok: true, t: it.category === "STYLE" ? `Nhà đã đổi sang kiểu ${it.name} ✨` : it.category === "HOUSE" ? `Đã nâng cấp lên ${it.name}! 🎉` : it.category === "WALL" ? `Đã mua ${qty} đoạn tường — vào 🔨 Xây dựng → 🧱 để xây` : it.category === "FACTORY" ? `Đã xây ${it.name}! Chạm vào nhà máy trong căn cứ để luyện quân ⚒️` : `Đã mua ${it.name} — vật mới đã được đặt vào căn cứ` });
     onBought(it); router.refresh();
   }
   const list = catalog.filter((c) => c.category === tab);
@@ -37,15 +38,15 @@ export function BuildPanel({ catalog, coins, onClose, onBought }: { catalog: Cat
       <div className="flex gap-1 overflow-x-auto px-3 py-2">
         {TABS.map(([k, t]) => <button key={k} onClick={() => { setTab(k); setMsg(null); }} className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold ${tab === k ? "bg-pink-500 text-white" : "bg-pink-50 text-pink-700"}`}>{t}</button>)}
       </div>
-      {tab === "UNIT" && (
+      {tab === "WALL" && (
         <div className="flex items-center gap-2 px-4 pb-1 text-xs font-bold text-slate-600">Số lượng: {[1, 5, 10].map((n) => <button key={n} onClick={() => setQty(n)} className={`rounded-lg px-2 py-0.5 ${qty === n ? "bg-pink-500 text-white" : "bg-slate-100"}`}>{n}</button>)}</div>
       )}
       {msg && <p role="status" className={`mx-4 rounded-xl px-3 py-2 text-sm font-bold ${msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>{msg.t}</p>}
       <div className="max-h-[calc(70vh-9rem)] space-y-2 overflow-y-auto p-3 sm:max-h-[calc(100%-9rem)]">
         {list.length === 0 && <p className="p-4 text-center text-sm text-slate-500">{tab === "HOUSE" ? "Nhà đã đạt cấp tối đa 💒" : "Không có món nào."}</p>}
         {list.map((it) => {
-          const price = it.category === "UNIT" ? it.price * qty : it.price;
-          const reason = it.reason ?? (coins < price ? `Thiếu ${(price - coins).toLocaleString("vi-VN")} xu` : null);
+          const price = it.category === "WALL" ? it.price * qty : it.owned ? 0 : it.price;
+          const reason = it.reason ?? (it.category === "WALL" && (it.max ?? 0) < qty ? `Chỉ còn mua được ${it.max} đoạn` : coins < price ? `Thiếu ${(price - coins).toLocaleString("vi-VN")} xu` : null);
           return (
             <div key={it.code} className="flex items-center gap-3 rounded-2xl bg-pink-50/70 p-2.5" data-code={it.code}>
               <div className="text-3xl">{it.emoji}</div>
@@ -55,7 +56,7 @@ export function BuildPanel({ catalog, coins, onClose, onBought }: { catalog: Cat
                 {reason && <div className="text-xs font-bold text-amber-700">{reason}</div>}
               </div>
               <button disabled={!!reason || busy === it.code} onClick={() => buy(it)} className="rounded-xl bg-pink-500 px-3 py-2 text-xs font-extrabold text-white shadow disabled:bg-slate-300">
-                {busy === it.code ? "…" : it.category === "HOUSE" ? `⬆️ ${price.toLocaleString("vi-VN")}` : `🪙 ${price.toLocaleString("vi-VN")}`}
+                {busy === it.code ? "…" : it.category === "FACTORY" && it.owned ? "✓ Đã xây" : it.using ? "✓ Đang dùng" : it.owned ? "Dùng" : it.category === "HOUSE" ? `⬆️ ${price.toLocaleString("vi-VN")}` : `🪙 ${price.toLocaleString("vi-VN")}`}
               </button>
             </div>
           );

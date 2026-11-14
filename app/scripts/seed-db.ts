@@ -5,7 +5,8 @@ import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import fs from "node:fs";
 import path from "node:path";
-import { parseWordsCsv } from "../src/lib/csv";
+import { parseWordsCsv, WORD_HEADER } from "../src/lib/csv";
+import { generateObstacles } from "../src/lib/game/obstacles";
 config({ path: path.resolve(__dirname, "..", process.env.IT_ENV ?? ".env.local") });
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
@@ -16,6 +17,12 @@ async function main() {
   must(await sb.from("game_config").upsert(load("game_config.json").map((c: any) => ({ key: c.key, value: c.value, unit: c.unit, description: c.description }))));
 
   must(await sb.from("shop_items").upsert(load("shop_items.json")));
+
+  // BASE-13: vật cản vòng ngoài căn cứ (sinh xác định từ cấu hình; dùng chung cho mọi người chơi)
+  const cfg = new Map<string, number>(load("game_config.json").map((c: any) => [c.key, Number(c.value)]));
+  const obs = generateObstacles(cfg.get("BASE_GRID_SIZE") ?? 30, cfg.get("BASE_FREE_SIZE") ?? 20, cfg.get("OBSTACLE_COST_PER_CELL") ?? 150, cfg.get("OBSTACLE_DENSITY") ?? 0.75);
+  must(await sb.from("obstacles").upsert(obs));
+  must(await sb.from("obstacles").delete().not("id", "in", `(${obs.map((o) => o.id).join(",")})`));
 
   const levels = load("levels.json");
   must(await sb.from("levels").upsert(levels.map((l: any) => ({
@@ -33,34 +40,53 @@ async function main() {
     meanings_vi: w.meanings_vi, example_en: w.example_en, example_vi: w.example_vi,
   }));
   must(await sb.from("words").upsert(words, { onConflict: "level_id,word" }));
-  // Từ vựng bổ sung (màn 2, 3, 5, 6) – cùng định dạng CSV import
-  const extraText = fs.readFileSync(path.resolve(__dirname, "../supabase/seed/words_extra.csv"), "utf8");
-  for (const lvNo of [2, 3, 5, 6]) {
-    const only = extraText.split("\n").filter((l, i) => i === 0 || l.startsWith(lvNo + ",")).join("\n");
-    const r = parseWordsCsv(only, lvNo);
-    if (r.errors.length) throw new Error(r.errors.join("; "));
+  // Từ vựng bổ sung: mọi file supabase/seed/words_*.csv (cùng định dạng CSV import ở trang Admin), gom theo màn
+  const seedDir = path.resolve(__dirname, "../supabase/seed");
+  const csvLines = new Map<number, string[]>();
+  for (const f of fs.readdirSync(seedDir).filter((f) => /^words_.*\.csv$/.test(f)).sort()) {
+    const [, ...lines] = fs.readFileSync(path.join(seedDir, f), "utf8").replace(/^\uFEFF/, "").split(/\r?\n/);
+    for (const l of lines) { const n = Number(l.split(",")[0]); if (l.trim() && n) (csvLines.get(n) ?? csvLines.set(n, []).get(n)!).push(l); }
+  }
+  let extra = 0;
+  for (const [lvNo, lines] of [...csvLines].sort((a, b) => a[0] - b[0])) {
+    const r = parseWordsCsv([WORD_HEADER.join(","), ...lines].join("\n"), lvNo);
+    if (r.errors.length) throw new Error(`Màn ${lvNo}: ` + r.errors.join("; "));
     must(await sb.from("words").upsert(r.words.map((w) => ({ ...w, level_id: idOf.get(lvNo) })), { onConflict: "level_id,word" }));
+    extra += r.words.length;
   }
 
-  // 2 tài khoản dev
-  const users = [
-    { email: "utdac@lovequest.local", password: "utdac-dev-2026", name: "Út đặc", role: "ADMIN" },
-    { email: "moheo@lovequest.local", password: "moheo-dev-2026", name: "Mỡ heo", role: "PLAYER" },
-  ];
+  // Tài khoản & cặp đôi.
+  // Production: đặt SEED_COUPLE="email_admin,email_nguoi_choi" (2 tài khoản đã tạo sẵn ở Supabase Dashboard) → KHÔNG tạo tài khoản dev,
+  // người thứ nhất thành ADMIN, ghép đôi 2 người. Không đặt → tạo 2 tài khoản dev (chỉ dùng local).
   const ids: string[] = [];
-  for (const u of users) {
-    const { data: list } = await sb.auth.admin.listUsers({ page: 1, perPage: 200 });
-    let found = list?.users.find((x) => x.email === u.email);
-    if (!found) {
-      const r = await sb.auth.admin.createUser({ email: u.email, password: u.password, email_confirm: true, user_metadata: { role: u.role } });
-      if (r.error) throw r.error;
-      found = r.data.user!;
-      console.log("Đã tạo", u.email, "/", u.password);
+  const { data: list } = await sb.auth.admin.listUsers({ page: 1, perPage: 200 });
+  if (process.env.SEED_COUPLE) {
+    const emails = process.env.SEED_COUPLE.split(",").map((e) => e.trim().toLowerCase());
+    if (emails.length !== 2) throw new Error("SEED_COUPLE phải có đúng 2 email, cách nhau dấu phẩy");
+    for (const e of emails) {
+      const u = list?.users.find((x) => x.email?.toLowerCase() === e);
+      if (!u) throw new Error(`Chưa có tài khoản ${e} — tạo ở Supabase Dashboard → Authentication → Add user (tick Auto Confirm)`);
+      ids.push(u.id);
     }
-    ids.push(found.id);
+    must(await sb.from("profiles").update({ role: "ADMIN" }).eq("id", ids[0]));
+  } else {
+    const users = [
+      { email: "utdac@lovequest.local", password: "utdac-dev-2026", name: "Út đặc", role: "ADMIN" },
+      { email: "moheo@lovequest.local", password: "moheo-dev-2026", name: "Mỡ heo", role: "PLAYER" },
+    ];
+    for (const u of users) {
+      let found = list?.users.find((x) => x.email === u.email);
+      if (!found) {
+        const r = await sb.auth.admin.createUser({ email: u.email, password: u.password, email_confirm: true, user_metadata: { role: u.role } });
+        if (r.error) throw r.error;
+        found = r.data.user!;
+        console.log("Đã tạo", u.email, "/", u.password);
+      }
+      ids.push(found.id);
+    }
   }
   const { data: c } = await sb.from("couples").select("id").limit(1);
   if (!c?.length) must(await sb.from("couples").insert({ player_a: ids[0], player_b: ids[1] }));
-  console.log("Seed xong:", { levels: levels.length, words: words.length });
+  console.log("Seed xong:", { levels: levels.length, words: words.length + extra, obstacles: obs.length });
 }
 main().catch((e) => { console.error(e); process.exit(1); });

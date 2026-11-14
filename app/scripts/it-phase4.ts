@@ -75,7 +75,7 @@ async function main() {
   ok(L.status === "CLOSED" && L.winner_id === m.id && !L.is_draw, "TC-13 màn đóng ngay, Mỡ heo thắng", L);
   ok((await coins(m.id)) === 500 + 200, "Người thắng +200 xu", await coins(m.id));
   ok((await coins(u.id)) === 500 + 60, "Người thua có chơi +30% = 60 xu", await coins(u.id));
-  ok((await inv(m.id, "PET_UPGRADE")) === 1 && (await inv(m.id, "WEAPON_LICENSE")) === 1 && (await inv(m.id, "ARMY_UPGRADE")) === 1, "Thắng nhận 3 token");
+  ok((await inv(m.id, "PET_UPGRADE")) === 2 && (await inv(m.id, "WEAPON_LICENSE")) === 0 && (await inv(m.id, "ARMY_UPGRADE")) === 1, "Thắng nhận 2 Nâng cấp thú cưng + 1 Nâng cấp quân (không còn Quyền mua vũ khí)");
   ok((await inv(u.id, "PET_UPGRADE")) === 0, "Thua không có token");
   ok((await lvl(2)).status === "OPEN", "LVL-02 màn 2 mở khi màn 1 đóng");
   const before = [await coins(m.id), await coins(u.id)];
@@ -143,7 +143,7 @@ async function main() {
   const d1 = await play(m, 4, "right"); const d2 = await play(u, 4, "right");
   const l4 = await lvl(4);
   ok(d1.sub.score === d2.sub.score && l4.is_draw === true && l4.winner_id === null, "LVL-08 bằng điểm & thời gian → HÒA", l4);
-  ok((await inv(m.id, "PET_UPGRADE")) === (1 + 1 + 1) && (await inv(u.id, "PET_UPGRADE")) === 2, "Hòa: mỗi người +1 Nâng cấp thú cưng (Út đặc: 1 từ màn 2 + 1 từ hòa)");
+  ok((await inv(m.id, "PET_UPGRADE")) === (2 + 2 + 1) && (await inv(u.id, "PET_UPGRADE")) === 3, "Hòa: mỗi người +1 Nâng cấp thú cưng (thắng màn nhận 2: Mỡ heo thắng 2 màn + hòa, Út đặc thắng 1 màn + hòa)");
   // ---- đủ 6 loại câu hỏi (SPELL, MATCH, FILL...) ----
   await admin.from("levels").update({ question_types: ["MC_EN_VN", "MC_VN_EN", "LISTEN", "SPELL", "MATCH", "FILL"] }).eq("order_no", 4);
   const all = await play(u, 4, "right", { ranked: false });

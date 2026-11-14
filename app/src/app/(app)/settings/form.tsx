@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { btnGhost, btnPrimary, inputCls } from "@/components/ui";
 import { signOut } from "@/app/login/actions";
 import { musicEnabled, play, setMusic, setSfx, sfxEnabled, startMusic } from "@/lib/sfx";
+import { setGfx, setShowFps, useQuality, type GfxSetting } from "@/components/three/quality";
 
 const VAPID = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const b64 = (s: string) => Uint8Array.from(atob((s + "=".repeat((4 - (s.length % 4)) % 4)).replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
@@ -17,6 +18,7 @@ export default function SettingsForm() {
   const [view, setView] = useState("2d");
   const [perm, setPerm] = useState<string>("default");
   const [push, setPush] = useState<string | null>(null);
+  const gfx = useQuality();
 
   useEffect(() => {
     try { setRate(localStorage.getItem("tts_rate") ?? "1"); setView(localStorage.getItem("view") ?? "2d"); } catch { /* ignore */ }
@@ -52,6 +54,15 @@ export default function SettingsForm() {
   );
   return (
     <div className="space-y-6">
+      <section className="space-y-3">
+        <h2 className="font-extrabold text-love-700">🎮 Đồ hoạ 3D</h2>
+        <label className="block space-y-1"><span className="text-sm font-bold">Mức đồ hoạ</span>
+          <select value={gfx.setting} onChange={(e) => setGfx(e.target.value as GfxSetting)} className={inputCls} data-testid="gfx">
+            <option value="auto">Tự động (đang dùng: {gfx.tier === "high" ? "Cao" : "Thấp"})</option><option value="high">Cao — có bóng đổ, nét hơn</option><option value="low">Thấp — mượt nhất cho điện thoại</option>
+          </select></label>
+        <div className={row}><span className="font-bold text-sm">Hiện FPS trong cảnh 3D</span><Toggle on={gfx.showFps} label="Hiện FPS" onClick={() => setShowFps(!gfx.showFps)} /></div>
+        <p className="text-xs text-love-700/70">Game tự hạ độ phân giải khi máy chậm để giữ 60 FPS. Nếu vẫn giật, chọn mức Thấp.</p>
+      </section>
       <section className="space-y-3">
         <h2 className="font-extrabold text-love-700">🔊 Âm thanh</h2>
         <div className={row}><span className="font-bold text-sm">Hiệu ứng âm thanh</span><Toggle on={sfx} label="Hiệu ứng" onClick={() => { const v = !sfx; setSfx(v); setSfxS(v); if (v) play("correct"); }} /></div>

@@ -1,0 +1,95 @@
+# ============================================================
+#  Love Quest — .gitignore gốc (áp dụng cho cả repo)
+#  Nguyên tắc: KHÔNG bao giờ commit khoá/mật khẩu/biến môi trường thật.
+#  Mẫu biến môi trường để chia sẻ: app/.env.example (không chứa giá trị thật).
+# ============================================================
+
+# ---------- BẢO MẬT: biến môi trường & khoá ----------
+.env
+.env.*
+!.env.example
+*.local
+.env.keys
+# khoá, chứng chỉ, file bí mật
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*secret*
+!**/src/**/*secret*
+secrets/
+credentials*.json
+service-account*.json
+# khoá push thông báo (VAPID) nếu lỡ lưu ra file
+vapid*.json
+
+# ---------- BẢO MẬT: cấu hình nền tảng có thể chứa token ----------
+.vercel/
+.netlify/
+.supabase/
+**/supabase/.temp/
+**/supabase/.branches/
+# DB Supabase local dùng cho test (có khoá & dữ liệu local)
+.sbtest/
+# file dump / sao lưu database (có thể chứa dữ liệu người chơi)
+*.sql.gz
+*.dump
+*.backup
+dump*.sql
+backup*.sql
+
+# ---------- Node / Next.js ----------
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.next/
+.next-*/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# ---------- Kết quả test & cache ----------
+.e2e-shots/
+playwright-report/
+test-results/
+.model-cache/
+.cache/
+.turbo/
+.eslintcache
+
+# ---------- Bản nháp / sao lưu tài liệu ----------
+*.bak
+*.tmp
+*.orig
+~$*.xlsx
+~$*.docx
+.~lock.*
+
+# ---------- Hệ điều hành & trình soạn thảo ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+.claude/settings.local.json

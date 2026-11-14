@@ -1,169 +1,137 @@
 "use client";
-// Thú cưng thiết kế bằng khối low-poly (KayKit không có thú). Cùng phong cách bo tròn, có hoạt ảnh riêng từng loài.
-import { useRef } from "react";
+// Thú cưng 3D "mắt to" có hoạt ảnh thật (Quaternius Colorful Monsters, CC0). TIẾN HOÁ theo cấp (BASE-03):
+//   Lv1 Sơ sinh · Lv2 Lớn (to hơn) · Lv3 TIẾN HOÁ (đổi sang mô hình tiến hoá; loài không có thì đổi bộ lông "phép thuật")
+//   Lv4 Hào quang (vòng sáng dưới chân) · Lv5 Huyền thoại (vương miện + lấp lánh). Lên cấp → lóe sáng + nảy.
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import { useAnimations, useGLTF } from "@react-three/drei";
+import { clone as skeletonClone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
+import { cutify, modelUrl, Pop } from "./models";
+import { Badge } from "./quality";
 
-type Mat = { color: string; rough?: number; emissive?: string };
-const M = ({ color, rough = 0.7, emissive }: Mat) => <meshStandardMaterial color={color} roughness={rough} flatShading emissive={emissive ?? "#000"} emissiveIntensity={emissive ? 0.4 : 0} />;
-const Eye = ({ x, y, z, r = 0.07 }: { x: number; y: number; z: number; r?: number }) => (
-  <group position={[x, y, z]}>
-    <mesh><sphereGeometry args={[r, 10, 8]} /><meshStandardMaterial color="#111827" roughness={0.2} /></mesh>
-    <mesh position={[r * 0.35, r * 0.35, r * 0.8]}><sphereGeometry args={[r * 0.3, 6, 6]} /><meshBasicMaterial color="#fff" /></mesh>
-  </group>
-);
+type PetDef = {
+  model: string; evo?: string; h: number; idle: string; move: string; happy: string; fly?: number;
+  /** bộ lông "phép thuật" khi tiến hoá (loài không có mô hình tiến hoá) — theo tên vật liệu */
+  magic?: Record<string, string>; aura: string;
+};
+const GROUND = { idle: "Idle", move: "Walk" }, AIR = { idle: "Flying_Idle", move: "Fast_Flying", fly: 0.7 };
+export const PETS: Record<string, PetDef> = {
+  cat: { model: "pet_cat", h: 0.95, ...GROUND, happy: "Dance", aura: "#ffd166", magic: { Cat_Main: "#ffd76a", Cat_Secondary: "#ff9f1c", Ears: "#ff7eb6" } },          // Mèo thần tài
+  corgi: { model: "pet_corgi", h: 0.9, ...GROUND, happy: "Jump", aura: "#7cc8ff", magic: { Dog_Main: "#8fd0ff", Dog_Secondary: "#ffffff" } },                        // Chó mây
+  owl: { model: "pet_owl", h: 0.95, ...GROUND, happy: "Dance", aura: "#c4b5fd", magic: { Pigeon_Main: "#f4f1ea", Pigeon_Secondary: "#ffcf4a" } },                    // Cú tuyết
+  mushnub: { model: "pet_mushnub", evo: "pet_mushnub_evo", h: 1.0, ...GROUND, happy: "Dance", aura: "#86efac" },
+  dragon: { model: "pet_dragon", evo: "pet_dragon_evo", h: 0.85, ...AIR, happy: "Yes", aura: "#ff8fb8" },
+  armabee: { model: "pet_armabee", evo: "pet_armabee_evo", h: 0.8, ...AIR, happy: "Yes", aura: "#fde047" },
+  glub: { model: "pet_glub", evo: "pet_glub_evo", h: 0.8, ...AIR, happy: "Yes", aura: "#a78bfa" },
+  alpaking: { model: "pet_alpaking", evo: "pet_alpaking_evo", h: 0.85, ...AIR, happy: "Yes", aura: "#fbbf24" },
+  goleling: { model: "pet_goleling", evo: "pet_goleling_evo", h: 0.85, ...AIR, happy: "Yes", aura: "#4ade80" },
+};
+export const EVO_NAMES = ["", "Sơ sinh", "Lớn", "Tiến hoá", "Hào quang", "Huyền thoại"];
+const STAGE_SCALE = [1, 1, 1.15, 1.32, 1.42, 1.55];
 
-// ---------- Mèo mướp: thân cam sọc nâu, tai nhọn, đuôi cong vẫy ----------
-function Cat({ t }: { t: React.RefObject<number> }) {
-  const tail = useRef<THREE.Group>(null), head = useRef<THREE.Group>(null);
-  useFrame(() => { const k = t.current ?? 0; if (tail.current) tail.current.rotation.z = Math.sin(k * 3) * 0.5; if (head.current) head.current.rotation.y = Math.sin(k * 0.8) * 0.3; });
-  const fur = "#f59e0b", stripe = "#b45309", cream = "#fde68a";
-  return (
-    <group>
-      <mesh position={[0, 0.38, 0]} scale={[0.36, 0.3, 0.5]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={fur} /></mesh>
-      {[-0.15, 0, 0.15].map((z) => <mesh key={z} position={[0, 0.6, z]} scale={[0.37, 0.06, 0.07]}><sphereGeometry args={[1, 8, 6]} /><M color={stripe} /></mesh>)}
-      <mesh position={[0, 0.3, 0.2]} scale={[0.25, 0.2, 0.3]}><sphereGeometry args={[1, 10, 8]} /><M color={cream} /></mesh>
-      {[[-0.17, 0.27], [0.17, 0.27], [-0.17, -0.27], [0.17, -0.27]].map(([x, z], i) => <mesh key={i} position={[x, 0.12, z]} castShadow><cylinderGeometry args={[0.07, 0.08, 0.26, 8]} /><M color={i < 2 ? cream : fur} /></mesh>)}
-      <group ref={head} position={[0, 0.72, 0.42]}>
-        <mesh scale={[0.3, 0.27, 0.27]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={fur} /></mesh>
-        {[-1, 1].map((s) => <mesh key={s} position={[s * 0.17, 0.25, 0]} rotation={[0, 0, -s * 0.3]} castShadow><coneGeometry args={[0.1, 0.2, 4]} /><M color={fur} /></mesh>)}
-        {[-1, 1].map((s) => <mesh key={`i${s}`} position={[s * 0.17, 0.24, 0.03]} rotation={[0, 0, -s * 0.3]}><coneGeometry args={[0.05, 0.12, 4]} /><M color="#fda4af" /></mesh>)}
-        <mesh position={[0, -0.06, 0.22]} scale={[0.14, 0.1, 0.1]}><sphereGeometry args={[1, 8, 6]} /><M color={cream} /></mesh>
-        <mesh position={[0, -0.02, 0.29]}><sphereGeometry args={[0.03, 6, 6]} /><M color="#f472b6" /></mesh>
-        <Eye x={-0.1} y={0.04} z={0.22} /><Eye x={0.1} y={0.04} z={0.22} />
-      </group>
-      <group ref={tail} position={[0, 0.45, -0.48]}>
-        {[0, 1, 2, 3].map((i) => <mesh key={i} position={[0, 0.12 + i * 0.13, -0.06 * i + (i > 2 ? 0.08 : 0)]} castShadow><sphereGeometry args={[0.07 - i * 0.008, 8, 6]} /><M color={i % 2 ? stripe : fur} /></mesh>)}
-      </group>
-    </group>
-  );
+function PetBody({ model, def, anim, sad, phase, magic }: { model: string; def: PetDef; anim: string; sad: boolean; phase: number; magic?: Record<string, string> }) {
+  const { scene, animations } = useGLTF(modelUrl(model));
+  cutify(scene);
+  const root = useRef<THREE.Group>(null);
+  const { obj, s, y0 } = useMemo(() => {
+    const c = skeletonClone(scene) as THREE.Group;
+    c.traverse((o) => {
+      const m = o as THREE.Mesh; if (!m.isMesh) return;
+      m.castShadow = true; m.frustumCulled = false;
+      const mat = m.material as THREE.MeshStandardMaterial;
+      if (magic && magic[mat.name]) { const n = mat.clone(); n.color.set(magic[mat.name]); n.emissive.set(magic[mat.name]); n.emissiveIntensity = 0.18; m.material = n; }
+    });
+    const box = new THREE.Box3().setFromObject(scene);
+    return { obj: c, s: def.h / Math.max(0.01, box.max.y - box.min.y), y0: -box.min.y };
+  }, [scene, def, magic]);
+  const { actions } = useAnimations(animations, root);
+  useEffect(() => {
+    const a = actions[anim] ?? actions[def.idle]; if (!a) return;
+    a.reset(); a.time = (phase * 0.37) % Math.max(0.1, a.getClip().duration);
+    a.setEffectiveTimeScale(sad ? 0.45 : 1).fadeIn(0.25).play();
+    return () => { a.fadeOut(0.25); };
+  }, [actions, anim, def, phase, sad]);
+  return <group ref={root} scale={s}><primitive object={obj} position={[0, y0, 0]} /></group>;
 }
 
-// ---------- Corgi: vàng cam + trắng, chân ngắn, tai to dựng, mông lắc ----------
-function Corgi({ t }: { t: React.RefObject<number> }) {
-  const butt = useRef<THREE.Group>(null), tongue = useRef<THREE.Mesh>(null);
-  useFrame(() => { const k = t.current ?? 0; if (butt.current) butt.current.rotation.y = Math.sin(k * 6) * 0.12; if (tongue.current) tongue.current.scale.y = 1 + Math.sin(k * 8) * 0.3; });
-  const tan = "#f59e0b", white = "#fffbeb";
-  return (
-    <group>
-      <group ref={butt}>
-        <mesh position={[0, 0.33, 0]} scale={[0.32, 0.26, 0.55]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={tan} /></mesh>
-        <mesh position={[0, 0.25, 0.12]} scale={[0.26, 0.18, 0.4]}><sphereGeometry args={[1, 10, 8]} /><M color={white} /></mesh>
-        <mesh position={[0, 0.42, -0.52]} castShadow><sphereGeometry args={[0.1, 8, 6]} /><M color={white} /></mesh>
-      </group>
-      {[[-0.17, 0.32], [0.17, 0.32], [-0.17, -0.32], [0.17, -0.32]].map(([x, z], i) => <mesh key={i} position={[x, 0.08, z]} castShadow><cylinderGeometry args={[0.07, 0.07, 0.16, 8]} /><M color={white} /></mesh>)}
-      <group position={[0, 0.6, 0.48]}>
-        <mesh scale={[0.27, 0.24, 0.26]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={tan} /></mesh>
-        <mesh position={[0, -0.08, 0.2]} scale={[0.15, 0.11, 0.17]}><sphereGeometry args={[1, 10, 8]} /><M color={white} /></mesh>
-        <mesh position={[0, -0.02, 0.36]}><sphereGeometry args={[0.04, 8, 6]} /><M color="#111827" /></mesh>
-        <mesh ref={tongue} position={[0, -0.16, 0.3]} scale={[0.05, 0.06, 0.02]}><sphereGeometry args={[1, 6, 6]} /><M color="#f472b6" /></mesh>
-        {[-1, 1].map((s) => <mesh key={s} position={[s * 0.15, 0.27, -0.02]} rotation={[0, 0, -s * 0.25]} castShadow><coneGeometry args={[0.11, 0.3, 4]} /><M color={tan} /></mesh>)}
-        <mesh position={[0, 0.17, 0.12]} scale={[0.05, 0.1, 0.05]}><sphereGeometry args={[1, 6, 6]} /><M color={white} /></mesh>
-        <Eye x={-0.1} y={0.05} z={0.2} /><Eye x={0.1} y={0.05} z={0.2} />
-      </group>
-    </group>
-  );
-}
-
-// ---------- Cú mèo: tròn, mắt to, cánh vỗ ----------
-function Owl({ t }: { t: React.RefObject<number> }) {
-  const wl = useRef<THREE.Mesh>(null), wr = useRef<THREE.Mesh>(null), body = useRef<THREE.Group>(null);
-  useFrame(() => {
-    const k = t.current ?? 0, f = Math.max(0, Math.sin(k * 2)) * Math.sin(k * 18) * 0.6;
-    if (wl.current) wl.current.rotation.z = 0.2 + f; if (wr.current) wr.current.rotation.z = -0.2 - f;
-    if (body.current) body.current.position.y = Math.max(0, Math.sin(k * 2)) * 0.25;
+/** Vòng hào quang dưới chân (Lv4+) */
+function Aura({ color, r }: { color: string; r: number }) {
+  const m = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (!m.current) return;
+    const k = 1 + Math.sin(clock.elapsedTime * 3) * 0.08;
+    m.current.scale.set(k, k, 1); m.current.rotation.z = clock.elapsedTime * 0.8;
+    (m.current.material as THREE.MeshBasicMaterial).opacity = 0.45 + Math.sin(clock.elapsedTime * 3) * 0.15;
   });
-  const brown = "#92400e", light = "#fcd34d";
-  return (
-    <group ref={body}>
-      <mesh position={[0, 0.45, 0]} scale={[0.33, 0.42, 0.3]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={brown} /></mesh>
-      <mesh position={[0, 0.38, 0.14]} scale={[0.24, 0.3, 0.18]}><sphereGeometry args={[1, 10, 8]} /><M color={light} /></mesh>
-      {[-1, 1].map((s) => (
-        <group key={s} position={[s * 0.13, 0.66, 0.24]}>
-          <mesh><cylinderGeometry args={[0.12, 0.12, 0.05, 14]} /><meshStandardMaterial color="#fff" /></mesh>
-          <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.03]}><cylinderGeometry args={[0.12, 0.12, 0.02, 14]} /><meshStandardMaterial color="#fffbeb" /></mesh>
-          <Eye x={0} y={0} z={0.05} r={0.06} />
-        </group>
-      ))}
-      <mesh position={[0, 0.56, 0.3]} rotation={[Math.PI / 2, 0, 0]}><coneGeometry args={[0.04, 0.1, 4]} /><M color="#f97316" /></mesh>
-      {[-1, 1].map((s) => <mesh key={`e${s}`} position={[s * 0.2, 0.86, 0]} rotation={[0, 0, -s * 0.4]}><coneGeometry args={[0.06, 0.16, 4]} /><M color={brown} /></mesh>)}
-      <mesh ref={wl} position={[-0.32, 0.45, -0.02]} scale={[0.07, 0.28, 0.2]} castShadow><sphereGeometry args={[1, 8, 6]} /><M color="#78350f" /></mesh>
-      <mesh ref={wr} position={[0.32, 0.45, -0.02]} scale={[0.07, 0.28, 0.2]} castShadow><sphereGeometry args={[1, 8, 6]} /><M color="#78350f" /></mesh>
-      {[-0.1, 0.1].map((x) => <mesh key={x} position={[x, 0.05, 0.1]}><boxGeometry args={[0.08, 0.04, 0.12]} /><M color="#f97316" /></mesh>)}
-    </group>
-  );
+  return <mesh ref={m} position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[r * 0.55, r, 24, 1, 0, Math.PI * 1.7]} /><meshBasicMaterial color={color} transparent depthWrite={false} side={THREE.DoubleSide} /></mesh>;
 }
-
-// ---------- Rồng con: xanh lá, sừng, gai lưng, cánh, đuôi; thỉnh thoảng phun lửa ----------
-function Dragon({ t }: { t: React.RefObject<number> }) {
-  const wl = useRef<THREE.Group>(null), wr = useRef<THREE.Group>(null), tail = useRef<THREE.Group>(null), fire = useRef<THREE.Group>(null);
-  useFrame(() => {
-    const k = t.current ?? 0;
-    if (wl.current) wl.current.rotation.z = 0.5 + Math.sin(k * 5) * 0.4; if (wr.current) wr.current.rotation.z = -0.5 - Math.sin(k * 5) * 0.4;
-    if (tail.current) tail.current.rotation.y = Math.sin(k * 2) * 0.4;
-    if (fire.current) { const on = (k % 6) < 0.9; fire.current.visible = on; fire.current.scale.setScalar(on ? 0.6 + ((k % 6) / 0.9) * 0.6 : 0.01); }
+/** Lấp lánh quanh thú cưng (Lv5) */
+function Sparkles({ color, r, h }: { color: string; r: number; h: number }) {
+  const g = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    if (!g.current) return;
+    g.current.rotation.y = clock.elapsedTime * 0.9;
+    g.current.children.forEach((c, i) => { const t = (clock.elapsedTime * 0.7 + i / 5) % 1; c.position.y = h * (0.2 + t * 0.9); c.scale.setScalar(Math.sin(t * Math.PI) * 0.12); });
   });
-  const g = "#22c55e", dark = "#15803d", belly = "#fef08a";
-  return (
-    <group>
-      <mesh position={[0, 0.42, 0]} scale={[0.34, 0.32, 0.48]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={g} /></mesh>
-      <mesh position={[0, 0.34, 0.12]} scale={[0.24, 0.22, 0.34]}><sphereGeometry args={[1, 10, 8]} /><M color={belly} /></mesh>
-      {[0.2, 0, -0.2].map((z, i) => <mesh key={z} position={[0, 0.74 - i * 0.02, z]}><coneGeometry args={[0.06, 0.16, 4]} /><M color={dark} /></mesh>)}
-      {[[-0.18, 0.28], [0.18, 0.28], [-0.18, -0.25], [0.18, -0.25]].map(([x, z], i) => <mesh key={i} position={[x, 0.12, z]} castShadow><cylinderGeometry args={[0.08, 0.09, 0.24, 8]} /><M color={dark} /></mesh>)}
-      <group position={[0, 0.78, 0.42]}>
-        <mesh scale={[0.25, 0.23, 0.28]} castShadow><sphereGeometry args={[1, 12, 10]} /><M color={g} /></mesh>
-        <mesh position={[0, -0.06, 0.24]} scale={[0.15, 0.1, 0.14]}><sphereGeometry args={[1, 10, 8]} /><M color={g} /></mesh>
-        {[-1, 1].map((s) => <mesh key={s} position={[s * 0.12, 0.22, -0.06]} rotation={[-0.4, 0, -s * 0.3]}><coneGeometry args={[0.05, 0.22, 6]} /><M color={belly} /></mesh>)}
-        {[-1, 1].map((s) => <mesh key={`n${s}`} position={[s * 0.05, -0.03, 0.37]}><sphereGeometry args={[0.02, 6, 6]} /><M color="#14532d" /></mesh>)}
-        <Eye x={-0.11} y={0.06} z={0.18} r={0.06} /><Eye x={0.11} y={0.06} z={0.18} r={0.06} />
-        <group ref={fire} position={[0, -0.06, 0.45]}>
-          {[0, 1, 2].map((i) => <mesh key={i} position={[0, 0, i * 0.18]}><octahedronGeometry args={[0.1 + i * 0.04, 0]} /><meshBasicMaterial color={i === 0 ? "#fde047" : "#f97316"} transparent opacity={0.85} /></mesh>)}
-        </group>
-      </group>
-      {[[-1, wl], [1, wr]].map(([s, r]) => (
-        <group key={String(s)} ref={r as React.RefObject<THREE.Group>} position={[(s as number) * 0.28, 0.62, -0.05]}>
-          <mesh position={[(s as number) * 0.25, 0.05, 0]} rotation={[0, 0, (s as number) * 0.1]} scale={[0.3, 0.03, 0.22]} castShadow><sphereGeometry args={[1, 6, 4]} /><M color="#86efac" /></mesh>
-        </group>
-      ))}
-      <group ref={tail} position={[0, 0.35, -0.45]}>
-        {[0, 1, 2, 3].map((i) => <mesh key={i} position={[0, -0.04 * i, -0.15 * i]} castShadow><sphereGeometry args={[0.1 - i * 0.018, 8, 6]} /><M color={g} /></mesh>)}
-        <mesh position={[0, -0.14, -0.66]} rotation={[-Math.PI / 2, 0, 0]}><coneGeometry args={[0.07, 0.14, 4]} /><M color={dark} /></mesh>
-      </group>
-    </group>
-  );
+  return <group ref={g}>{[0, 1, 2, 3, 4].map((i) => <mesh key={i} position={[Math.cos(i * 1.26) * r, 0, Math.sin(i * 1.26) * r]}><octahedronGeometry args={[1, 0]} /><meshBasicMaterial color={i % 2 ? "#fff7c2" : color} /></mesh>)}</group>;
+}
+/** Lóe sáng khi vừa tiến hoá / lên cấp */
+function EvolveFlash({ k, r }: { k: number; r: number }) {
+  const m = useRef<THREE.Mesh>(null);
+  const t = useRef(2), last = useRef<number | null>(null);
+  useFrame((_, dt) => {
+    if (last.current === null) { last.current = k; return; }   // lần đầu hiện: không lóe
+    if (last.current !== k) { last.current = k; t.current = 0; }
+    t.current += dt;
+    if (!m.current) return;
+    const x = t.current / 0.8;
+    m.current.visible = x < 1;
+    if (x < 1) { m.current.scale.setScalar(r * (0.4 + x * 2.2)); (m.current.material as THREE.MeshBasicMaterial).opacity = 0.9 * (1 - x); }
+  });
+  return <mesh ref={m} position={[0, r * 0.8, 0]} visible={false}><sphereGeometry args={[1, 16, 12]} /><meshBasicMaterial color="#ffffff" transparent depthWrite={false} /></mesh>;
 }
 
-const PETS: Record<string, (p: { t: React.RefObject<number> }) => React.ReactElement> = { cat: Cat, corgi: Corgi, owl: Owl, dragon: Dragon };
-
-/**
- * 1 thú cưng: to dần theo cấp, nhún nhảy; `wander` (mét) → đi vòng quanh điểm đặt.
- * `sad` (nhà đổ nát, BASE-03) → cúi đầu, xám màu nhẹ, đi chậm.
- */
 export function Pet({ code, level = 1, name, wander = 0, sad = false, phase = 0, scale = 1.6 }: { code: string; level?: number; name?: string; wander?: number; sad?: boolean; phase?: number; scale?: number }) {
-  const g = useRef<THREE.Group>(null), inner = useRef<THREE.Group>(null);
+  const def = PETS[code] ?? PETS.cat;
+  const lv = Math.max(1, Math.min(5, level));
+  const evolved = lv >= 3;
+  const model = evolved && def.evo ? def.evo : def.model;
+  const magic = evolved && !def.evo ? def.magic : undefined;
+  const g = useRef<THREE.Group>(null), body = useRef<THREE.Group>(null);
   const t = useRef(phase);
+  const roam = wander > 1;   // đi dạo vòng quanh (làng) hay đứng tại ô (căn cứ)
+  const [anim, setAnim] = useState(roam ? def.move : def.idle);
+  useEffect(() => {
+    if (roam || sad) { setAnim(roam ? def.move : def.idle); return; }
+    let on = false;
+    const iv = setInterval(() => { on = !on; setAnim(on ? def.happy : def.idle); }, on ? 2200 : 5000 + (phase % 7) * 600);
+    return () => clearInterval(iv);
+  }, [roam, sad, def, phase]);
   useFrame((_, dt) => {
     t.current += dt * (sad ? 0.35 : 1);
     const k = t.current;
-    if (inner.current) inner.current.position.y = sad ? 0 : Math.abs(Math.sin(k * 4)) * 0.06;
-    if (g.current && wander > 0) {
-      const a = k * 0.35 + phase;
+    if (g.current && roam) {
+      const a = k * 0.3 + phase;
       g.current.position.set(Math.cos(a) * wander, 0, Math.sin(a) * wander);
-      g.current.rotation.y = -a;          // hướng theo chiều đi (tiếp tuyến vòng tròn)
+      g.current.rotation.y = -a + Math.PI;     // mặt trước (+Z) theo chiều đi
+    } else if (g.current && wander > 0) {
+      g.current.rotation.y = Math.sin(k * 0.4 + phase) * 0.9;   // ngó nghiêng
     }
+    if (body.current) body.current.position.y = (def.fly ?? 0) * scale + (def.fly ? Math.sin(k * 2.2) * 0.12 : 0);
   });
-  const Body = PETS[code] ?? Cat;
-  const s = scale * (0.85 + level * 0.07);
+  const s = scale * STAGE_SCALE[lv];
+  const top = (def.h + (def.fly ?? 0)) * s;
   return (
     <group ref={g}>
-      <group ref={inner} scale={s} rotation={[sad ? 0.25 : 0, 0, 0]}><Body t={t} /></group>
-      {level >= 5 && <mesh position={[0, 1.15 * s, 0.4 * s]}><coneGeometry args={[0.12 * s, 0.18 * s, 5]} /><meshStandardMaterial color="#facc15" metalness={0.7} roughness={0.2} /></mesh>}
-      {name && (
-        <Html position={[0, 1.35 * s, 0]} center distanceFactor={16} zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
-          <div className="rounded-full bg-white/90 px-2 py-0.5 text-[11px] font-extrabold text-pink-700 shadow whitespace-nowrap">{sad ? "😢 " : ""}{name} · Lv{level}</div>
-        </Html>
-      )}
+      <Pop k={`${model}${lv}`} strength={1.4}>
+        <group ref={body} rotation={[sad ? 0.3 : 0, 0, 0]} scale={s}><PetBody model={model} def={def} anim={sad ? def.idle : anim} sad={sad} phase={phase} magic={magic} /></group>
+      </Pop>
+      <EvolveFlash k={lv} r={def.h * s} />
+      {lv >= 4 && !sad && <Aura color={def.aura} r={0.55 * s} />}
+      {lv >= 5 && !sad && <Sparkles color={def.aura} r={0.6 * s} h={top} />}
+      {lv >= 5 && <mesh position={[0, top + 0.12, 0]}><coneGeometry args={[0.12 * s, 0.2 * s, 5]} /><meshStandardMaterial color="#facc15" metalness={0.7} roughness={0.2} emissive="#facc15" emissiveIntensity={0.3} /></mesh>}
+      {name && <Badge text={`${sad ? "😢 " : lv >= 3 ? "✨ " : ""}${name} · Lv${lv}`} position={[0, top + 0.55, 0]} h={0.5} wide={5} fg="#be185d" />}
     </group>
   );
 }

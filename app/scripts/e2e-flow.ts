@@ -173,17 +173,35 @@ async function main() {
   await pa.waitForFunction(() => !!(window as any).__base, null, { timeout: 120000 });
   await pa.getByTestId("open-shop").click();
   const panel = pa.getByTestId("build-panel");
-  await panel.getByRole("button", { name: "🪖 Quân" }).click();
+  // BASE-04: lính luyện ở nhà máy — test cho luyện nhanh (1 giây/lính), trả lại giá trị gốc ở cuối bước 7
+  const swordStats = (await admin.from("shop_items").select("stats").eq("code", "sword").single()).data!.stats;
+  await admin.from("shop_items").update({ stats: { ...swordStats, train_sec: 1 } }).eq("code", "sword");
+  await panel.getByRole("button", { name: "🏭 Nhà máy quân" }).click();
   const cBuy = await coins(A_ID);
-  await panel.locator('[data-code="sword"] button').click();
+  await panel.locator('[data-code="fac_sword"] button').click();
   await panel.getByRole("status").waitFor({ timeout: 20000 });
-  check("Mua 1 Lính kiếm trong căn cứ 3D (−50 xu)", await coins(A_ID) === cBuy - 50, { before: cBuy, after: await coins(A_ID) });
+  check("Xây Doanh trại trong căn cứ 3D (−300 xu)", await coins(A_ID) === cBuy - 300, { before: cBuy, after: await coins(A_ID) });
+  await panel.getByRole("button", { name: "✕" }).click();
+  /** chạm nhà máy trong 3D → bảng luyện → luyện n lính → chờ lính hiện cạnh nhà máy */
+  const trainAt = async (p: typeof pa, n: number) => {
+    await p.waitForFunction(() => (window as any).__base?.placed?.some((x: any) => x.kind === "FACTORY"), null, { timeout: 60000 });
+    const f = await p.evaluate(() => (window as any).__base.placed.find((x: any) => x.kind === "FACTORY"));
+    const box = (await p.getByTestId("base-scene").locator("canvas").boundingBox())!;
+    const pt = await p.evaluate(([x, z]) => (window as any).__base.project(x, z, 3), [f.x, f.z]);
+    await p.mouse.click(box.x + pt.x, box.y + pt.y);
+    await p.getByTestId("factory-panel").waitFor({ timeout: 30000 });
+    await p.getByTestId("factory-panel").locator(`[data-qty="${n}"]`).click();
+    await p.waitForFunction(() => (window as any).__base?.placed?.some((x: any) => x.kind === "UNIT"), null, { timeout: 120000 });
+  };
+  await trainAt(pa, 1);
+  check("TC-51 luyện 1 Lính kiếm ở Doanh trại → lính hiện cạnh nhà máy (−40 xu)", await coins(A_ID) === cBuy - 340, await coins(A_ID));
+  await pa.getByTestId("open-shop").click();
   await panel.getByRole("button", { name: "🌸 Trang trí" }).click();
   await panel.locator('[data-code="deco_fence"] button').click();
   await pa.waitForTimeout(1500);
-  check("Mua Hàng rào gỗ (−15 xu)", await coins(A_ID) === cBuy - 65);
+  check("Mua Hàng rào gỗ (−15 xu)", await coins(A_ID) === cBuy - 355);
   await panel.getByRole("button", { name: "✕" }).click();
-  await pa.waitForFunction(() => (window as any).__base.placed.length >= 2, null, { timeout: 60000 });
+  await pa.waitForFunction(() => (window as any).__base.placed.length >= 3, null, { timeout: 60000 });
   check("Vật mới mua tự đặt vào ô trống", true);
   await pa.waitForTimeout(4000);
   await shot(pa, "06-base-truoc-khi-sua");
@@ -192,20 +210,20 @@ async function main() {
   const canvasBox = (await pa.locator("[data-testid=base-scene] canvas").boundingBox())!;
   const proj = (x: number, z: number, s: number) => pa.evaluate(([x, z, s]) => (window as any).__base.project(x, z, s), [x, z, s] as const);
   const sq = await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "UNIT"));
-  const from = await proj(sq.x, sq.z, 2), to = await proj(3, 13, 2);
+  const from = await proj(sq.x, sq.z, 2), to = await proj(13, 23, 2);
   await pa.mouse.move(canvasBox.x + from.x, canvasBox.y + from.y);
   await pa.mouse.down();
   for (let i = 1; i <= 12; i++) { await pa.mouse.move(canvasBox.x + from.x + ((to.x - from.x) * i) / 12, canvasBox.y + from.y + ((to.y - from.y) * i) / 12); await pa.waitForTimeout(60); }
   await pa.mouse.up();
   await pa.waitForTimeout(600);
   const moved = await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "UNIT"));
-  check("Kéo thả đội Lính kiếm sang ô (3,13)", moved.x === 3 && moved.z === 13, moved);
+  check("Kéo thả đội Lính kiếm sang ô (13,23)", moved.x === 13 && moved.z === 23, moved);
   // kéo đè lên nhà → bị từ chối
-  const toHouse = await proj(9, 9, 2), fromSq = await proj(3, 13, 2);
+  const toHouse = await proj(19, 19, 2), fromSq = await proj(13, 23, 2);
   await pa.mouse.move(canvasBox.x + fromSq.x, canvasBox.y + fromSq.y); await pa.mouse.down();
   for (let i = 1; i <= 10; i++) { await pa.mouse.move(canvasBox.x + fromSq.x + ((toHouse.x - fromSq.x) * i) / 10, canvasBox.y + fromSq.y + ((toHouse.y - fromSq.y) * i) / 10); await pa.waitForTimeout(60); }
   await pa.mouse.up(); await pa.waitForTimeout(500);
-  check("Kéo đè lên nhà → báo lỗi, giữ chỗ cũ", (await pa.getByText("Không đặt đè lên nhà được").count()) > 0 && (await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "UNIT"))).x === 3);
+  check("Kéo đè lên nhà → báo lỗi, giữ chỗ cũ", (await pa.getByText("Không đặt đè lên nhà được").count()) > 0 && (await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "UNIT"))).x === 13);
   // cất hàng rào vào kho rồi đặt lại bằng cách chạm ô (cách dùng trên điện thoại)
   const fence = await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "DECOR"));
   const fp = await proj(fence.x, fence.z, 1);
@@ -213,28 +231,33 @@ async function main() {
   await pa.getByRole("button", { name: "📦 Cất vào kho" }).click();
   check("Cất hàng rào vào kho", await pa.getByTestId("tray").getByText("Hàng rào gỗ").count() > 0);
   await pa.getByTestId("tray").getByText("Hàng rào gỗ").click();
-  const tgt = await proj(16, 4, 1);
+  const tgt = await proj(26, 14, 1);
   await pa.mouse.move(canvasBox.x + tgt.x, canvasBox.y + tgt.y); await pa.waitForTimeout(200);
   await pa.mouse.click(canvasBox.x + tgt.x, canvasBox.y + tgt.y); await pa.waitForTimeout(500);
-  check("Chạm ô (16,4) để đặt hàng rào từ kho", (await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "DECOR")))?.x === 16);
+  check("Chạm ô (26,14) để đặt hàng rào từ kho", (await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "DECOR")))?.x === 26);
   await pa.getByTestId("save-layout").click();
   await pa.getByText("Đã lưu bố cục căn cứ").waitFor({ timeout: 20000 });
   const lay = (await admin.from("base_layout").select("kind,ref,x,z").eq("user_id", A_ID)).data ?? [];
-  check("Lưu bố cục → DB có đội quân ở (3,13) và hàng rào ở (16,4)", lay.some((l: any) => l.kind === "UNIT" && l.x === 3 && l.z === 13) && lay.some((l: any) => l.kind === "DECOR" && l.x === 16 && l.z === 4), lay);
+  check("Lưu bố cục → DB có đội quân ở (13,23) và hàng rào ở (26,14)", lay.some((l: any) => l.kind === "UNIT" && l.x === 13 && l.z === 23) && lay.some((l: any) => l.kind === "DECOR" && l.x === 26 && l.z === 14), lay);
   await pa.waitForTimeout(3000); await shot(pa, "06-base-sau-khi-sua");
 
   console.log("\n== 7. B xem căn cứ của A (đúng bố cục), mua quân, tấn công kiểu Clash of Clans ==");
   await go(pb, "/base/partner");
   await pb.waitForFunction(() => !!(window as any).__base, null, { timeout: 120000 });
-  check("B thấy đúng bố cục A đã sắp", await pb.evaluate(() => (window as any).__base.placed.some((p: any) => p.kind === "UNIT" && p.x === 3 && p.z === 13)));
+  check("B thấy đúng bố cục A đã sắp", await pb.evaluate(() => (window as any).__base.placed.some((p: any) => p.kind === "UNIT" && p.x === 13 && p.z === 23)));
   check("B chưa có lính → nút tấn công bị khoá kèm lý do", !(await pb.getByTestId("attack-btn").isEnabled()) && (await pb.getByTestId("attack-hud").innerText()).includes("chưa có lính"));
   await go(pb, "/base");
   await pb.waitForFunction(() => !!(window as any).__base, null, { timeout: 120000 });
+  await admin.rpc("apply_coins", { p_user: B_ID, p_amount: 1000, p_reason: "LEVEL_WIN" });
+  await pb.reload({ waitUntil: "domcontentloaded" }); await pb.waitForFunction(() => !!(window as any).__base, null, { timeout: 120000 });
   await pb.getByTestId("open-shop").click();
-  await pb.getByTestId("build-panel").getByRole("button", { name: "10" }).click();
-  await pb.getByTestId("build-panel").locator('[data-code="sword"] button').click();
+  await pb.getByTestId("build-panel").locator('[data-code="fac_sword"] button').click();
   await pb.getByTestId("build-panel").getByRole("status").waitFor({ timeout: 20000 });
-  check("B tuyển 10 Lính kiếm", ((await admin.from("user_army").select("quantity").eq("user_id", B_ID).eq("unit_code", "sword").maybeSingle()).data?.quantity ?? 0) === 10);
+  await pb.getByTestId("build-panel").getByRole("button", { name: "✕" }).click();
+  await trainAt(pb, 10);
+  await pb.waitForFunction(() => (window as any).__base?.placed?.some((x: any) => x.kind === "UNIT"), null, { timeout: 120000 });
+  await admin.from("shop_items").update({ stats: swordStats }).eq("code", "sword");
+  check("B luyện 10 Lính kiếm ở Doanh trại", ((await admin.from("user_army").select("quantity").eq("user_id", B_ID).eq("unit_code", "sword").maybeSingle()).data?.quantity ?? 0) === 10);
   // A đang ở làng 3D khi bị đánh
   await go(pa, "/world"); await worldReady(pa);
   const hpA0 = (await house(A_ID))!.hp, coinA0 = await coins(A_ID), coinB0 = await coins(B_ID);
@@ -242,15 +265,19 @@ async function main() {
   await pb.waitForFunction(() => !!(window as any).__base, null, { timeout: 120000 });
   pb.once("dialog", (d) => d.accept());
   await pb.getByTestId("attack-btn").click();
+  // BTL-07: vào trận rải quân → "Tự rải hết" → tua ×2 → chờ hết trận (server chạy lại mô phỏng từ nhật ký)
+  await pb.getByTestId("troop-bar").waitFor({ timeout: 120000 });
+  await pb.getByTestId("auto-deploy").click();
+  await pb.getByText(/▶ ×1/).click();
   await pb.waitForTimeout(6000); await shot(pb, "07-tran-danh");
-  await pb.getByTestId("battle-result").waitFor({ timeout: 90000 });
+  await pb.getByTestId("battle-result").waitFor({ timeout: 300000 });
   await shot(pb, "07-ket-qua");
   const atk = (await admin.from("attacks").select("*").eq("attacker_id", B_ID).order("created_at", { ascending: false }).limit(1)).data![0];
   check("Trận đánh được ghi ở server", !!atk && atk.damage > 0, atk);
   check("Màn kết quả hiện đúng sát thương server", (await pb.getByTestId("battle-damage").innerText()).includes(String(atk.damage)));
   check("Thanh HP sau hoạt cảnh = HP server", (await pb.getByTestId("house-hp").innerText()).startsWith(`${atk.defender_hp_after}/`));
   check("HP nhà A giảm đúng", (await house(A_ID))!.hp === Math.max(0, hpA0 - atk.damage) && atk.defender_hp_after === (await house(A_ID))!.hp);
-  check("Chiến lợi phẩm chuyển từ A sang B", await coins(A_ID) === coinA0 - atk.loot && await coins(B_ID) === coinB0 + atk.loot, { a: [coinA0, await coins(A_ID)], b: [coinB0, await coins(B_ID)], loot: atk.loot });
+  check("Chiến lợi phẩm: B được cộng, A KHÔNG bị trừ xu (sheet 2 mục G)", await coins(A_ID) === coinA0 && await coins(B_ID) === coinB0 + atk.loot, { a: [coinA0, await coins(A_ID)], b: [coinB0, await coins(B_ID)], loot: atk.loot });
   await pa.getByTestId("world-toast").waitFor({ timeout: 20000 }).catch(() => undefined);
   check("A đang ở làng 3D thấy ngay thông báo bị tấn công (realtime)", (await pa.getByTestId("world-toast").innerText().catch(() => "")).includes("tấn công"));
   await shot(pa, "07-A-bi-tan-cong-trong-lang");
@@ -258,7 +285,8 @@ async function main() {
   await idle(pa);
   console.log("\n== 8. Xem lại trận, nhật ký, thông báo ==");
   await go(pb, `/battle/${atk.id}`, "xem lại trận 3D");
-  await pb.getByTestId("battle-result").waitFor({ timeout: 90000 });
+  await pb.getByText(/▶ ×1/).click().catch(() => undefined);
+  await pb.getByTestId("battle-result").waitFor({ timeout: 300000 });
   check("Xem lại trận 3D chạy tới kết quả", (await pb.getByTestId("battle-damage").innerText()).includes(String(atk.damage)));
   await go(pa, "/notifications");
   check("A có thông báo bị tấn công", (await pa.locator("main").innerText()).includes("tấn công"));

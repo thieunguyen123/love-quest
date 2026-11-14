@@ -25,7 +25,9 @@ export async function sessionCookies(email: string, password: string) {
   const host = new globalThis.URL(BASE).hostname;
   return parts.length === 1 ? [{ name: cname, value, domain: host, path: "/" }] : parts.map((v, i) => ({ name: `${cname}.${i}`, value: v, domain: host, path: "/" }));
 }
-export const launch = () => chromium.launch({ args: ["--use-angle=swiftshader-webgl", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
+// WSLg đặt WAYLAND_DISPLAY/DISPLAY: Chrome headless sẽ đòi VK_KHR_wayland_surface và KHÔNG khởi tạo được WebGL → bỏ 2 biến đó
+const cleanEnv = () => { const e: Record<string, string> = {}; for (const [k, v] of Object.entries(process.env)) if (v !== undefined && k !== "WAYLAND_DISPLAY" && k !== "DISPLAY" && k !== "XDG_SESSION_TYPE") e[k] = v; return e; };
+export const launch = () => chromium.launch({ env: cleanEnv(), args: ["--use-angle=swiftshader-webgl", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 export async function context(browser: Browser, cookies?: Awaited<ReturnType<typeof sessionCookies>>, mobile = false) {
   const c = await browser.newContext(mobile ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : { viewport: { width: 1366, height: 860 } });
   if (cookies) await c.addCookies(cookies);

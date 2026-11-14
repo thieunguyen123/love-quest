@@ -21,7 +21,9 @@
     "test:smoke": "IT_ENV=.env.test SMOKE_BASE=http://127.0.0.1:3101 tsx scripts/http-smoke.ts",
     "test:e2e": "IT_ENV=.env.test tsx scripts/e2e-world.ts",
     "test:flow": "IT_ENV=.env.test tsx scripts/e2e-flow.ts",
-    "models:build": "tsx scripts/build-models.mts"
+    "models:build": "tsx scripts/build-models.mts",
+    "test:e2e9": "IT_ENV=.env.test tsx scripts/e2e-phase9.ts",
+    "test:showcase": "IT_ENV=.env.test tsx scripts/e2e-showcase.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

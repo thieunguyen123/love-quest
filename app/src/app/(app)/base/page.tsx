@@ -9,10 +9,11 @@ import { Card } from "@/components/ui";
 import { RpcButton } from "@/components/rpc-button";
 import { BaseClient } from "./base-client";
 import { ShieldPanel } from "./shield-panel";
+import { queuedSlots } from "@/lib/training";
 
 export default async function BasePage() {
   const { supabase, me } = await requirePlayer();
-  await supabase.rpc("ensure_daily");
+  await Promise.all([supabase.rpc("ensure_daily"), supabase.rpc("collect_training")]);   // lính luyện xong → vào quân
   const [b, cfg, { data: closed }] = await Promise.all([loadBase(supabase, me.id), loadConfig(supabase), supabase.from("levels").select("order_no").eq("status", "CLOSED")]);
   const grid = Number(cfg.BASE_GRID_SIZE ?? 20);
   const catalog = buildCatalog(b, cfg, new Set((closed ?? []).map((l) => l.order_no)));
@@ -22,6 +23,12 @@ export default async function BasePage() {
   const cap = Number(cfg.ARMY_CAP_BASE) + Number(cfg.ARMY_CAP_PER_HOUSE_LEVEL) * h.level;
   const nextHouse = b.byCode.get(`house_${h.level + 1}`);
   const tok = (t: string) => tokenCount(b.inv, t);
+  // luyện quân ở nhà máy (BASE-04)
+  const units = (b.items as any[]).filter((i) => i.category === "UNIT");
+  const trainProps = {
+    info: Object.fromEntries(units.map((u) => [u.code, { unit: u.code, name: u.name_vi, emoji: u.emoji, price: Number(u.stats.train_price), sec: Number(u.stats.train_sec), slots: u.slots }])),
+    freeSlots: cap - b.used - queuedSlots(b.training, (c) => Number(b.byCode.get(c)?.slots ?? 1)),
+  };
   const armyCost = Number(cfg.ARMY_UPGRADE_COST_STEP) * (me.army_level + 1);
 
   return (
@@ -31,7 +38,7 @@ export default async function BasePage() {
         <div className="flex gap-4"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Ra làng</Link><Link href="/base/partner" className="font-bold text-love-600 underline">⚔️ Thăm nhà người ấy →</Link></div>
       </div>
 
-      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} />
+      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} train={trainProps} />
 
       <Card className={`space-y-3 ${h.hp === 0 ? "border-red-300" : ""}`}>
         <div className="flex items-center gap-4">
@@ -60,7 +67,7 @@ export default async function BasePage() {
             return (
               <div key={p.id} className={`rounded-xl bg-love-50 p-3 flex items-center gap-3 ${h.hp === 0 ? "opacity-60" : ""}`}>
                 <div className="text-4xl">{def?.emoji}</div>
-                <div className="flex-1 min-w-0"><BaseClient petId={p.id} nickname={p.nickname} /><div className="text-xs">{def?.name_vi} · cấp {p.level}/{String(cfg.PET_MAX_LEVEL)} — {def?.stats.desc}{h.hp === 0 ? " (buồn: mất buff)" : ""}</div></div>
+                <div className="flex-1 min-w-0"><BaseClient petId={p.id} nickname={p.nickname} /><div className="text-xs">{def?.name_vi} · cấp {p.level}/{String(cfg.PET_MAX_LEVEL)} {["", "🐣 Sơ sinh", "🌱 Lớn", "✨ Tiến hoá", "🌟 Hào quang", "👑 Huyền thoại"][p.level] ?? ""} — {def?.stats.desc}{h.hp === 0 ? " (buồn: mất buff)" : ""}</div></div>
                 <RpcButton small fn="upgrade_pet" args={{ p_id: p.id }} label={`⬆️ ${cost} xu`} disabledReason={reason} ghost />
               </div>
             );
@@ -70,13 +77,15 @@ export default async function BasePage() {
           <h2 className="font-extrabold text-love-700">🪖 Quân đội ({b.used}/{cap} chỗ)</h2>
           <div className="text-sm font-semibold">Cấp quân: {me.army_level}/{String(cfg.ARMY_MAX_LEVEL)} (+{Math.round(Number(cfg.ARMY_UPGRADE_ATK_PCT) * me.army_level * 100)}% ATK)</div>
           {b.army.filter((a: any) => a.quantity > 0).map((a: any) => <div key={a.unit_code} className="flex justify-between text-sm"><span>{b.byCode.get(a.unit_code)?.emoji} {b.byCode.get(a.unit_code)?.name_vi}</span><b>×{a.quantity}</b></div>)}
-          {b.army.every((a: any) => a.quantity === 0) && <p className="text-sm">Chưa có lính. <Link className="underline font-bold" href="/shop?tab=units">Tuyển quân</Link></p>}
+          {b.army.every((a: any) => a.quantity === 0) && <p className="text-sm">Chưa có lính. <Link className="underline font-bold" href="/shop?tab=units">Xây nhà máy & luyện quân</Link></p>}
           <RpcButton small ghost fn="upgrade_army" label={`⬆️ Nâng cấp quân (${armyCost} xu)`} disabledReason={me.army_level >= Number(cfg.ARMY_MAX_LEVEL) ? "Đã tối đa" : tok("ARMY_UPGRADE") < 1 ? "Cần 1 Nâng cấp quân đội" : b.profile!.coins < armyCost ? `Thiếu ${armyCost - b.profile!.coins} xu` : null} />
-          <h3 className="font-bold pt-2">⚔️ Vũ khí</h3>
-          {b.weapons.length === 0 ? <p className="text-sm">Chưa có vũ khí. <Link className="underline font-bold" href="/shop?tab=weapons">Mua vũ khí</Link></p> : b.weapons.map((w: any) => <div key={w.weapon_code} className="text-sm">{b.byCode.get(w.weapon_code)?.emoji} {b.byCode.get(w.weapon_code)?.name_vi} (+{Math.round(b.byCode.get(w.weapon_code)?.stats.atk_pct * 100)}% ATK)</div>)}
+          <h3 className="font-bold pt-2">🗼 Phòng thủ</h3>
+          {b.defenses.length === 0 ? <p className="text-sm">Chưa có tháp canh, xe pháo hay bẫy. <Link className="underline font-bold" href="/shop?tab=defense">Xây phòng thủ</Link></p>
+            : <div className="text-sm">{[...new Set(b.defenses.map((d: any) => d.code as string))].map((c) => `${b.byCode.get(c)?.emoji} ${b.byCode.get(c)?.name_vi} ×${b.defenses.filter((d: any) => d.code === c).length}`).join(" · ")}</div>}
+          {b.weapons.length > 0 && <><h3 className="font-bold pt-2">⚔️ Vũ khí (đã ngừng bán, vẫn có tác dụng)</h3>{b.weapons.map((w: any) => <div key={w.weapon_code} className="text-sm">{b.byCode.get(w.weapon_code)?.emoji} {b.byCode.get(w.weapon_code)?.name_vi} (+{Math.round(b.byCode.get(w.weapon_code)?.stats.atk_pct * 100)}% ATK)</div>)}</>}
         </Card>
       </div>
-      <Card className="text-sm font-semibold">🎒 Vật phẩm: 🐾 Nâng cấp thú cưng ×{tok("PET_UPGRADE")} · ⚔️ Quyền mua vũ khí ×{tok("WEAPON_LICENSE")} · 🪖 Nâng cấp quân đội ×{tok("ARMY_UPGRADE")} · 🛡️ Khiên mua ×{b.shields.filter((x: any) => x.source === "PAID" && !x.activated_at).length}</Card>
+      <Card className="text-sm font-semibold">🎒 Vật phẩm: 🐾 Nâng cấp thú cưng ×{tok("PET_UPGRADE")} · 🪖 Nâng cấp quân đội ×{tok("ARMY_UPGRADE")} · 🛡️ Khiên mua ×{b.shields.filter((x: any) => x.source === "PAID" && !x.activated_at).length}</Card>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Html, PerformanceMonitor, Sky } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Html, Sky } from "@react-three/drei";
+import { GameCanvas, useQuality } from "@/components/three/quality";
 import { Physics, RigidBody, CuboidCollider, CylinderCollider, type RapierRigidBody } from "@react-three/rapier";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -100,7 +101,7 @@ export default function World3D(p: WorldProps) {
   const [near, setNear] = useState<ReturnType<typeof nearestZone>>(null);
   const nearRef = useRef(near); nearRef.current = near;
   const [camMode, setCamMode] = useState<CamMode>("iso");
-  const [low, setLow] = useState(false);
+  const Q = useQuality();
   const [touch, setTouch] = useState(false);
   const emotes = useRef<Emote[]>([]);
   const chanRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);
@@ -171,12 +172,12 @@ export default function World3D(p: WorldProps) {
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-sky-200" onWheel={onWheel}>
-      <Canvas shadows dpr={low ? 1 : [1, 1.75]} camera={{ position: [start.x + 11, 16, start.z + 15], fov: 50 }} frameloop={overlay ? "demand" : "always"}>
-        <PerformanceMonitor onDecline={() => setLow(true)} />
+      {/* mở overlay 2D thì dừng hẳn vòng render 3D phía sau (SYS-05) */}
+      <GameCanvas camera={{ position: [start.x + 11, 16, start.z + 15], fov: 50 }} paused={!!overlay}>
         <Sky sunPosition={[60, 40, 30]} turbidity={4} rayleigh={0.6} />
         <fog attach="fog" args={["#cfe8ff", 70, 160]} />
-        <hemisphereLight args={["#fff1f7", "#7fbf7f", 0.9]} />
-        <directionalLight ref={light} intensity={1.6} castShadow={!low} shadow-mapSize={[2048, 2048]} shadow-bias={-0.0005}
+        <hemisphereLight args={["#ffffff", "#9be07a", 1.15]} />
+        <directionalLight ref={light} intensity={2.1} color="#fff3dc" castShadow={Q.shadows} shadow-mapSize={[2048, 2048]} shadow-bias={-0.0005}
           shadow-camera-left={-40} shadow-camera-right={40} shadow-camera-top={40} shadow-camera-bottom={-40} shadow-camera-far={120} />
         <Suspense fallback={null}>
           <Physics gravity={[0, -25, 0]}>
@@ -193,7 +194,7 @@ export default function World3D(p: WorldProps) {
             <Hearts emotes={emotes} pose={pose} remote={remote} />
           </Physics>
         </Suspense>
-      </Canvas>
+      </GameCanvas>
 
       {/* HUD */}
       <div className="pointer-events-none absolute left-3 top-3 z-10 flex flex-col items-start gap-2">

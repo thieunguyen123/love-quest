@@ -62,7 +62,7 @@ async function main() {
   // Flashcard + thưởng
   const { data: lvl } = await moheo.from("levels").select("id").eq("order_no", 1).single();
   const { data: words } = await moheo.from("words").select("id").eq("level_id", lvl!.id);
-  ok(words!.length === 10, "Màn 1 có 10 từ");
+  ok(words!.length === 13, "Màn 1 có 13 từ");
   ok((await moheo.rpc("finish_flashcards", { p_level: lvl!.id })).error?.message === "NOT_ALL_CARDS_SEEN", "Chưa xem hết thẻ → không nhận thưởng");
   for (const w of words!) { const e = (await moheo.rpc("mark_word", { p_word: w.id, p_known: true })).error; if (e) throw e; }
   const f1 = await moheo.rpc("finish_flashcards", { p_level: lvl!.id });

@@ -38,10 +38,24 @@ async function main() {
   ok(Number((await admin.rpc("coin_bonus_pct", { p_user: m.id })).data) === 0, "BASE-03 nhà đổ nát → mất buff");
   await admin.from("user_house").update({ hp: 200 }).eq("user_id", m.id);
 
-  // ---- quân đội + sức chứa ----
-  ok((await m.c.rpc("buy_unit", { p_code: "sword", p_qty: 10 })).data === 10, "Mua 10 Lính kiếm (đủ 10 chỗ nhà cấp 0)");
-  ok(await err(m.c.rpc("buy_unit", { p_code: "sword", p_qty: 1 })) === "ARMY_FULL", "TC-23 hết chỗ chứa quân");
-  ok(await err(m.c.rpc("buy_unit", { p_code: "archer", p_qty: 1 })) === "ITEM_LOCKED", "Cung thủ khóa tới khi màn 3 đóng");
+  // ---- quân đội: nhà máy + luyện quân (BASE-04) ----
+  ok(await err(m.c.rpc("buy_unit", { p_code: "sword", p_qty: 1 })) === "UNIT_RETIRED", "TC-52 không mua lính thẳng được nữa");
+  ok(await err(m.c.rpc("train_units", { p_unit: "sword", p_qty: 1 })) === "NO_FACTORY", "Chưa có Doanh trại → không luyện được");
+  const cf = await coins(m.id);
+  ok(!(await m.c.rpc("buy_factory", { p_code: "fac_sword" })).error && await coins(m.id) === cf - 300, "Xây Doanh trại -300 xu");
+  ok(await err(m.c.rpc("buy_factory", { p_code: "fac_sword" })) === "ALREADY_OWNED", "Mỗi loại nhà máy 1 cái");
+  ok(await err(m.c.rpc("buy_factory", { p_code: "fac_archer" })) === "ITEM_LOCKED", "Trường bắn khoá tới khi màn 3 đóng");
+  const ct = await coins(m.id), t0 = Date.now();
+  const tr = await m.c.rpc("train_units", { p_unit: "sword", p_qty: 5 });
+  const sec = (Date.parse(tr.data?.done_at) - t0) / 1000;
+  ok(!tr.error && tr.data.cost === 200 && await coins(m.id) === ct - 200 && sec > 95 && sec < 105, "TC-51 luyện 5 Lính kiếm: -200 xu, mất ~100 giây", { tr, sec });
+  const tr2 = await m.c.rpc("train_units", { p_unit: "sword", p_qty: 5 });
+  ok(!tr2.error && Math.abs((Date.parse(tr2.data.done_at) - Date.parse(tr.data.done_at)) / 1000 - 100) < 2, "Đơn sau xếp hàng nối tiếp đơn trước", tr2);
+  ok(await err(m.c.rpc("train_units", { p_unit: "sword", p_qty: 1 })) === "ARMY_FULL", "TC-53/TC-23 hết chỗ (tính cả lính đang luyện)");
+  ok((await m.c.rpc("collect_training")).data === 0 && ((await admin.from("user_army").select("quantity").eq("user_id", m.id).eq("unit_code", "sword").maybeSingle()).data?.quantity ?? 0) === 0, "Chưa hết giờ → chưa có lính");
+  await admin.from("training").update({ done_at: new Date(Date.now() - 1000).toISOString() }).eq("user_id", m.id);
+  ok((await m.c.rpc("collect_training")).data === 10 && (await admin.from("user_army").select("quantity").eq("user_id", m.id).eq("unit_code", "sword").single()).data!.quantity === 10, "Hết giờ → 10 lính vào quân");
+  ok(((await admin.from("training").select("id").eq("user_id", m.id)).data ?? []).length === 0, "Hàng chờ trống sau khi thu");
 
   // ---- nhà ----
   await admin.from("user_house").update({ hp: 150 }).eq("user_id", m.id);
@@ -55,7 +69,7 @@ async function main() {
   const h = (await admin.from("user_house").select("*").eq("user_id", m.id).single()).data!;
   ok(hu.data === 1 && h.max_hp === 500 && h.hp === 500 && await coins(m.id) === c3 - 300, "BASE-02 Nhà gỗ: -300 xu, HP 500", { hu, h });
   ok((await admin.rpc("army_capacity", { p_user: m.id })).data === 20, "Sức chứa quân nhà cấp 1 = 20");
-  ok((await m.c.rpc("buy_unit", { p_code: "sword", p_qty: 10 })).data === 20, "Giờ mua thêm được 10 lính");
+  ok(!(await m.c.rpc("train_units", { p_unit: "sword", p_qty: 10 })).error, "Nhà to hơn → luyện thêm được 10 lính");
 
   // ---- cấp quân đội ----
   ok(await err(m.c.rpc("upgrade_army")) === "NOT_ENOUGH_ITEM", "Nâng cấp quân cần token");
@@ -63,15 +77,9 @@ async function main() {
   const c4 = await coins(m.id);
   ok((await m.c.rpc("upgrade_army")).data === 1 && await coins(m.id) === c4 - 150, "Quân cấp 1: -150 xu");
 
-  // ---- vũ khí ----
-  ok(await err(m.c.rpc("buy_weapon", { p_code: "iron_sword" })) === "NOT_ENOUGH_ITEM", "TC-21 vũ khí cần Quyền mua vũ khí");
+  // ---- vũ khí: đã bỏ khỏi cửa hàng (BASE-05) ----
   await give(m.id, "WEAPON_LICENSE", 3);
-  ok(await err(m.c.rpc("buy_weapon", { p_code: "iron_sword" })) === undefined, "Mua Kiếm sắt");
-  ok(await err(m.c.rpc("buy_weapon", { p_code: "iron_sword" })) === "ALREADY_OWNED", "Mỗi vũ khí 1 lần");
-  ok(await err(m.c.rpc("buy_weapon", { p_code: "fire_bow" })) === "ITEM_LOCKED", "Cung lửa khóa tới khi màn 4 đóng");
-  await admin.from("levels").update({ status: "CLOSED" }).eq("order_no", 4);
-  ok(await err(m.c.rpc("buy_weapon", { p_code: "fire_bow" })) === undefined, "Màn 4 đóng → mua được Cung lửa");
-  ok(await tokens("WEAPON_LICENSE") === 1, "Token vũ khí còn 1");
+  ok(await err(m.c.rpc("buy_weapon", { p_code: "iron_sword" })) === "ITEM_RETIRED", "TC-46 vũ khí không còn bán");
 
   // ---- người ấy xem được căn cứ nhưng không sửa được ----
   const { data: seen } = await u.c.from("user_pets").select("pet_code").eq("user_id", m.id);

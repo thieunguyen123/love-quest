@@ -69,3 +69,49 @@ describe("bố cục căn cứ (BASE-07)", () => {
     }
   });
 });
+
+describe("vật cản & mở rộng căn cứ (BASE-13)", () => {
+  it("sinh vật cản xác định, chỉ ở vòng ngoài, không chồng nhau, giá theo số ô", async () => {
+    const { generateObstacles } = await import("./obstacles");
+    const a = generateObstacles(30, 20, 150), b = generateObstacles(30, 20, 150);
+    expect(a).toEqual(b); expect(a.length).toBeGreaterThan(40);
+    const cells = new Set<string>();
+    for (const o of a) for (let i = 0; i < o.size; i++) for (let j = 0; j < o.size; j++) {
+      const x = o.x + i, z = o.z + j, k = `${x},${z}`;
+      expect(cells.has(k)).toBe(false); cells.add(k);
+      expect(x >= 5 && x < 25 && z >= 5 && z < 25).toBe(false);
+      expect(x < 30 && z < 30).toBe(true);
+    }
+    for (const o of a) expect(o.price).toBe(Math.round(o.size * o.size * 150 * (o.code === "boulder" ? 1.5 : 1)));
+  });
+  it("không đặt đè vật cản chưa dọn; autoPlace tránh vật cản", () => {
+    const blocked = [{ x: 0, z: 0, s: 3 }];
+    expect(canPlace({ kind: "PET", ref: "p", size: 1 }, 1, 1, [], () => 1, 30, 2, blocked)).toBe("OVERLAP_OBSTACLE");
+    expect(canPlace({ kind: "PET", ref: "p", size: 1 }, 3, 3, [], () => 1, 30, 2, blocked)).toBeNull();
+    const many = Array.from({ length: 60 }, (_, i) => ({ kind: "DECOR" as const, ref: `d${i}`, size: 1 }));
+    const ring = [{ x: 0, z: 0, s: 30 }].filter(() => false);
+    const { placed } = autoPlace([], many, 30, 2, [...ring, { x: 12, z: 12, s: 6 }].filter((r) => r.x !== 12));
+    expect(placed).toHaveLength(60);
+    const wall = [{ x: 10, z: 10, s: 10 }];
+    const r = autoPlace([], many.slice(0, 5), 30, 2, wall);
+    for (const p of r.placed) expect(p.x >= 10 && p.x < 20 && p.z >= 10 && p.z < 20).toBe(false);
+  });
+});
+
+describe("nhà máy & tường (BASE-04, BASE-15)", () => {
+  it("lính mới luyện đứng sát rìa nhà máy của nó; tường không tự đặt", () => {
+    const items: Item[] = [
+      { kind: "FACTORY", ref: "fac_sword", size: 3 },
+      { kind: "UNIT", ref: "sword", size: 2, near: "FACTORY:fac_sword" },
+      { kind: "WALL", ref: "w1", size: 1 }, { kind: "WALL", ref: "w2", size: 1 },
+    ];
+    const saved: Placed[] = [{ kind: "FACTORY", ref: "fac_sword", x: 4, z: 4, rot: 0 }];
+    const { placed, unplaced } = autoPlace(saved, items, 40, 2);
+    const u = placed.find((p) => p.kind === "UNIT")!;
+    const d = Math.max(Math.abs(u.x + 1 - 5.5), Math.abs(u.z + 1 - 5.5));
+    expect(d).toBeLessThanOrEqual(2.5);   // sát nhà máy (3×3 ở ô 4..6)
+    expect(placed.some((p) => p.kind === "WALL")).toBe(false);
+    expect(unplaced.filter((i) => i.kind === "WALL")).toHaveLength(2);
+    expect(autoPlace(saved, items, 40, 2)).toEqual(autoPlace(saved, items, 40, 2));
+  });
+});

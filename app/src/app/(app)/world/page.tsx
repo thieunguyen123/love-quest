@@ -15,7 +15,7 @@ export default async function WorldPage({ searchParams }: { searchParams: Promis
   ]);
   const now = Date.now();
   const info = (b: any, name: string, color: string): HouseInfo => ({
-    name, color, exists: !!b?.house, level: b?.house?.level ?? 0, hpPct: b?.house ? b.house.hp / b.house.max_hp : 1,
+    name, color, exists: !!b?.house, level: b?.house?.level ?? 0, style: b?.house?.style ?? "classic", hpPct: b?.house ? b.house.hp / b.house.max_hp : 1,
     shield: !!b?.shields.some((s: any) => s.activated_at && !s.broken_at && s.expires_at && Date.parse(s.expires_at) > now),
     pets: (b?.pets ?? []).map((p: any) => ({ code: p.pet_code, level: p.level, nickname: p.nickname })),
     squads: (b?.army ?? []).filter((a: any) => a.quantity > 0).sort((x: any, y: any) => y.quantity - x.quantity).map((a: any) => ({ unit: a.unit_code, qty: a.quantity })),

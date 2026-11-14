@@ -177,25 +177,25 @@
     "key": "DEFENDER_ARMY_RATIO",
     "value": 0.5,
     "unit": "%",
-    "description": "Quân của người phòng thủ đóng góp % ATK của họ vào DEF"
+    "description": "Đội gác (quân người phòng thủ đặt trong căn cứ) đánh với % sức đánh của họ"
   },
   {
     "key": "MIN_DAMAGE_RATIO",
     "value": 0.1,
     "unit": "%",
-    "description": "Sát thương tối thiểu = % ATK (đánh là luôn có sát thương)"
+    "description": "Sát thương tối thiểu = % ATK (đánh là luôn có sát thương) (KHÔNG còn dùng từ bản mô phỏng trận — BTL-02)"
   },
   {
     "key": "DAMAGE_RANDOM_MIN",
     "value": 0.9,
     "unit": "x",
-    "description": "Hệ số ngẫu nhiên thấp nhất"
+    "description": "Hệ số ngẫu nhiên thấp nhất (KHÔNG còn dùng — trận không còn ngẫu nhiên)"
   },
   {
     "key": "DAMAGE_RANDOM_MAX",
     "value": 1.1,
     "unit": "x",
-    "description": "Hệ số ngẫu nhiên cao nhất"
+    "description": "Hệ số ngẫu nhiên cao nhất (KHÔNG còn dùng — trận không còn ngẫu nhiên)"
   },
   {
     "key": "LOOT_COIN_PER_DAMAGE",
@@ -277,8 +277,92 @@
   },
   {
     "key": "BASE_GRID_SIZE",
-    "value": 20,
+    "value": 40,
     "unit": "ô",
-    "description": "Cạnh lưới căn cứ 3D (mỗi ô 2 m). Nhà chính ở giữa."
+    "description": "Cạnh lưới căn cứ 3D (mỗi ô 2 m). Nhà chính ở giữa. (20 → 30 → 40; bố cục cũ dời giữa nhà)"
+  },
+  {
+    "key": "BASE_FREE_SIZE",
+    "value": 24,
+    "unit": "ô",
+    "description": "Cạnh vùng trống ở giữa (không có vật cản) lúc bắt đầu"
+  },
+  {
+    "key": "OBSTACLE_COST_PER_CELL",
+    "value": 150,
+    "unit": "xu",
+    "description": "Giá dọn vật cản cho mỗi ô (núi đá ×1,5)"
+  },
+  {
+    "key": "OBSTACLE_DENSITY",
+    "value": 0.45,
+    "unit": "%",
+    "description": "Tỉ lệ ô vòng ngoài bị vật cản phủ khi sinh bản đồ"
+  },
+  {
+    "key": "BATTLE_SECONDS",
+    "value": 60,
+    "unit": "giây",
+    "description": "Thời lượng tối đa 1 trận (tính cả lúc rải quân)"
+  },
+  {
+    "key": "BATTLE_TICK_MS",
+    "value": 100,
+    "unit": "ms",
+    "description": "Bước mô phỏng. Client và server dùng cùng giá trị"
+  },
+  {
+    "key": "HOUSE_DAMAGE_RATIO",
+    "value": 0.02,
+    "unit": "x",
+    "description": "Sát thương của lính lên NHÀ CHÍNH nhân hệ số này (nhà kiên cố)"
+  },
+  {
+    "key": "HOUSE_ARMOR_K",
+    "value": 300,
+    "unit": "DEF",
+    "description": "Giáp nhà = DEF ÷ (DEF + K). K càng lớn giáp càng yếu"
+  },
+  {
+    "key": "GUARD_AGGRO_M",
+    "value": 8,
+    "unit": "m",
+    "description": "Địch vào trong bán kính này thì đội gác xông ra đánh"
+  },
+  {
+    "key": "DEPLOY_MIN_DIST_M",
+    "value": 4,
+    "unit": "m",
+    "description": "Vùng cấm thả quân quanh nhà và công trình phòng thủ"
+  },
+  {
+    "key": "DEPLOY_GROUP_SIZE",
+    "value": 5,
+    "unit": "lính",
+    "description": "Số lính tối đa mỗi lần chạm thả (1 tốp)"
+  },
+  {
+    "key": "BATTLE_MAX_GROUPS",
+    "value": 24,
+    "unit": "tốp",
+    "description": "Số tốp tối đa 1 trận (giữ FPS trên điện thoại)"
+  },
+  {
+    "key": "SPLASH_MAX_HITS",
+    "value": 4,
+    "unit": "lính",
+    "description": "Đạn pháo / bẫy nổ lan trúng tối đa bao nhiêu lính trong 1 tốp"
+  },
+  {
+    "key": "DEFENSE_HOUSE_LEVEL_PCT",
+    "value": 0.2,
+    "unit": "%",
+    "description": "Mỗi cấp nhà: HP & sát thương của tháp, pháo, bẫy +%"
+  },
+  {
+    "key": "ATTACK_PENDING_MINUTES",
+    "value": 10,
+    "unit": "phút",
+    "description": "Trận bỏ dở quá lâu → kết thúc với 0 sát thương (vẫn mất lượt)"
   }
 ]

@@ -1,9 +1,10 @@
 "use client";
-import { Suspense, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html, Instances, Instance } from "@react-three/drei";
 import * as THREE from "three";
 import { Model } from "@/components/three/models";
+import { InstancedModel, type Inst } from "@/components/three/quality";
 import { RigidBody, CuboidCollider, CylinderCollider, ConeCollider } from "@react-three/rapier";
 import { Countdown } from "@/components/countdown";
 import { CONES, RAMP, TREES, WORLD_HALF, ZONE_MODELS, bowlingPins, crateStack, type Zone } from "./data";
@@ -47,20 +48,25 @@ export function Ground() {
 // Cây KayKit: 1 rigid body cố định nhiều collider; 1/4 số cây nhuộm hồng cho "Làng Tình Yêu"
 const TREE_MODELS = ["tree_single_A", "tree_single_B", "trees_A_medium", "tree_single_A", "trees_B_medium", "tree_single_B"];
 export function Trees() {
+  // gộp 70 cây thành vài InstancedMesh (SYS-05): mỗi loại mô hình 1 nhóm
+  const groups = useMemo(() => {
+    const out: Record<string, Inst[]> = {};
+    TREES.forEach((t, i) => {
+      const m = TREE_MODELS[i % 6];
+      (out[m] ??= []).push({ x: t.x, z: t.z, s: (m.startsWith("trees_") ? 4.6 : 5) * t.s, rot: i * 1.7, tint: i % 4 === 0 ? "#ffc2e0" : undefined });
+    });
+    return Object.entries(out);
+  }, []);
   return (
     <>
       <RigidBody type="fixed" colliders={false}>
         {TREES.map((t, i) => <CylinderCollider key={i} args={[1.5, (TREE_MODELS[i % 6].startsWith("trees_") ? 1.4 : 0.45) * t.s]} position={[t.x, 1.5, t.z]} />)}
       </RigidBody>
-      {TREES.map((t, i) => {
-        const m = TREE_MODELS[i % 6];
-        return <Suspense key={i} fallback={null}><Model name={m} {...(m.startsWith("trees_") ? { size: 4.6 * t.s } : { height: 5 * t.s })} position={[t.x, 0, t.z]} rotation={[0, i * 1.7, 0]} tint={i % 4 === 0 ? "#ffc2e0" : undefined} /></Suspense>;
-      })}
+      {groups.map(([m, items]) => <Suspense key={m} fallback={null}><InstancedModel name={m} items={items} fit={m.startsWith("trees_") ? "size" : "height"} /></Suspense>)}
     </>
   );
 }
 
-// Núi bao quanh làng + mây trôi (chỉ để nhìn)
 export function Backdrop() {
   const L = WORLD_HALF;
   const mountains = Array.from({ length: 18 }, (_, i) => { const a = (i / 18) * Math.PI * 2; const d = L + 22 + (i % 3) * 8; return { x: Math.cos(a) * d, z: Math.sin(a) * d, s: 26 + (i % 4) * 6, r: i * 0.9, m: i % 2 ? "mountain_A_grass_trees" : "mountain_B_grass_trees" }; });

@@ -7,9 +7,10 @@ import * as THREE from "three";
 import { HouseModel, HOUSE_NAMES, Model } from "@/components/three/models";
 import { Pet } from "@/components/three/pets";
 import { Squad } from "@/components/three/units";
+import { useQuality } from "@/components/three/quality";
 
 export type HouseInfo = {
-  name: string; level: number; hpPct: number; shield: boolean; color: string; exists: boolean;
+  name: string; level: number; hpPct: number; shield: boolean; color: string; exists: boolean; style?: string;
   pets: { code: string; level: number; nickname: string }[];
   squads: { unit: string; qty: number }[];
 };
@@ -31,16 +32,17 @@ export function House({ x, z, info, hitRef }: { x: number; z: number; info: Hous
   const ruined = info.exists && info.hpPct <= 0;
   const face = x < 0 ? 0.6 : -0.6;   // quay mặt về phía đường giữa làng
   const shake = useRef(0);
+  const Q = useQuality();
   useFrame((_, dt) => { if (hitRef) { shake.current = hitRef.current ?? 0; if ((hitRef.current ?? 0) > 0) hitRef.current = Math.max(0, (hitRef.current ?? 0) - dt * 0.5); } });
   return (
     <group position={[x, 0, z]} rotation={[0, face, 0]}>
-      {info.exists ? <HouseModel level={info.level} color={info.color} hpPct={info.hpPct} shield={info.shield} size={HOUSE_LOT} shakeRef={shake} />
+      {info.exists ? <HouseModel level={info.level} style={info.style} color={info.color} hpPct={info.hpPct} shield={info.shield} size={HOUSE_LOT} shakeRef={shake} />
         : <Model name="scaffolding" size={HOUSE_LOT * 0.8} />}
       {hitRef && <Burst hitRef={hitRef} />}
       {/* lính gác đứng 2 bên cửa, thú cưng đi dạo quanh nhà */}
       {!ruined && info.squads.slice(0, 2).map((s, i) => (
         <group key={s.unit} position={[(i ? 1 : -1) * (HOUSE_LOT / 2 + 1.6), 0, HOUSE_LOT / 2 + 0.8]} rotation={[0, 0, 0]}>
-          <Suspense fallback={null}><Squad unit={s.unit} qty={s.qty} width={3} height={1.9} tint={info.color} /></Suspense>
+          <Suspense fallback={null}><Squad unit={s.unit} qty={s.qty} width={3} height={1.9} tint={info.color} cap={Q.squadCap} shadows={Q.shadows} /></Suspense>
         </group>
       ))}
       {info.pets.map((p, i) => (

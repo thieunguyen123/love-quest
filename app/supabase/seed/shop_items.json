@@ -149,7 +149,8 @@
     "stats": {
       "atk_pct_per_level": 0.05,
       "desc": "+5% ATK quân mỗi cấp",
-      "size": 1
+      "size": 1,
+      "evolved": true
     },
     "unlock_level": 5,
     "slots": 0,
@@ -157,13 +158,101 @@
     "emoji": "🐲"
   },
   {
+    "code": "mushnub",
+    "category": "PET",
+    "name_vi": "Nấm lùn",
+    "price": 400,
+    "stats": {
+      "coin_pct_per_level": 0.02,
+      "desc": "+2% xu nhận từ màn chơi mỗi cấp",
+      "size": 1,
+      "evolved": true
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 14,
+    "emoji": "🍄"
+  },
+  {
+    "code": "armabee",
+    "category": "PET",
+    "name_vi": "Ong mập",
+    "price": 600,
+    "stats": {
+      "def_per_level": 6,
+      "desc": "+6 DEF mỗi cấp",
+      "size": 1,
+      "evolved": true
+    },
+    "unlock_level": 3,
+    "slots": 0,
+    "sort": 15,
+    "emoji": "🐝"
+  },
+  {
+    "code": "glub",
+    "category": "PET",
+    "name_vi": "Dơi tím",
+    "price": 900,
+    "stats": {
+      "atk_pct_per_level": 0.03,
+      "desc": "+3% ATK quân mỗi cấp",
+      "size": 1,
+      "evolved": true
+    },
+    "unlock_level": 6,
+    "slots": 0,
+    "sort": 16,
+    "emoji": "🦇"
+  },
+  {
+    "code": "alpaking",
+    "category": "PET",
+    "name_vi": "Dơi vua",
+    "price": 1200,
+    "stats": {
+      "coin_pct_per_level": 0.04,
+      "desc": "+4% xu nhận từ màn chơi mỗi cấp",
+      "size": 1,
+      "evolved": true
+    },
+    "unlock_level": 8,
+    "slots": 0,
+    "sort": 17,
+    "emoji": "👑"
+  },
+  {
+    "code": "goleling",
+    "category": "PET",
+    "name_vi": "Yêu tinh xanh",
+    "price": 1500,
+    "stats": {
+      "def_per_level": 12,
+      "desc": "+12 DEF mỗi cấp",
+      "size": 1,
+      "evolved": true
+    },
+    "unlock_level": 10,
+    "slots": 0,
+    "sort": 18,
+    "emoji": "👺"
+  },
+  {
     "code": "sword",
     "category": "UNIT",
     "name_vi": "Lính kiếm",
-    "price": 50,
+    "price": 40,
     "stats": {
       "atk": 10,
-      "size": 2
+      "size": 2,
+      "hp": 60,
+      "speed": 3.5,
+      "range": 1.5,
+      "hit_sec": 1,
+      "target": "any",
+      "train_price": 40,
+      "train_sec": 20,
+      "factory": "fac_sword"
     },
     "unlock_level": null,
     "slots": 1,
@@ -174,10 +263,18 @@
     "code": "archer",
     "category": "UNIT",
     "name_vi": "Cung thủ",
-    "price": 120,
+    "price": 90,
     "stats": {
       "atk": 25,
-      "size": 2
+      "size": 2,
+      "hp": 40,
+      "speed": 3.2,
+      "range": 8,
+      "hit_sec": 1,
+      "target": "any",
+      "train_price": 90,
+      "train_sec": 40,
+      "factory": "fac_archer"
     },
     "unlock_level": 3,
     "slots": 1,
@@ -188,10 +285,18 @@
     "code": "knight",
     "category": "UNIT",
     "name_vi": "Kỵ binh",
-    "price": 300,
+    "price": 250,
     "stats": {
       "atk": 70,
-      "size": 2
+      "size": 2,
+      "hp": 320,
+      "speed": 4.5,
+      "range": 1.8,
+      "hit_sec": 1.2,
+      "target": "defense",
+      "train_price": 250,
+      "train_sec": 90,
+      "factory": "fac_knight"
     },
     "unlock_level": 6,
     "slots": 2,
@@ -202,15 +307,89 @@
     "code": "catapult",
     "category": "UNIT",
     "name_vi": "Máy bắn đá",
-    "price": 800,
+    "price": 700,
     "stats": {
       "atk": 200,
-      "size": 2
+      "size": 2,
+      "hp": 220,
+      "speed": 1.8,
+      "range": 13,
+      "hit_sec": 3,
+      "target": "house",
+      "train_price": 700,
+      "train_sec": 300,
+      "factory": "fac_catapult"
     },
     "unlock_level": 10,
     "slots": 3,
     "sort": 23,
     "emoji": "🪨"
+  },
+  {
+    "code": "mage",
+    "category": "UNIT",
+    "name_vi": "Pháp sư",
+    "price": 150,
+    "stats": {
+      "atk": 40,
+      "hp": 60,
+      "speed": 3,
+      "range": 7,
+      "hit_sec": 1.2,
+      "target": "any",
+      "size": 2,
+      "train_price": 150,
+      "train_sec": 60,
+      "factory": "fac_mage"
+    },
+    "unlock_level": 4,
+    "slots": 1,
+    "sort": 24,
+    "emoji": "🧙"
+  },
+  {
+    "code": "ninja",
+    "category": "UNIT",
+    "name_vi": "Ninja",
+    "price": 120,
+    "stats": {
+      "atk": 30,
+      "hp": 90,
+      "speed": 5.5,
+      "range": 1.4,
+      "hit_sec": 0.6,
+      "target": "any",
+      "size": 2,
+      "train_price": 120,
+      "train_sec": 45,
+      "factory": "fac_ninja"
+    },
+    "unlock_level": 5,
+    "slots": 1,
+    "sort": 25,
+    "emoji": "🥷"
+  },
+  {
+    "code": "yeti",
+    "category": "UNIT",
+    "name_vi": "Người tuyết Yeti",
+    "price": 500,
+    "stats": {
+      "atk": 45,
+      "hp": 900,
+      "speed": 2.2,
+      "range": 1.8,
+      "hit_sec": 1.5,
+      "target": "defense",
+      "size": 2,
+      "train_price": 500,
+      "train_sec": 180,
+      "factory": "fac_yeti"
+    },
+    "unlock_level": 8,
+    "slots": 4,
+    "sort": 26,
+    "emoji": "🦍"
   },
   {
     "code": "iron_sword",
@@ -219,7 +398,8 @@
     "price": 200,
     "stats": {
       "atk_pct": 0.1,
-      "size": 1
+      "size": 1,
+      "retired": true
     },
     "unlock_level": null,
     "slots": 0,
@@ -233,7 +413,8 @@
     "price": 500,
     "stats": {
       "atk_pct": 0.2,
-      "size": 1
+      "size": 1,
+      "retired": true
     },
     "unlock_level": 4,
     "slots": 0,
@@ -247,7 +428,8 @@
     "price": 1000,
     "stats": {
       "atk_pct": 0.3,
-      "size": 1
+      "size": 1,
+      "retired": true
     },
     "unlock_level": 8,
     "slots": 0,
@@ -261,7 +443,8 @@
     "price": 2500,
     "stats": {
       "atk_pct": 0.5,
-      "size": 1
+      "size": 1,
+      "retired": true
     },
     "unlock_level": 12,
     "slots": 0,
@@ -275,12 +458,140 @@
     "price": 5000,
     "stats": {
       "atk_pct": 0.8,
-      "size": 1
+      "size": 1,
+      "retired": true
     },
     "unlock_level": 16,
     "slots": 0,
     "sort": 34,
     "emoji": "⚡"
+  },
+  {
+    "code": "def_tower",
+    "category": "DEFENSE",
+    "name_vi": "Tháp canh",
+    "price": 250,
+    "stats": {
+      "size": 2,
+      "hp": 800,
+      "dmg": 10,
+      "hit_sec": 0.8,
+      "range": 9,
+      "splash": 0,
+      "max_by_house": [
+        1,
+        1,
+        2,
+        2,
+        3,
+        4
+      ],
+      "desc": "Bắn tên vào lính địch gần nhất trong tầm 9 m"
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 40,
+    "emoji": "🗼"
+  },
+  {
+    "code": "def_cannon",
+    "category": "DEFENSE",
+    "name_vi": "Xe pháo",
+    "price": 600,
+    "stats": {
+      "size": 2,
+      "hp": 1000,
+      "dmg": 30,
+      "hit_sec": 2.5,
+      "range": 7.5,
+      "splash": 2.5,
+      "max_by_house": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3
+      ],
+      "desc": "Bắn chậm, đạn nổ lan cả tốp lính"
+    },
+    "unlock_level": 3,
+    "slots": 0,
+    "sort": 41,
+    "emoji": "💣"
+  },
+  {
+    "code": "trap_spike",
+    "category": "TRAP",
+    "name_vi": "Bẫy chông",
+    "price": 80,
+    "stats": {
+      "size": 1,
+      "dmg": 35,
+      "trigger": 1.6,
+      "splash": 2.2,
+      "max_by_house": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "desc": "Ẩn với địch; lính bước vào là sập"
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 45,
+    "emoji": "🪤"
+  },
+  {
+    "code": "trap_bomb",
+    "category": "TRAP",
+    "name_vi": "Bom tình yêu",
+    "price": 200,
+    "stats": {
+      "size": 1,
+      "dmg": 90,
+      "trigger": 1.8,
+      "splash": 3.2,
+      "max_by_house": [
+        0,
+        1,
+        2,
+        2,
+        3,
+        4
+      ],
+      "desc": "Ẩn với địch; nổ lan rộng"
+    },
+    "unlock_level": 4,
+    "slots": 0,
+    "sort": 46,
+    "emoji": "💥"
+  },
+  {
+    "code": "wall",
+    "category": "WALL",
+    "name_vi": "Tường thành",
+    "price": 40,
+    "stats": {
+      "size": 1,
+      "hp": 300,
+      "max_by_house": [
+        20,
+        40,
+        60,
+        90,
+        120,
+        160
+      ],
+      "desc": "Chặn đường lính địch — phải phá mới đi qua"
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 47,
+    "emoji": "🧱"
   },
   {
     "code": "deco_bush",
@@ -509,17 +820,185 @@
   {
     "code": "deco_tower",
     "category": "DECOR",
-    "name_vi": "Tháp canh",
+    "name_vi": "Tháp ngắm cảnh",
     "price": 300,
     "stats": {
       "size": 2,
       "model": "tower_A",
-      "desc": "Tháp canh theo màu của bạn 2×2",
+      "desc": "Tháp trang trí theo màu của bạn 2×2 (không bắn)",
       "max": 20
     },
     "unlock_level": 5,
     "slots": 0,
     "sort": 64,
     "emoji": "🗼"
+  },
+  {
+    "code": "style_classic",
+    "category": "STYLE",
+    "name_vi": "Làng quê",
+    "price": 0,
+    "stats": {
+      "size": 0,
+      "desc": "Kiểu nhà mặc định: chòi gỗ → cung điện"
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 70,
+    "emoji": "🏡"
+  },
+  {
+    "code": "style_town",
+    "category": "STYLE",
+    "name_vi": "Phố cổ",
+    "price": 2000,
+    "stats": {
+      "size": 0,
+      "desc": "Nhà phố mái ngói, lên cấp thành dãy nhà 2 tầng"
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 71,
+    "emoji": "🏘️"
+  },
+  {
+    "code": "style_temple",
+    "category": "STYLE",
+    "name_vi": "Đền Tình Yêu",
+    "price": 4000,
+    "stats": {
+      "size": 0,
+      "desc": "Đền gỗ → tháp nhọn trắng như cổ tích"
+    },
+    "unlock_level": 3,
+    "slots": 0,
+    "sort": 72,
+    "emoji": "⛪"
+  },
+  {
+    "code": "style_fortress",
+    "category": "STYLE",
+    "name_vi": "Pháo đài",
+    "price": 6000,
+    "stats": {
+      "size": 0,
+      "desc": "Doanh trại → thành đá có tháp canh"
+    },
+    "unlock_level": 6,
+    "slots": 0,
+    "sort": 73,
+    "emoji": "🏯"
+  },
+  {
+    "code": "fac_sword",
+    "category": "FACTORY",
+    "name_vi": "Doanh trại",
+    "price": 300,
+    "stats": {
+      "size": 3,
+      "model": "house_fortress_l0",
+      "unit": "sword",
+      "desc": "Luyện Lính kiếm"
+    },
+    "unlock_level": null,
+    "slots": 0,
+    "sort": 80,
+    "emoji": "🏯"
+  },
+  {
+    "code": "fac_archer",
+    "category": "FACTORY",
+    "name_vi": "Trường bắn",
+    "price": 800,
+    "stats": {
+      "size": 3,
+      "model": "fac_archery",
+      "unit": "archer",
+      "desc": "Luyện Cung thủ"
+    },
+    "unlock_level": 3,
+    "slots": 0,
+    "sort": 81,
+    "emoji": "🎯"
+  },
+  {
+    "code": "fac_mage",
+    "category": "FACTORY",
+    "name_vi": "Đền phép",
+    "price": 1500,
+    "stats": {
+      "size": 3,
+      "model": "house_temple_l0",
+      "unit": "mage",
+      "desc": "Luyện Pháp sư"
+    },
+    "unlock_level": 4,
+    "slots": 0,
+    "sort": 82,
+    "emoji": "🔮"
+  },
+  {
+    "code": "fac_ninja",
+    "category": "FACTORY",
+    "name_vi": "Tháp ninja",
+    "price": 1800,
+    "stats": {
+      "size": 2,
+      "model": "fac_ninja",
+      "unit": "ninja",
+      "desc": "Luyện Ninja"
+    },
+    "unlock_level": 5,
+    "slots": 0,
+    "sort": 83,
+    "emoji": "🗼"
+  },
+  {
+    "code": "fac_knight",
+    "category": "FACTORY",
+    "name_vi": "Chuồng ngựa",
+    "price": 2500,
+    "stats": {
+      "size": 3,
+      "model": "house_fortress_l1",
+      "unit": "knight",
+      "desc": "Luyện Kỵ binh"
+    },
+    "unlock_level": 6,
+    "slots": 0,
+    "sort": 84,
+    "emoji": "🐴"
+  },
+  {
+    "code": "fac_yeti",
+    "category": "FACTORY",
+    "name_vi": "Hang tuyết",
+    "price": 5000,
+    "stats": {
+      "size": 3,
+      "model": "fac_mine",
+      "unit": "yeti",
+      "desc": "Luyện Người tuyết Yeti"
+    },
+    "unlock_level": 8,
+    "slots": 0,
+    "sort": 85,
+    "emoji": "🏔️"
+  },
+  {
+    "code": "fac_catapult",
+    "category": "FACTORY",
+    "name_vi": "Xưởng máy",
+    "price": 8000,
+    "stats": {
+      "size": 3,
+      "model": "fac_workshop",
+      "unit": "catapult",
+      "desc": "Luyện Máy bắn đá"
+    },
+    "unlock_level": 10,
+    "slots": 0,
+    "sort": 86,
+    "emoji": "🛠️"
   }
 ]

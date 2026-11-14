@@ -1,7 +1,8 @@
 // Bố cục căn cứ kiểu Clash of Clans (BASE-07). Twin của SQL save_base_layout: cùng luật kiểm tra.
-export type Kind = "UNIT" | "PET" | "WEAPON" | "DECOR";
+export type Kind = "UNIT" | "PET" | "WEAPON" | "DECOR" | "DEFENSE" | "TRAP" | "WALL" | "FACTORY";
 export type Placed = { kind: Kind; ref: string; x: number; z: number; rot: number };
-export type Item = { kind: Kind; ref: string; size: number };
+/** `near` = khoá (kind:ref) của vật mà vật này nên đứng sát cạnh khi tự đặt (lính → nhà máy luyện ra nó) */
+export type Item = { kind: Kind; ref: string; size: number; near?: string };
 export type Rect = { x: number; z: number; s: number };
 
 export const TILE = 2;   // mét / ô
@@ -14,19 +15,20 @@ export function houseRect(grid: number, houseSize: number): Rect {
 export const overlap = (a: Rect, b: Rect) => a.x < b.x + b.s && a.x + a.s > b.x && a.z < b.z + b.s && a.z + a.s > b.z;
 export const inGrid = (r: Rect, grid: number) => r.x >= 0 && r.z >= 0 && r.x + r.s <= grid && r.z + r.s <= grid;
 
-export type LayoutError = "OUT_OF_BOUNDS" | "OVERLAP_HOUSE" | "OVERLAP" | "DUPLICATE_ITEM" | "ITEM_NOT_OWNED";
+export type LayoutError = "OUT_OF_BOUNDS" | "OVERLAP_HOUSE" | "OVERLAP_OBSTACLE" | "OVERLAP" | "DUPLICATE_ITEM" | "ITEM_NOT_OWNED";
 
-/** Kiểm tra 1 vị trí cho `item` khi các vật khác (trừ chính nó) đã nằm trong `placed` */
-export function canPlace(item: Item, x: number, z: number, placed: Placed[], sizeOf: (p: Placed) => number, grid: number, houseSize: number): LayoutError | null {
+/** Kiểm tra 1 vị trí cho `item` khi các vật khác (trừ chính nó) đã nằm trong `placed`. `blocked` = vật cản chưa dọn (BASE-13) */
+export function canPlace(item: Item, x: number, z: number, placed: Placed[], sizeOf: (p: Placed) => number, grid: number, houseSize: number, blocked: Rect[] = []): LayoutError | null {
   const r = { x, z, s: item.size };
   if (!inGrid(r, grid)) return "OUT_OF_BOUNDS";
   if (overlap(r, houseRect(grid, houseSize))) return "OVERLAP_HOUSE";
+  for (const b of blocked) if (overlap(r, b)) return "OVERLAP_OBSTACLE";
   for (const p of placed) if (keyOf(p) !== keyOf(item) && overlap(r, { x: p.x, z: p.z, s: sizeOf(p) })) return "OVERLAP";
   return null;
 }
 
 /** Kiểm tra cả bố cục (giống server) */
-export function validateLayout(placed: Placed[], owned: Map<string, Item>, grid: number, houseSize: number): LayoutError | null {
+export function validateLayout(placed: Placed[], owned: Map<string, Item>, grid: number, houseSize: number, blocked: Rect[] = []): LayoutError | null {
   const seen = new Set<string>();
   for (const p of placed) {
     const k = keyOf(p);
@@ -35,7 +37,7 @@ export function validateLayout(placed: Placed[], owned: Map<string, Item>, grid:
   }
   const size = (p: Placed) => owned.get(keyOf(p))!.size;
   for (const p of placed) {
-    const e = canPlace(owned.get(keyOf(p))!, p.x, p.z, placed, size, grid, houseSize);
+    const e = canPlace(owned.get(keyOf(p))!, p.x, p.z, placed, size, grid, houseSize, blocked);
     if (e) return e;
   }
   return null;
@@ -45,11 +47,11 @@ export function validateLayout(placed: Placed[], owned: Map<string, Item>, grid:
  * Đặt tự động các vật chưa có chỗ: quét các vòng quanh nhà từ trong ra ngoài, vị trí đầu tiên hợp lệ.
  * Xác định (deterministic) để 2 máy thấy giống nhau. Vật đã đặt giữ nguyên; vật không còn sở hữu bị bỏ.
  */
-export function autoPlace(saved: Placed[], items: Item[], grid: number, houseSize: number): { placed: Placed[]; unplaced: Item[] } {
+export function autoPlace(saved: Placed[], items: Item[], grid: number, houseSize: number, blocked: Rect[] = []): { placed: Placed[]; unplaced: Item[] } {
   const owned = new Map(items.map((i) => [keyOf(i), i]));
   const placed: Placed[] = [];
   const size = (p: Placed) => owned.get(keyOf(p))?.size ?? 1;
-  for (const p of saved) if (owned.has(keyOf(p)) && !canPlace(owned.get(keyOf(p))!, p.x, p.z, placed, size, grid, houseSize)) placed.push(p);
+  for (const p of saved) if (owned.has(keyOf(p)) && !canPlace(owned.get(keyOf(p))!, p.x, p.z, placed, size, grid, houseSize, blocked)) placed.push(p);
   const done = new Set(placed.map(keyOf));
   const h = houseRect(grid, houseSize);
   const cx = h.x + h.s / 2, cz = h.z + h.s / 2;
@@ -57,19 +59,22 @@ export function autoPlace(saved: Placed[], items: Item[], grid: number, houseSiz
   const cells: [number, number][] = [];
   for (let x = 0; x < grid; x++) for (let z = 0; z < grid; z++) cells.push([x, z]);
   const unplaced: Item[] = [];
-  // vật to đặt trước để không bị vật nhỏ chiếm chỗ; trong cùng loại giữ thứ tự đầu vào
-  const order = [...items].filter((i) => !done.has(keyOf(i))).sort((a, b) => b.size - a.size);
+  // vật to đặt trước để không bị vật nhỏ chiếm chỗ; vật có `near` đặt sau vật nó bám theo; tường KHÔNG tự đặt (nằm kho tới khi xây tay)
+  const order = [...items].filter((i) => !done.has(keyOf(i)) && i.kind !== "WALL").sort((a, b) => (a.near ? 1 : 0) - (b.near ? 1 : 0) || b.size - a.size);
+  const unplacedWalls = items.filter((i) => !done.has(keyOf(i)) && i.kind === "WALL");
   for (const it of order) {
+    const anchor = it.near ? placed.find((p) => keyOf(p) === it.near) : undefined;
+    const ax = anchor ? anchor.x + size(anchor) / 2 : cx, az = anchor ? anchor.z + size(anchor) / 2 : cz, ar = anchor ? size(anchor) / 2 : h.s / 2;
     const sorted = cells
-      .map(([x, z]) => ({ x, z, d: Math.max(Math.abs(x + it.size / 2 - cx), Math.abs(z + it.size / 2 - cz)) + (Math.abs(x + it.size / 2 - cx) + Math.abs(z + it.size / 2 - cz)) * 0.01 }))
+      .map(([x, z]) => ({ x, z, d: Math.max(Math.abs(x + it.size / 2 - ax), Math.abs(z + it.size / 2 - az)) + (Math.abs(x + it.size / 2 - ax) + Math.abs(z + it.size / 2 - az)) * 0.01 }))
       .sort((a, b) => a.d - b.d || a.z - b.z || a.x - b.x);
-    // chừa 1 ô trống quanh nhà làm "sân" cho đẹp: bắt đầu từ vòng cách nhà ≥ 1 ô
-    const spot = sorted.find((c) => c.d >= h.s / 2 + it.size / 2 + 1 && !canPlace(it, c.x, c.z, placed, size, grid, houseSize))
-      ?? sorted.find((c) => !canPlace(it, c.x, c.z, placed, size, grid, houseSize));
+    // chừa 1 ô trống quanh nhà làm "sân" cho đẹp (bám nhà máy thì đứng sát rìa nhà máy)
+    const spot = sorted.find((c) => c.d >= ar + it.size / 2 + (anchor ? 0 : 1) && !canPlace(it, c.x, c.z, placed, size, grid, houseSize, blocked))
+      ?? sorted.find((c) => !canPlace(it, c.x, c.z, placed, size, grid, houseSize, blocked));
     if (spot) placed.push({ kind: it.kind, ref: it.ref, x: spot.x, z: spot.z, rot: 0 });
     else unplaced.push(it);
   }
-  return { placed, unplaced };
+  return { placed, unplaced: [...unplaced, ...unplacedWalls] };
 }
 
 /** Tâm (mét) của 1 vật trên lưới, gốc toạ độ = tâm lưới */
