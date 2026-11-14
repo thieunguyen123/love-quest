@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseWordsCsv, WORD_HEADER } from "../src/lib/csv";
 import { generateObstacles } from "../src/lib/game/obstacles";
+import { seedGrammar } from "./seed-grammar";
 config({ path: path.resolve(__dirname, "..", process.env.IT_ENV ?? ".env.local") });
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
@@ -54,6 +55,8 @@ async function main() {
     must(await sb.from("words").upsert(r.words.map((w) => ({ ...w, level_id: idOf.get(lvNo) })), { onConflict: "level_id,word" }));
     extra += r.words.length;
   }
+
+  console.log("Ngữ pháp:", await seedGrammar(sb as any));
 
   // Tài khoản & cặp đôi.
   // Production: đặt SEED_COUPLE="email_admin,email_nguoi_choi" (2 tài khoản đã tạo sẵn ở Supabase Dashboard) → KHÔNG tạo tài khoản dev,

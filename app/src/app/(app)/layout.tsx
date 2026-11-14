@@ -7,7 +7,7 @@ import { BackgroundMusic, MusicToggle } from "@/components/music";
 import { DailyRewards } from "@/components/daily-rewards";
 import { signOut } from "../login/actions";
 
-const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/words", "Sổ từ"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"], ["/battles", "Nhật ký"], ["/world", "🌍 3D"]];
+const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/grammar", "Ngữ pháp"], ["/words", "Sổ từ"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"], ["/battles", "Nhật ký"], ["/world", "🌍 3D"]];
 
 // Chế độ nhúng: trang mở trong overlay của thế giới 3D (iframe) → ẩn menu; link về Hub/3D hoặc Esc thì đóng overlay
 const EMBED_SCRIPT = `(function(){if(window.self===window.top)return;var d=document.documentElement;d.setAttribute("data-embed","1");

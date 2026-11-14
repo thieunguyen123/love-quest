@@ -406,5 +406,23 @@
     "value": 150,
     "unit": "xu",
     "description": "Thưởng đôi: cả hai cùng mở rương trong ngày"
+  },
+  {
+    "key": "GRAMMAR_QUIZ_SIZE",
+    "value": 10,
+    "unit": "câu",
+    "description": "Số câu mỗi bài kiểm tra ngữ pháp (GRM-03)"
+  },
+  {
+    "key": "GRAMMAR_PASS_PCT",
+    "value": 0.7,
+    "unit": "%",
+    "description": "Tỉ lệ đúng tối thiểu để đạt bài ngữ pháp"
+  },
+  {
+    "key": "GRAMMAR_PASS_COINS",
+    "value": 80,
+    "unit": "xu",
+    "description": "Thưởng lần đầu đạt mỗi bài ngữ pháp"
   }
 ]

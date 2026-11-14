@@ -1,0 +1,452 @@
+[
+  {
+    "code": "passive", "order_no": 17, "band": 3, "emoji": "🔄",
+    "title_vi": "Câu bị động", "title_en": "The Passive Voice",
+    "summary_vi": "Nhận ra và dùng đúng câu bị động ở các thì thường gặp và với động từ khuyết thiếu.",
+    "sections": [
+      { "heading": "Khi nào dùng bị động?",
+        "text": "Dùng bị động khi **chủ ngữ chịu tác động** của hành động, hoặc khi người làm không quan trọng / không rõ.\nCông thức chung: **be + V3/ed**. Người thực hiện (nếu cần) đặt sau **by**.",
+        "formulas": ["S + be + V3/ed (+ by O)"],
+        "examples": [
+          { "en": "The report is written by the sales team.", "vi": "Bản báo cáo được viết bởi nhóm kinh doanh." },
+          { "en": "The meeting was cancelled.", "vi": "Cuộc họp đã bị huỷ." }
+        ] },
+      { "heading": "Bị động ở các thì thường gặp",
+        "text": "Chỉ cần chia **be** theo thì, động từ chính luôn ở dạng **V3/ed**.",
+        "formulas": ["Hiện tại đơn: am/is/are + V3", "Quá khứ đơn: was/were + V3", "Hiện tại hoàn thành: have/has been + V3", "Tiếp diễn: am/is/are/was/were being + V3", "Tương lai: will be + V3", "Quá khứ hoàn thành: had been + V3"],
+        "examples": [
+          { "en": "Orders are shipped within 24 hours.", "vi": "Đơn hàng được giao trong vòng 24 giờ." },
+          { "en": "The lobby is being renovated this week.", "vi": "Sảnh đang được sửa chữa trong tuần này." },
+          { "en": "Three new branches have been opened since January.", "vi": "Ba chi nhánh mới đã được mở từ tháng Một." }
+        ] },
+      { "heading": "Bị động với động từ khuyết thiếu",
+        "text": "Sau **can, must, should, may, will...** dùng **be + V3** (be giữ nguyên, không chia).",
+        "formulas": ["S + modal + be + V3/ed"],
+        "examples": [
+          { "en": "All forms must be submitted by Friday.", "vi": "Mọi biểu mẫu phải được nộp trước thứ Sáu." },
+          { "en": "This room can be booked online.", "vi": "Phòng này có thể được đặt trực tuyến." }
+        ] },
+      { "heading": "Cách nhận ra chỗ trống cần bị động",
+        "text": "Sau chỗ trống **không có tân ngữ** mà động từ lại là ngoại động từ (cần tân ngữ: send, process, approve, notify...) → gần như chắc chắn là **bị động**.\nCó **by + người/tổ chức** ngay sau → càng chắc là bị động." }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Động từ cần tân ngữ (approve, submit, notify, distribute...) mà phía sau không có tân ngữ → chọn dạng bị động.",
+      "Mẹo TOEIC: Sau modal (must, should, will, can) chỉ có 'be + V3', không bao giờ là 'is/are + V3' hay 'been + V3'.",
+      "Bẫy: 'have processed' (chủ động hoàn thành) và 'have been processed' (bị động) chỉ khác chữ 'been' — đọc kỹ chủ ngữ là người làm hay vật bị tác động."
+    ],
+    "questions": [
+      { "q": "All invoices ___ by the accounting team every Monday.", "options": ["process", "are processed", "processing", "have processed"], "answer": 1,
+        "explain_vi": "Hoá đơn được xử lý bởi đội kế toán (có 'by') và 'every Monday' chỉ thói quen → bị động hiện tại đơn 'are processed'." },
+      { "q": "The new safety regulations ___ to all employees last Friday.", "options": ["were distributed", "distributed", "have distributed", "distributing"], "answer": 0,
+        "explain_vi": "Quy định được phát cho nhân viên (distribute cần tân ngữ nhưng sau chỗ trống không có), 'last Friday' → quá khứ bị động 'were distributed'." },
+      { "q": "The conference room ___ at the moment, so please use the staff lounge.", "options": ["is cleaning", "cleans", "has cleaned", "is being cleaned"], "answer": 3,
+        "explain_vi": "Phòng họp đang được dọn (bị động), 'at the moment' → tiếp diễn bị động 'is being cleaned'." },
+      { "q": "Since the merger, more than 200 new staff members ___.", "options": ["have been hired", "have hired", "were hiring", "hire"], "answer": 0,
+        "explain_vi": "Nhân viên được tuyển (bị động), 'Since the merger' → hiện tại hoàn thành bị động 'have been hired'." },
+      { "q": "All expense reports must ___ by Friday afternoon.", "options": ["submit", "be submitted", "submitting", "have submit"], "answer": 1,
+        "explain_vi": "Báo cáo chi phí được nộp (bị động); sau modal 'must' dùng 'be + V3' → be submitted." },
+      { "q": "The final draft of the contract ___ by Ms. Tanaka before it was sent to the client.", "options": ["reviewed", "was reviewing", "had been reviewed", "has reviewed"], "answer": 2,
+        "explain_vi": "Bản hợp đồng được xem xét bởi Ms. Tanaka (có 'by'), xảy ra trước một việc quá khứ 'was sent' → quá khứ hoàn thành bị động 'had been reviewed'." },
+      { "q": "The quarterly results will ___ at the shareholders' meeting next week.", "options": ["announce", "announcing", "be announced", "been announced"], "answer": 2,
+        "explain_vi": "Kết quả được công bố (bị động); sau 'will' dùng 'be + V3' → be announced." },
+      { "q": "Ms. Lee's proposal was approved ___ the board of directors yesterday.", "options": ["from", "with", "to", "by"], "answer": 3,
+        "explain_vi": "Trong câu bị động, người thực hiện hành động đứng sau 'by' → by the board of directors." },
+      { "q": "The software update should ___ installed before the system is restarted.", "options": ["be", "is", "being", "been"], "answer": 0,
+        "explain_vi": "Sau modal 'should' dùng động từ nguyên mẫu 'be' + V3 → should be installed." },
+      { "q": "Customers ___ of any changes to the delivery schedule by e-mail.", "options": ["will notify", "will be notified", "notifying", "are notifying"], "answer": 1,
+        "explain_vi": "'notify' cần tân ngữ nhưng sau chỗ trống chỉ có 'of...', khách hàng là người được thông báo → bị động 'will be notified'." }
+    ]
+  },
+  {
+    "code": "relative-clauses", "order_no": 18, "band": 3, "emoji": "🔗",
+    "title_vi": "Mệnh đề quan hệ", "title_en": "Relative Clauses",
+    "summary_vi": "Chọn đúng who / which / that / whose / where và nhận ra mệnh đề quan hệ rút gọn.",
+    "sections": [
+      { "heading": "Các đại từ quan hệ cơ bản",
+        "text": "**who**: thay cho người (làm chủ ngữ).\n**which**: thay cho vật.\n**that**: thay cho người hoặc vật (chỉ trong mệnh đề **không có dấu phẩy**).\n**whose**: chỉ sở hữu, luôn đi kèm **danh từ** ngay sau (whose team, whose products).",
+        "formulas": ["N (người) + who + V", "N (vật) + which/that + (S) + V", "N + whose + N + V"],
+        "examples": [
+          { "en": "The candidate who applied yesterday has excellent references.", "vi": "Ứng viên nộp đơn hôm qua có thư giới thiệu rất tốt." },
+          { "en": "We hired a designer whose portfolio impressed everyone.", "vi": "Chúng tôi tuyển một nhà thiết kế có bộ hồ sơ khiến mọi người ấn tượng." }
+        ] },
+      { "heading": "where = in/at which",
+        "text": "**where** thay cho nơi chốn và theo sau là **một mệnh đề đầy đủ** (S + V + ...).\nNếu mệnh đề phía sau còn thiếu tân ngữ hoặc đã có giới từ ở cuối (worked in) → dùng **which/that**, không dùng where.",
+        "examples": [
+          { "en": "This is the office where I worked for five years.", "vi": "Đây là văn phòng nơi tôi đã làm việc năm năm." },
+          { "en": "This is the office which I worked in for five years.", "vi": "Đây là văn phòng mà tôi đã làm việc trong đó năm năm." }
+        ] },
+      { "heading": "Mệnh đề có dấu phẩy",
+        "text": "Mệnh đề quan hệ không xác định (có dấu phẩy) bổ sung thông tin thêm. **Không dùng that** sau dấu phẩy.",
+        "examples": [
+          { "en": "Our CEO, who founded the company in 2005, will retire next year.", "vi": "Giám đốc điều hành của chúng tôi, người sáng lập công ty năm 2005, sẽ nghỉ hưu năm sau." }
+        ] },
+      { "heading": "Rút gọn mệnh đề quan hệ",
+        "text": "Bỏ đại từ quan hệ và **be**:\n- Nghĩa **chủ động** → **V-ing** (people who work here → people working here).\n- Nghĩa **bị động** → **V3/ed** (the files which were sent → the files sent).",
+        "formulas": ["N + V-ing (chủ động)", "N + V3/ed (bị động)"],
+        "examples": [
+          { "en": "Employees working overtime will be paid extra.", "vi": "Nhân viên làm thêm giờ sẽ được trả thêm tiền." },
+          { "en": "The products ordered last week have arrived.", "vi": "Các sản phẩm được đặt tuần trước đã đến." }
+        ] }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Sau chỗ trống là một danh từ không có mạo từ (___ products, ___ team) → gần như chắc chắn là 'whose'.",
+      "Mẹo TOEIC: Câu đã có động từ chính, chỗ trống đứng sau danh từ → nghĩ ngay tới rút gọn: V-ing (chủ động) hoặc V3 (bị động).",
+      "Bẫy: 'that' không đứng sau dấu phẩy; 'where' cần một mệnh đề đầy đủ phía sau."
+    ],
+    "questions": [
+      { "q": "The employee ___ won the sales award will receive a bonus.", "options": ["who", "which", "whose", "where"], "answer": 0,
+        "explain_vi": "Thay cho người ('employee') và làm chủ ngữ của 'won' → who." },
+      { "q": "The printer ___ we bought last month has already broken down.", "options": ["who", "whose", "which", "where"], "answer": 2,
+        "explain_vi": "Thay cho vật ('printer'), làm tân ngữ của 'bought' → which." },
+      { "q": "Mr. Patel, ___ team designed the new logo, will present it tomorrow.", "options": ["who", "which", "that", "whose"], "answer": 3,
+        "explain_vi": "Sau chỗ trống là danh từ 'team' (đội của Mr. Patel) → chỉ sở hữu, dùng whose." },
+      { "q": "The hotel ___ the conference will be held is near the airport.", "options": ["which", "where", "who", "whose"], "answer": 1,
+        "explain_vi": "Sau chỗ trống là mệnh đề đầy đủ 'the conference will be held', thay cho nơi chốn 'hotel' → where." },
+      { "q": "Our headquarters, ___ is located in Singapore, employs over 500 people.", "options": ["that", "which", "where", "who"], "answer": 1,
+        "explain_vi": "Mệnh đề có dấu phẩy, thay cho vật và làm chủ ngữ của 'is' → which ('that' không dùng sau dấu phẩy)." },
+      { "q": "Applicants ___ for the position must have at least three years of experience.", "options": ["apply", "are applying", "applied", "applying"], "answer": 3,
+        "explain_vi": "Câu đã có động từ chính 'must have'; ứng viên tự nộp đơn (chủ động) → rút gọn bằng V-ing 'applying'." },
+      { "q": "The documents ___ to the client yesterday contained several errors.", "options": ["sent", "sending", "were sent", "send"], "answer": 0,
+        "explain_vi": "Động từ chính là 'contained'; tài liệu được gửi (bị động) → rút gọn bằng V3 'sent'." },
+      { "q": "We are looking for a supplier ___ products meet international safety standards.", "options": ["whose", "which", "who", "whom"], "answer": 0,
+        "explain_vi": "Sau chỗ trống là danh từ 'products' (sản phẩm của nhà cung cấp) → whose." },
+      { "q": "This is the department ___ I worked in before I was promoted.", "options": ["where", "who", "which", "whose"], "answer": 2,
+        "explain_vi": "Cuối mệnh đề đã có giới từ 'in' (worked in) nên không dùng 'where' (= in which); thay cho vật → which." },
+      { "q": "Anyone ___ wishes to attend the workshop should sign up by Friday.", "options": ["which", "whom", "whose", "who"], "answer": 3,
+        "explain_vi": "Thay cho người ('Anyone') và làm chủ ngữ của 'wishes' → who." }
+    ]
+  },
+  {
+    "code": "conditionals", "order_no": 19, "band": 3, "emoji": "🔀",
+    "title_vi": "Câu điều kiện loại 0, 1, 2", "title_en": "Conditionals (Types 0, 1, 2) and Unless",
+    "summary_vi": "Chia đúng động từ trong câu điều kiện loại 0, 1, 2 và dùng unless thay cho if not.",
+    "sections": [
+      { "heading": "Loại 0 – sự thật, quy trình luôn đúng",
+        "text": "Diễn tả điều **luôn xảy ra** khi có điều kiện (quy trình máy móc, sự thật). Cả hai vế đều ở **hiện tại đơn**.",
+        "formulas": ["If + S + V (hiện tại đơn), S + V (hiện tại đơn)"],
+        "examples": [
+          { "en": "If the machine overheats, it shuts down automatically.", "vi": "Nếu máy quá nóng, nó tự động tắt." }
+        ] },
+      { "heading": "Loại 1 – có thể xảy ra ở tương lai",
+        "text": "Vế **if** dùng **hiện tại đơn** (KHÔNG dùng will). Vế chính dùng **will / can / may + V** hoặc câu mệnh lệnh.",
+        "formulas": ["If + S + V (hiện tại đơn), S + will/can + V", "If + S + V (hiện tại đơn), please + V"],
+        "examples": [
+          { "en": "If the client agrees, we will sign the contract tomorrow.", "vi": "Nếu khách hàng đồng ý, chúng ta sẽ ký hợp đồng vào ngày mai." },
+          { "en": "If you have any questions, please contact Mr. Wong.", "vi": "Nếu bạn có câu hỏi, vui lòng liên hệ ông Wong." }
+        ] },
+      { "heading": "Loại 2 – không có thật ở hiện tại",
+        "text": "Giả định trái với hiện tại. Vế **if** dùng **quá khứ đơn** (to be dùng **were** cho mọi ngôi), vế chính dùng **would / could + V**.",
+        "formulas": ["If + S + V2/ed (were), S + would/could + V"],
+        "examples": [
+          { "en": "If we had a bigger budget, we would hire more staff.", "vi": "Nếu chúng ta có ngân sách lớn hơn, chúng ta sẽ tuyển thêm nhân viên (thực tế không có)." },
+          { "en": "If I were you, I would accept the offer.", "vi": "Nếu tôi là bạn, tôi sẽ nhận lời đề nghị." }
+        ] },
+      { "heading": "Unless = if ... not",
+        "text": "**Unless** mang nghĩa phủ định 'trừ khi / nếu không'. Sau unless dùng động từ **khẳng định**.",
+        "formulas": ["Unless + S + V = If + S + do/does not + V"],
+        "examples": [
+          { "en": "Unless you register today, you cannot attend the seminar.", "vi": "Trừ khi bạn đăng ký hôm nay, bạn không thể tham dự hội thảo." }
+        ] }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Vế if thấy 'will' → loại 1 thì vế if phải là hiện tại đơn; vế chính thấy 'would/could' → vế if dùng quá khứ.",
+      "Mẹo TOEIC: Câu có ý 'sẽ không ... nếu không ...' → chọn 'unless'.",
+      "Bẫy: Loại 2 dùng 'were' cho cả I/he/she/it (If I were, If she were)."
+    ],
+    "questions": [
+      { "q": "If the shipment ___ late again, we will look for a new supplier.", "options": ["arrives", "will arrive", "arrived", "would arrive"], "answer": 0,
+        "explain_vi": "Vế chính có 'will look' → điều kiện loại 1, vế if dùng hiện tại đơn 'arrives'." },
+      { "q": "If I ___ the manager, I would hire more staff for the weekend shift.", "options": ["am", "will be", "were", "have been"], "answer": 2,
+        "explain_vi": "Vế chính có 'would hire', giả định trái hiện tại → loại 2, to be dùng 'were'." },
+      { "q": "___ you submit the form by Friday, your application will not be processed.", "options": ["If", "Unless", "Although", "Because"], "answer": 1,
+        "explain_vi": "Nghĩa: trừ khi nộp trước thứ Sáu, đơn sẽ không được xử lý → Unless (= if ... not)." },
+      { "q": "If the company ___ more funding, it could expand into Asian markets.", "options": ["receives", "will receive", "has received", "received"], "answer": 3,
+        "explain_vi": "Vế chính có 'could expand' → điều kiện loại 2, vế if dùng quá khứ đơn 'received'." },
+      { "q": "If the printer runs out of toner, a warning light ___ on automatically.", "options": ["comes", "came", "would come", "coming"], "answer": 0,
+        "explain_vi": "Quy trình máy luôn xảy ra ('automatically'), vế if là hiện tại đơn → loại 0, vế chính cũng hiện tại đơn 'comes'." },
+      { "q": "We ___ the deadline if we had more staff on the project.", "options": ["meet", "will meet", "would meet", "met"], "answer": 2,
+        "explain_vi": "Vế if dùng quá khứ 'had' (giả định trái hiện tại) → loại 2, vế chính 'would meet'." },
+      { "q": "Orders will not be shipped ___ payment has been received in full.", "options": ["unless", "if", "so", "despite"], "answer": 0,
+        "explain_vi": "Nghĩa: đơn hàng sẽ không được gửi trừ khi đã nhận đủ tiền → unless." },
+      { "q": "If Ms. Chen ___ available tomorrow, she will lead the training session.", "options": ["be", "is", "will be", "were"], "answer": 1,
+        "explain_vi": "Vế chính có 'will lead' → loại 1, vế if dùng hiện tại đơn 'is' (dù có 'tomorrow' vẫn không dùng will)." },
+      { "q": "If our website were easier to use, more customers ___ online.", "options": ["will order", "order", "ordered", "would order"], "answer": 3,
+        "explain_vi": "Vế if có 'were' → điều kiện loại 2, vế chính dùng 'would + V' → would order." },
+      { "q": "Please call the help desk if your password ___ to work.", "options": ["will fail", "fails", "failed", "would fail"], "answer": 1,
+        "explain_vi": "Vế chính là câu mệnh lệnh 'Please call' → loại 1, vế if dùng hiện tại đơn 'fails'." }
+    ]
+  },
+  {
+    "code": "subject-verb", "order_no": 20, "band": 3, "emoji": "⚖️",
+    "title_vi": "Hoà hợp chủ ngữ – động từ", "title_en": "Subject-Verb Agreement",
+    "summary_vi": "Xác định đúng chủ ngữ thật để chia động từ số ít hay số nhiều, kể cả với chủ ngữ dài.",
+    "sections": [
+      { "heading": "Each / Every – luôn số ít",
+        "text": "**Each + N số ít**, **Every + N số ít**, **Each of + N số nhiều** → động từ **số ít**.\nKể cả 'Every A and B' cũng chia **số ít**.",
+        "formulas": ["Each / Every + N (số ít) + V (số ít)", "Each of the + N (số nhiều) + V (số ít)"],
+        "examples": [
+          { "en": "Each of the rooms has a projector.", "vi": "Mỗi phòng đều có một máy chiếu." },
+          { "en": "Every employee receives a parking pass.", "vi": "Mỗi nhân viên đều nhận thẻ gửi xe." }
+        ] },
+      { "heading": "The number of vs A number of",
+        "text": "**The number of + N số nhiều** = 'số lượng ...' → động từ **số ít**.\n**A number of + N số nhiều** = 'nhiều ...' → động từ **số nhiều**.",
+        "formulas": ["The number of + Ns + V (số ít)", "A number of + Ns + V (số nhiều)"],
+        "examples": [
+          { "en": "The number of orders has doubled.", "vi": "Số lượng đơn hàng đã tăng gấp đôi." },
+          { "en": "A number of clients have requested a refund.", "vi": "Nhiều khách hàng đã yêu cầu hoàn tiền." }
+        ] },
+      { "heading": "Chủ ngữ dài có giới từ / cụm chen giữa",
+        "text": "Bỏ qua cụm **of + N**, **along with / as well as / together with + N** để tìm **danh từ chính** đứng đầu.\nVí dụ: The list **of vendors** is ... (chủ ngữ là 'list').",
+        "examples": [
+          { "en": "The quality of our products is our top priority.", "vi": "Chất lượng sản phẩm là ưu tiên hàng đầu của chúng tôi." },
+          { "en": "The director, as well as two managers, is attending the fair.", "vi": "Giám đốc, cùng hai quản lý, đang tham dự hội chợ." }
+        ] },
+      { "heading": "Danh từ tập hợp, số tiền và either/neither",
+        "text": "**Danh từ tập hợp** (team, committee, staff, company) trong TOEIC thường coi là **một khối → số ít** (đi với its).\n**Số tiền, thời gian, khoảng cách** coi là một khối → **số ít**.\n**Either/Neither A or/nor B** → chia theo **B** (danh từ gần động từ nhất)." }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Gạch bỏ cụm giới từ (of..., in..., along with...) để tìm danh từ chính rồi mới chia động từ.",
+      "Mẹo TOEIC: 'The number of' → số ít; 'A number of' → số nhiều. Đây là câu bẫy rất hay gặp.",
+      "Bẫy: Danh từ số nhiều đứng sát chỗ trống (rooms, assistants, employees) thường không phải chủ ngữ thật."
+    ],
+    "questions": [
+      { "q": "Each of the new employees ___ required to attend the orientation.", "options": ["are", "were", "be", "is"], "answer": 3,
+        "explain_vi": "'Each of + danh từ số nhiều' → động từ chia số ít → is." },
+      { "q": "The number of applicants for the position ___ increased sharply this year.", "options": ["has", "have", "are", "were"], "answer": 0,
+        "explain_vi": "'The number of' (số lượng) là chủ ngữ số ít; 'this year' + increased → hiện tại hoàn thành 'has'." },
+      { "q": "A number of customers ___ complained about the late deliveries.", "options": ["has", "have", "is", "was"], "answer": 1,
+        "explain_vi": "'A number of' (nhiều) + danh từ số nhiều → động từ số nhiều; cần trợ động từ cho 'complained' → have." },
+      { "q": "Every manager and supervisor ___ expected to attend the safety meeting.", "options": ["are", "were", "is", "have"], "answer": 2,
+        "explain_vi": "Chủ ngữ bắt đầu bằng 'Every' → luôn chia số ít, kể cả khi có 'and' → is." },
+      { "q": "The list of approved vendors ___ updated every quarter.", "options": ["is", "are", "were", "have"], "answer": 0,
+        "explain_vi": "Danh từ chính là 'list' (số ít), cụm 'of approved vendors' chỉ bổ nghĩa; 'every quarter' → hiện tại đơn 'is'." },
+      { "q": "The committee ___ its decision on the budget at next week's meeting.", "options": ["announce", "announces", "announcing", "have announced"], "answer": 1,
+        "explain_vi": "Danh từ tập hợp 'committee' được coi là một khối (có 'its') → số ít 'announces'." },
+      { "q": "The manager, along with her assistants, ___ visiting the Tokyo office this week.", "options": ["are", "were", "have", "is"], "answer": 3,
+        "explain_vi": "Bỏ qua cụm 'along with her assistants', chủ ngữ thật là 'The manager' (số ít); 'this week' → is." },
+      { "q": "Neither the director nor the employees ___ aware of the change last month.", "options": ["was", "is", "were", "has"], "answer": 2,
+        "explain_vi": "'Neither A nor B' chia theo B ('the employees' số nhiều); 'last month' → quá khứ 'were'." },
+      { "q": "The results of the customer survey ___ surprising to the marketing team.", "options": ["was", "is", "has been", "were"], "answer": 3,
+        "explain_vi": "Danh từ chính là 'results' (số nhiều), 'of the customer survey' chỉ bổ nghĩa → were." },
+      { "q": "Ten thousand dollars ___ too much to spend on a single advertisement.", "options": ["is", "are", "were", "have been"], "answer": 0,
+        "explain_vi": "Số tiền 'Ten thousand dollars' được coi là một khoản → động từ số ít 'is'." }
+    ]
+  },
+  {
+    "code": "pronouns-adv", "order_no": 21, "band": 3, "emoji": "🪞",
+    "title_vi": "Đại từ phản thân & đại từ nâng cao", "title_en": "Reflexive and Advanced Pronouns",
+    "summary_vi": "Dùng đúng đại từ phản thân, by oneself / on one's own, each other / one another và those who.",
+    "sections": [
+      { "heading": "Đại từ phản thân",
+        "text": "myself, yourself, himself, herself, itself, ourselves, yourselves, themselves.\n**Dùng khi:**\n- Chủ ngữ và tân ngữ là **cùng một người/vật**: He introduced **himself**.\n- **Nhấn mạnh**: The CEO **himself** answered the call (chính ông ấy).",
+        "examples": [
+          { "en": "Please help yourself to coffee in the break room.", "vi": "Cứ tự nhiên dùng cà phê trong phòng nghỉ." },
+          { "en": "The president herself signed the agreement.", "vi": "Chính bà chủ tịch đã ký thoả thuận." }
+        ] },
+      { "heading": "By oneself / On one's own",
+        "text": "**by + đại từ phản thân** = **on + tính từ sở hữu + own** = tự mình, một mình, không ai giúp.",
+        "formulas": ["by + myself/himself/herself...", "on + my/his/her/their + own"],
+        "examples": [
+          { "en": "She organized the event by herself.", "vi": "Cô ấy tự tổ chức sự kiện." },
+          { "en": "New staff should not operate the machine on their own.", "vi": "Nhân viên mới không nên tự vận hành máy một mình." }
+        ] },
+      { "heading": "Each other / One another",
+        "text": "Diễn tả **hành động qua lại** giữa các bên (lẫn nhau). Truyền thống: **each other** cho 2 người, **one another** cho từ 3 người trở lên (nay dùng thay thế được).\nKhác với **themselves** (mỗi người tự làm cho chính mình).",
+        "examples": [
+          { "en": "The two partners trust each other completely.", "vi": "Hai đối tác hoàn toàn tin tưởng lẫn nhau." },
+          { "en": "Team members should support one another.", "vi": "Các thành viên trong nhóm nên hỗ trợ lẫn nhau." }
+        ] },
+      { "heading": "Those who / that of / those of",
+        "text": "**Those who + V (số nhiều)** = những người mà...\n**that of / those of** thay cho danh từ đã nhắc trước để tránh lặp (số ít → that, số nhiều → those).",
+        "examples": [
+          { "en": "Those who finish early may leave at 4 p.m.", "vi": "Những ai xong sớm có thể về lúc 4 giờ chiều." },
+          { "en": "Our prices are lower than those of our rivals.", "vi": "Giá của chúng tôi thấp hơn giá của các đối thủ." }
+        ] }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Thấy 'by ___' ở cuối câu với nghĩa 'tự làm' → chọn đại từ phản thân (by himself); thấy 'on his ___' → chọn 'own'.",
+      "Mẹo TOEIC: Câu so sánh 'than ___ of' → 'that' nếu danh từ trước là số ít, 'those' nếu số nhiều.",
+      "Bẫy: Chủ ngữ là vật số ít (machine, system) → đại từ phản thân là 'itself', không phải 'themselves'."
+    ],
+    "questions": [
+      { "q": "Mr. Kim prepared the entire presentation by ___ because his assistant was on vacation.", "options": ["he", "him", "his", "himself"], "answer": 3,
+        "explain_vi": "'by + đại từ phản thân' = tự mình làm → by himself." },
+      { "q": "The two departments should communicate with ___ more often to avoid delays.", "options": ["each other", "itself", "their", "its"], "answer": 0,
+        "explain_vi": "Hai phòng ban trao đổi qua lại lẫn nhau → each other." },
+      { "q": "___ who wish to attend the seminar should register online by Friday.", "options": ["They", "Them", "These", "Those"], "answer": 3,
+        "explain_vi": "Cấu trúc cố định 'Those who + V' = những người mà → Those." },
+      { "q": "Ms. Garcia completed the report on her ___, without any help from her team.", "options": ["self", "own", "alone", "herself"], "answer": 1,
+        "explain_vi": "Cấu trúc 'on + tính từ sở hữu + own' = tự mình → on her own." },
+      { "q": "The CEO ___ will welcome the new interns at the reception.", "options": ["his", "him", "he's", "himself"], "answer": 3,
+        "explain_vi": "Đại từ phản thân đứng ngay sau chủ ngữ để nhấn mạnh 'chính giám đốc' → himself." },
+      { "q": "Please introduce ___ to the other participants at the start of the workshop.", "options": ["you", "your", "yourself", "yours"], "answer": 2,
+        "explain_vi": "Câu mệnh lệnh có chủ ngữ ngầm 'you', người được giới thiệu cũng là 'you' → đại từ phản thân yourself." },
+      { "q": "The new system allows employees to update their work schedules ___.", "options": ["them", "their", "themselves", "they"], "answer": 2,
+        "explain_vi": "Nhấn mạnh nhân viên tự cập nhật (không cần người khác) → đại từ phản thân themselves ở cuối câu." },
+      { "q": "Ms. Ito and Mr. Brown have known ___ since they joined the company.", "options": ["their own", "each other", "themselves", "theirs"], "answer": 1,
+        "explain_vi": "Hai người quen biết lẫn nhau (hành động qua lại) → each other." },
+      { "q": "The prices of our products are lower than ___ of our main competitors.", "options": ["those", "that", "them", "it"], "answer": 0,
+        "explain_vi": "Thay cho danh từ số nhiều 'prices' đã nhắc trước, đi với 'of' → those." },
+      { "q": "To save energy, the copy machine turns ___ off automatically after 30 minutes.", "options": ["it", "its", "itself", "themselves"], "answer": 2,
+        "explain_vi": "Chủ ngữ và tân ngữ cùng là 'the copy machine' (vật số ít) → itself." }
+    ]
+  },
+  {
+    "code": "prep-vs-conj", "order_no": 22, "band": 3, "emoji": "🧭",
+    "title_vi": "Giới từ hay liên từ?", "title_en": "Prepositions vs Conjunctions",
+    "summary_vi": "Phân biệt despite / although, because of / because, during / while dựa vào thứ đứng sau chỗ trống.",
+    "sections": [
+      { "heading": "Quy tắc vàng: nhìn phía sau chỗ trống",
+        "text": "**Giới từ** + **danh từ / cụm danh từ / V-ing**.\n**Liên từ** + **mệnh đề (S + V)**.",
+        "formulas": ["Giới từ + N / V-ing", "Liên từ + S + V"] },
+      { "heading": "Nhượng bộ: mặc dù",
+        "text": "**Giới từ**: despite, in spite of (+ N / V-ing).\n**Liên từ**: although, even though, though (+ S + V).",
+        "examples": [
+          { "en": "Despite the delay, the project finished on budget.", "vi": "Mặc dù bị chậm trễ, dự án vẫn hoàn thành trong ngân sách." },
+          { "en": "Although the project was delayed, it finished on budget.", "vi": "Mặc dù dự án bị chậm, nó vẫn hoàn thành trong ngân sách." }
+        ] },
+      { "heading": "Nguyên nhân: vì",
+        "text": "**Giới từ**: because of, due to, owing to (+ N).\n**Liên từ**: because, since, as (+ S + V).",
+        "examples": [
+          { "en": "The event was postponed due to bad weather.", "vi": "Sự kiện bị hoãn vì thời tiết xấu." },
+          { "en": "The event was postponed because the weather was bad.", "vi": "Sự kiện bị hoãn vì thời tiết xấu." }
+        ] },
+      { "heading": "Thời gian: trong khi / trong suốt",
+        "text": "**during** (giới từ) + N: during the meeting.\n**while** (liên từ) + S + V hoặc V-ing: while he was driving / while driving.",
+        "examples": [
+          { "en": "Phones must be turned off during the presentation.", "vi": "Điện thoại phải tắt trong suốt buổi thuyết trình." },
+          { "en": "Please wait while we process your request.", "vi": "Vui lòng chờ trong khi chúng tôi xử lý yêu cầu của bạn." }
+        ] }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Không cần dịch cả câu — chỉ cần xem sau chỗ trống có động từ chia thì hay không: có → liên từ, không → giới từ.",
+      "Mẹo TOEIC: Hai lựa chọn cùng loại (despite / in spite of) thì cả hai đều sai hoặc phải xét nghĩa — đáp án thường là lựa chọn khác loại.",
+      "Bẫy: 'Despite being...' (V-ing) vẫn là giới từ; 'Despite of' luôn sai."
+    ],
+    "questions": [
+      { "q": "___ the heavy rain, the outdoor event was held as scheduled.", "options": ["Despite", "Although", "Even though", "Because"], "answer": 0,
+        "explain_vi": "Sau chỗ trống là cụm danh từ 'the heavy rain' và nghĩa nhượng bộ → giới từ Despite." },
+      { "q": "___ the budget was limited, the team launched a successful campaign.", "options": ["Despite", "In spite of", "Although", "Due to"], "answer": 2,
+        "explain_vi": "Sau chỗ trống là mệnh đề 'the budget was limited', nghĩa 'mặc dù' → liên từ Although." },
+      { "q": "The flight to Seoul was delayed ___ a technical problem with the engine.", "options": ["because", "although", "while", "due to"], "answer": 3,
+        "explain_vi": "Sau chỗ trống là cụm danh từ 'a technical problem', nghĩa nguyên nhân → giới từ due to." },
+      { "q": "Please do not use your mobile phone ___ the meeting.", "options": ["while", "when", "during", "as"], "answer": 2,
+        "explain_vi": "Sau chỗ trống là danh từ 'the meeting' → giới từ during." },
+      { "q": "Mr. Davis checked his e-mail ___ he was waiting for the train.", "options": ["during", "while", "despite", "because of"], "answer": 1,
+        "explain_vi": "Sau chỗ trống là mệnh đề 'he was waiting', nghĩa 'trong khi' → liên từ while." },
+      { "q": "The store closed early yesterday ___ the power outage.", "options": ["because of", "because", "although", "while"], "answer": 0,
+        "explain_vi": "Sau chỗ trống là cụm danh từ 'the power outage', nghĩa nguyên nhân → giới từ because of." },
+      { "q": "___ he had little management experience, Mr. Lee was promoted to team leader.", "options": ["Despite", "Because of", "During", "Although"], "answer": 3,
+        "explain_vi": "Sau chỗ trống là mệnh đề 'he had little ...', nghĩa nhượng bộ → liên từ Although." },
+      { "q": "The project was completed on time ___ several unexpected setbacks.", "options": ["although", "in spite of", "because", "even if"], "answer": 1,
+        "explain_vi": "Sau chỗ trống là cụm danh từ 'several unexpected setbacks', nghĩa 'mặc dù' → giới từ in spite of." },
+      { "q": "Sales increased significantly ___ the company lowered its prices.", "options": ["because", "due to", "despite", "during"], "answer": 0,
+        "explain_vi": "Sau chỗ trống là mệnh đề 'the company lowered...', nghĩa nguyên nhân → liên từ because." },
+      { "q": "___ being a small company, Tech Solutions has clients all over the world.", "options": ["Although", "Even though", "Despite", "Because"], "answer": 2,
+        "explain_vi": "Sau chỗ trống là V-ing 'being', nghĩa nhượng bộ → giới từ Despite." }
+    ]
+  },
+  {
+    "code": "participle-adj", "order_no": 23, "band": 3, "emoji": "😮",
+    "title_vi": "Tính từ đuôi -ing và -ed", "title_en": "-ing and -ed Adjectives",
+    "summary_vi": "Phân biệt tính từ -ing / -ed và dùng phân từ làm tính từ đứng trước danh từ.",
+    "sections": [
+      { "heading": "-ing: gây ra cảm xúc / -ed: cảm thấy",
+        "text": "**V-ing** mô tả **người/vật gây ra** cảm xúc (bản chất của nó): an interesting report.\n**V-ed** mô tả **người cảm nhận** cảm xúc: I am interested in the report.",
+        "formulas": ["Vật/sự việc + is + V-ing (interesting, boring, satisfying)", "Người + is + V-ed (interested, bored, satisfied) + giới từ"],
+        "examples": [
+          { "en": "The training session was very boring.", "vi": "Buổi đào tạo rất nhàm chán." },
+          { "en": "The trainees were bored.", "vi": "Các học viên cảm thấy chán." }
+        ] },
+      { "heading": "Các cặp hay gặp trong TOEIC",
+        "text": "interesting / interested (in)\nsatisfying / satisfied (with)\ndisappointing / disappointed (with)\nconfusing / confused\nexciting / excited (about)\nexhausting / exhausted\namazing / amazed" },
+      { "heading": "Phân từ làm tính từ trước danh từ",
+        "text": "**V-ing + N**: danh từ **tự thực hiện** hành động (chủ động): a growing market (thị trường đang tăng trưởng), the rising cost.\n**V3/ed + N**: danh từ **bị tác động** (bị động): a damaged package, the attached file, an experienced engineer.",
+        "formulas": ["V-ing + N (chủ động)", "V3/ed + N (bị động / đã hoàn thành)"],
+        "examples": [
+          { "en": "Please review the attached document.", "vi": "Vui lòng xem tài liệu đính kèm." },
+          { "en": "There is a growing demand for electric cars.", "vi": "Nhu cầu về xe điện đang ngày càng tăng." }
+        ] }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Chủ ngữ là người + động từ cảm xúc (feel, be) → thường chọn -ed; chủ ngữ là vật/sự việc → chọn -ing.",
+      "Mẹo TOEIC: Các cụm cố định nên thuộc: attached file, enclosed document, experienced staff, qualified candidates, damaged goods, growing demand, rising cost.",
+      "Bẫy: Đừng chọn động từ nguyên mẫu hay danh từ (interest, satisfaction) khi chỗ trống đứng sau 'very' hoặc trước danh từ cần tính từ."
+    ],
+    "questions": [
+      { "q": "The results of the customer survey were very ___ to the management.", "options": ["disappointed", "disappointing", "disappoint", "disappointment"], "answer": 1,
+        "explain_vi": "Chủ ngữ là vật ('results') gây ra cảm giác thất vọng, sau 'very' cần tính từ → disappointing." },
+      { "q": "Most of the staff were ___ with the new benefits package.", "options": ["satisfy", "satisfying", "satisfaction", "satisfied"], "answer": 3,
+        "explain_vi": "Chủ ngữ là người ('staff') cảm thấy hài lòng, đi với 'with' → satisfied." },
+      { "q": "Please fill out the ___ form and return it to the Human Resources office.", "options": ["attach", "attaching", "attached", "attachment"], "answer": 2,
+        "explain_vi": "Mẫu đơn được đính kèm (bị động) đứng trước danh từ 'form' → attached." },
+      { "q": "Ms. Park gave an ___ presentation on market trends in Southeast Asia.", "options": ["interesting", "interested", "interest", "interestingly"], "answer": 0,
+        "explain_vi": "Bài thuyết trình gây hứng thú (vật gây ra cảm xúc), đứng trước danh từ → interesting." },
+      { "q": "Employees who are ___ in the leadership program should contact Mr. Lim.", "options": ["interest", "interesting", "interests", "interested"], "answer": 3,
+        "explain_vi": "Người cảm thấy quan tâm, cụm 'be interested in' → interested." },
+      { "q": "All ___ items will be repaired or replaced free of charge.", "options": ["damage", "damaging", "damaged", "damages"], "answer": 2,
+        "explain_vi": "Món hàng bị hư hỏng (bị động) đứng trước danh từ 'items' → damaged." },
+      { "q": "After the ten-hour negotiation, everyone on the team felt ___.", "options": ["exhausting", "exhausted", "exhaust", "exhaustion"], "answer": 1,
+        "explain_vi": "Người ('everyone') cảm thấy kiệt sức, sau 'felt' → exhausted." },
+      { "q": "The instructions in the manual were so ___ that many users called the help desk.", "options": ["confusing", "confused", "confuse", "confusion"], "answer": 0,
+        "explain_vi": "Hướng dẫn (vật) gây khó hiểu cho người dùng → confusing." },
+      { "q": "There has been a ___ demand for organic food products in recent years.", "options": ["grow", "growing", "grown", "grows"], "answer": 1,
+        "explain_vi": "Nhu cầu tự tăng lên (chủ động, đang diễn ra) đứng trước danh từ 'demand' → growing." },
+      { "q": "Only ___ technicians are allowed to repair the main server.", "options": ["experiencing", "experience", "experienced", "experiences"], "answer": 2,
+        "explain_vi": "Kỹ thuật viên có kinh nghiệm — cụm cố định 'experienced + người' đứng trước danh từ → experienced." }
+    ]
+  },
+  {
+    "code": "time-clauses", "order_no": 24, "band": 3, "emoji": "⏰",
+    "title_vi": "Mệnh đề thời gian tương lai", "title_en": "Future Time Clauses",
+    "summary_vi": "Dùng hiện tại đơn (không dùng will) sau when / before / after / as soon as / until khi nói về tương lai.",
+    "sections": [
+      { "heading": "Quy tắc chính",
+        "text": "Khi nói về **tương lai**, trong mệnh đề bắt đầu bằng **when, before, after, as soon as, until, once, by the time** ta dùng **hiện tại đơn** (hoặc hiện tại hoàn thành), **KHÔNG dùng will**.\nMệnh đề chính vẫn dùng **will / câu mệnh lệnh**.",
+        "formulas": ["S + will + V + when/after/as soon as + S + V (hiện tại đơn)", "When/Before + S + V (hiện tại đơn), S + will + V"],
+        "examples": [
+          { "en": "I will call you when I arrive at the airport.", "vi": "Tôi sẽ gọi cho bạn khi tôi đến sân bay." },
+          { "en": "As soon as the report is ready, please send it to me.", "vi": "Ngay khi báo cáo xong, vui lòng gửi cho tôi." }
+        ] },
+      { "heading": "Until / Before / After",
+        "text": "**until**: cho đến khi — We will wait until the manager **returns**.\n**before / after**: trước / sau khi — After the contract **is signed**, we will start.\nNếu có bị động thì vẫn dùng **is/are + V3**, không dùng 'will be + V3'.",
+        "examples": [
+          { "en": "We won't announce the results until the audit is completed.", "vi": "Chúng tôi sẽ không công bố kết quả cho đến khi việc kiểm toán hoàn tất." },
+          { "en": "Before you leave, please lock the cabinet.", "vi": "Trước khi về, vui lòng khoá tủ." }
+        ] },
+      { "heading": "By the time + hiện tại đơn → tương lai hoàn thành",
+        "text": "**By the time + S + V (hiện tại đơn)**, mệnh đề chính thường dùng **will have + V3** (việc sẽ xong trước thời điểm đó).",
+        "formulas": ["By the time + S + V (hiện tại), S + will have + V3"],
+        "examples": [
+          { "en": "By the time you get here, we will have finished lunch.", "vi": "Khi bạn tới đây thì chúng tôi đã ăn trưa xong rồi." }
+        ] }
+    ],
+    "tips": [
+      "Mẹo TOEIC: Chỗ trống nằm ngay sau when / as soon as / until / before / after mà mệnh đề kia có will → chọn hiện tại đơn, loại mọi đáp án có 'will'.",
+      "Mẹo TOEIC: Ngược lại, nếu chỗ trống ở mệnh đề chính và mệnh đề thời gian dùng hiện tại đơn với nghĩa tương lai → chọn 'will + V'.",
+      "Bẫy: Chủ ngữ số ít ở mệnh đề thời gian nhớ thêm -s/-es (arrives, finishes, ends)."
+    ],
+    "questions": [
+      { "q": "Please call me as soon as the shipment ___ at the warehouse.", "options": ["arrives", "will arrive", "arrived", "would arrive"], "answer": 0,
+        "explain_vi": "Sau 'as soon as' nói về tương lai dùng hiện tại đơn, không dùng will → arrives." },
+      { "q": "We will not start the meeting until Mr. Hall ___.", "options": ["will arrive", "arrived", "arriving", "arrives"], "answer": 3,
+        "explain_vi": "Sau 'until' (mệnh đề chính có 'will not start') dùng hiện tại đơn → arrives." },
+      { "q": "Before you ___ the office tonight, please turn off all the lights.", "options": ["leaving", "left", "leave", "will leave"], "answer": 2,
+        "explain_vi": "Sau 'Before' + chủ ngữ 'you', nói về tối nay (tương lai) → hiện tại đơn 'leave'." },
+      { "q": "When the new manager ___ the company next month, she will review all current projects.", "options": ["will join", "joined", "joins", "joining"], "answer": 2,
+        "explain_vi": "Mệnh đề 'When' nói về tương lai ('next month') dùng hiện tại đơn, chủ ngữ số ít → joins." },
+      { "q": "After the contract ___, construction of the new factory will begin immediately.", "options": ["will be signed", "signed", "signing", "is signed"], "answer": 3,
+        "explain_vi": "Hợp đồng được ký (bị động); sau 'After' nói về tương lai dùng hiện tại đơn → is signed." },
+      { "q": "Mr. Reyes will e-mail the client ___ he finishes the sales report.", "options": ["as soon as", "during", "by", "until then"], "answer": 0,
+        "explain_vi": "Sau chỗ trống là mệnh đề 'he finishes ...' (hiện tại đơn chỉ tương lai) → cần liên từ thời gian 'as soon as'." },
+      { "q": "Ms. Ford ___ the results once the analysis is complete.", "options": ["announce", "will announce", "announced", "has announced"], "answer": 1,
+        "explain_vi": "Mệnh đề 'once the analysis is complete' chỉ tương lai → mệnh đề chính dùng 'will announce'." },
+      { "q": "By the time the guests arrive, the caterers ___ setting up the tables.", "options": ["finish", "finished", "will have finished", "had finished"], "answer": 2,
+        "explain_vi": "'By the time + hiện tại đơn' nói về tương lai → mệnh đề chính dùng tương lai hoàn thành 'will have finished'." },
+      { "q": "I will wait in the lobby until the interview ___.", "options": ["will end", "ended", "ending", "ends"], "answer": 3,
+        "explain_vi": "Sau 'until' nói về tương lai dùng hiện tại đơn, chủ ngữ số ít → ends." },
+      { "q": "As soon as we ___ your payment, we will ship your order.", "options": ["receive", "will receive", "received", "would receive"], "answer": 0,
+        "explain_vi": "Sau 'As soon as' (mệnh đề chính có 'will ship') dùng hiện tại đơn → receive." }
+    ]
+  }
+]

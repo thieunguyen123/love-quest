@@ -7,7 +7,7 @@ import { refreshCoins } from "@/components/coins";
 import { btnGhost, btnPrimary } from "./ui";
 
 export const RPC_MSG: Record<string, string> = {
-  ALREADY_CLAIMED: "Hôm nay đã nhận rồi", QUEST_NOT_DONE: "Chưa hoàn thành", QUEST_NOT_FOUND: "Không có nhiệm vụ này", NO_PARTNER: "Chưa ghép đôi",
+  ALREADY_CLAIMED: "Hôm nay đã nhận rồi", QUEST_NOT_DONE: "Chưa hoàn thành", QUEST_NOT_FOUND: "Không có nhiệm vụ này", NO_PARTNER: "Chưa ghép đôi", NO_QUESTIONS: "Bài này chưa có câu hỏi", ALREADY_ANSWERED: "Câu này đã trả lời rồi", ATTEMPT_FINISHED: "Bài đã nộp", ATTEMPT_NOT_FOUND: "Không tìm thấy bài làm",
   NOT_ENOUGH_COINS: "Không đủ xu", NOT_ENOUGH_ITEM: "Thiếu vật phẩm cần thiết", ITEM_LOCKED: "Chưa mở khóa", ALREADY_OWNED: "Bạn đã có rồi",
   ARMY_FULL: "Hết chỗ chứa quân – hãy nâng cấp nhà", MAX_LEVEL: "Đã đạt cấp tối đa", HOUSE_DAMAGED: "Hãy sửa nhà đầy HP trước", INVALID_HP: "Số HP không hợp lệ",
   INVALID_NAME: "Tên không hợp lệ", SHIELD_ACTIVE: "Đang có khiên rồi", NO_SHIELD: "Bạn không còn khiên", SHIELD_LIMIT: "Hôm nay bạn đã mua khiên rồi",

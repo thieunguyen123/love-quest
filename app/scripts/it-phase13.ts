@@ -43,7 +43,7 @@ async function main() {
 
   // ---- DAY-02 nhiệm vụ ----
   s = await status();
-  ok(s.quests.length === 6 && s.quests.every((q: any) => q.progress === 0 && !q.claimed), "6 nhiệm vụ, tiến độ 0", s.quests);
+  ok(s.quests.length === 7 && s.quests.every((q: any) => q.progress === 0 && !q.claimed), "7 nhiệm vụ (có ngữ pháp), tiến độ 0", s.quests);
   ok(await err(m.c.rpc("claim_quest", { p_code: "study10" })) === "QUEST_NOT_DONE", "TC-56 chưa đủ → QUEST_NOT_DONE");
   const words = (await admin.from("words").select("id").eq("level_id", await levelId(1)).limit(10)).data!;
   for (const w of words) await m.c.rpc("mark_word", { p_word: w.id, p_known: true });
@@ -58,7 +58,10 @@ async function main() {
   for (const hit of [25, 20]) { const t = await m.c.rpc("claim_typing_session", { p_source: null, p_hit: hit, p_missed: 1, p_duration_ms: 60000, p_hit_ids: [], p_missed_ids: [] }); if (t.error) console.log(t.error); }
   // 1 lượt luyện tập nộp bài, đúng 15 câu
   await admin.from("level_attempts").insert({ level_id: await levelId(1), user_id: m.id, mode: "PRACTICE", status: "SUBMITTED", seed: 1, question_count: 20, seconds_per_question: 10, submitted_at: new Date().toISOString(), correct_count: 15 });
-  for (const code of ["typing2", "typing40", "level1", "correct15"]) {
+  // 1 bài ngữ pháp đã nộp (chi tiết chấm bài ở it-phase14)
+  const gl = (await admin.from("grammar_lessons").select("id").order("order_no").limit(1).single()).data!.id;
+  await admin.from("grammar_attempts").insert({ user_id: m.id, lesson_id: gl, question_ids: [], answers: [], finished_at: new Date().toISOString() });
+  for (const code of ["grammar1", "typing2", "typing40", "level1", "correct15"]) {
     const q = await m.c.rpc("claim_quest", { p_code: code });
     ok(!q.error, `Nhận nhiệm vụ ${code}`, q.error);
   }
@@ -72,7 +75,7 @@ async function main() {
   const n = (await admin.from("notifications").select("title").eq("user_id", u.id).eq("type", "QUEST")).data ?? [];
   ok(n.length === 1, "Người ấy nhận thông báo đã mở rương", n);
   // người ấy làm xong hết (giả lập: ghi nhận nhiệm vụ bắt buộc)
-  await admin.from("quest_claims").insert(["study10", "typing2", "typing40", "level1", "correct15"].map((code) => ({ user_id: u.id, day: vnDay(), code, coins: 0 })));
+  await admin.from("quest_claims").insert(["study10", "grammar1", "typing2", "typing40", "level1", "correct15"].map((code) => ({ user_id: u.id, day: vnDay(), code, coins: 0 })));
   ok(!(await u.c.rpc("claim_quest", { p_code: "_ALL" })).error, "Người ấy mở rương");
   c0 = await coins(m.id); r = await m.c.rpc("claim_quest", { p_code: "_COUPLE" });
   ok(!r.error && await coins(m.id) === c0 + 150, "Cả hai mở rương → 💞 thưởng đôi +150 xu", r.error);

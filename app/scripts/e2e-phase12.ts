@@ -127,6 +127,26 @@ async function main() {
   check("Chạm ngoài → đóng bảng thưởng", (await q.getByTestId("daily-panel").count()) === 0);
   await q.reload({ waitUntil: "domcontentloaded" }); await q.waitForTimeout(3000);
   check("Mở lại trong ngày: không tự bật nữa", (await q.getByTestId("daily-panel").count()) === 0);
+
+  // ---- Phase 14: ngữ pháp trên điện thoại (GRM-01..03) ----
+  await q.goto(`${BASE}/grammar`, { waitUntil: "domcontentloaded", timeout: 180000 });
+  await q.getByTestId("grammar-be-verb").waitFor({ timeout: 60000 });
+  check(`Trang Ngữ pháp có ${await q.locator('[data-testid^="grammar-"]').count()} bài`, (await q.locator('[data-testid^="grammar-"]').count()) >= 24);
+  await q.getByTestId("grammar-be-verb").click();
+  await q.getByTestId("grammar-start").waitFor({ timeout: 60000 });
+  await q.screenshot({ path: path.join(SHOTS, "p14-1-lesson.png"), fullPage: true });
+  await q.getByTestId("grammar-start").click();
+  for (let i = 0; i < 10; i++) {
+    await q.getByTestId("grammar-opt-0").click();
+    await q.getByRole("status").waitFor({ timeout: 30000 });
+    if (i === 0) await q.screenshot({ path: path.join(SHOTS, "p14-2-question.png") });
+    if (i < 9) await q.getByTestId("grammar-next").click(); else await q.getByTestId("grammar-finish").click();
+  }
+  const res = await q.getByTestId("grammar-result").innerText({ timeout: 30000 });
+  check(`Làm hết 10 câu → kết quả "${res}"`, /Đúng \d+\/10/.test(res));
+  const sw = await q.evaluate(() => document.documentElement.scrollWidth);
+  check(`Trang ngữ pháp không tràn ngang (rộng ${sw})`, sw <= 390);
+  await q.screenshot({ path: path.join(SHOTS, "p14-3-result.png") });
   await b.close();
   finish();
 }

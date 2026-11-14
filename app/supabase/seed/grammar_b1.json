@@ -1,0 +1,454 @@
+[
+  {
+    "code": "be-verb",
+    "order_no": 1,
+    "band": 1,
+    "emoji": "🟢",
+    "title_vi": "Động từ to be",
+    "title_en": "The verb 'to be'",
+    "summary_vi": "Dùng đúng am / is / are ở hiện tại và was / were ở quá khứ theo chủ ngữ.",
+    "sections": [
+      {
+        "heading": "To be là gì?",
+        "text": "**To be** nghĩa là \"thì, là, ở\". Nó đi với danh từ, tính từ hoặc nơi chốn để mô tả ai đó / cái gì đó.\nDạng của to be thay đổi theo **chủ ngữ** và **thời gian**.",
+        "examples": [
+          { "en": "I am a sales assistant.", "vi": "Tôi là trợ lý bán hàng." },
+          { "en": "The meeting is at 9 a.m.", "vi": "Cuộc họp lúc 9 giờ sáng." },
+          { "en": "The reports are on your desk.", "vi": "Các bản báo cáo ở trên bàn của bạn." }
+        ]
+      },
+      {
+        "heading": "Hiện tại: am / is / are",
+        "text": "**I** → am\n**He / She / It / danh từ số ít / danh từ không đếm được** → is\n**You / We / They / danh từ số nhiều** → are",
+        "formulas": [
+          "(+) S + am/is/are + N/Adj/nơi chốn",
+          "(−) S + am/is/are + not + ...",
+          "(?) Am/Is/Are + S + ...?"
+        ],
+        "examples": [
+          { "en": "The office is not open on Sundays.", "vi": "Văn phòng không mở cửa vào Chủ nhật." },
+          { "en": "Are you free this afternoon?", "vi": "Chiều nay bạn có rảnh không?" }
+        ]
+      },
+      {
+        "heading": "Quá khứ: was / were",
+        "text": "**I / He / She / It / danh từ số ít** → was\n**You / We / They / danh từ số nhiều** → were\nDấu hiệu: yesterday, last week, ago, in 2020...",
+        "formulas": [
+          "(+) S + was/were + ...",
+          "(−) S + was/were + not + ...",
+          "(?) Was/Were + S + ...?"
+        ],
+        "examples": [
+          { "en": "I was at the airport yesterday.", "vi": "Hôm qua tôi ở sân bay." },
+          { "en": "The customers were very happy last year.", "vi": "Năm ngoái khách hàng rất hài lòng." }
+        ]
+      },
+      {
+        "heading": "There is / There are",
+        "text": "Dùng để nói \"có\" cái gì đó. To be chia theo **danh từ đứng sau**.\nThere is + danh từ số ít / không đếm được · There are + danh từ số nhiều.",
+        "examples": [
+          { "en": "There is a printer in the hallway.", "vi": "Có một máy in ở hành lang." },
+          { "en": "There are three boxes on the desk.", "vi": "Có ba cái hộp trên bàn." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: nhìn chủ ngữ thật sự — \"Everyone / Each / Every + N\" luôn đi với is/was (số ít).",
+      "Hai chủ ngữ nối bằng \"and\" (Mr. Lee and I) là số nhiều → are/were.",
+      "Thấy yesterday, last..., ago → chọn was/were, không chọn am/is/are."
+    ],
+    "questions": [
+      { "q": "Ms. Tran ___ the new sales manager.", "options": ["am", "is", "are", "be"], "answer": 1, "explain_vi": "Chủ ngữ số ít (Ms. Tran) ở hiện tại → dùng is." },
+      { "q": "The new printers ___ in the storage room now.", "options": ["is", "am", "are", "be"], "answer": 2, "explain_vi": "\"printers\" là danh từ số nhiều, có \"now\" → dùng are." },
+      { "q": "I ___ at the airport yesterday morning.", "options": ["was", "were", "am", "are"], "answer": 0, "explain_vi": "Có \"yesterday\" → quá khứ; chủ ngữ I → was." },
+      { "q": "Our clients ___ very happy with the service last year.", "options": ["was", "is", "be", "were"], "answer": 3, "explain_vi": "Có \"last year\" → quá khứ; \"clients\" số nhiều → were." },
+      { "q": "___ you available for a meeting this afternoon?", "options": ["Is", "Am", "Are", "Be"], "answer": 2, "explain_vi": "Câu hỏi với chủ ngữ you → đảo Are lên đầu." },
+      { "q": "The office ___ not open on Sundays.", "options": ["are", "is", "am", "be"], "answer": 1, "explain_vi": "\"The office\" số ít, nói về sự thật hiện tại → is not." },
+      { "q": "There ___ three boxes on the desk right now.", "options": ["are", "is", "was", "am"], "answer": 0, "explain_vi": "Sau There là \"three boxes\" (số nhiều), có \"right now\" → there are." },
+      { "q": "Mr. Lee and I ___ in Hanoi last week for a conference.", "options": ["was", "were", "are", "is"], "answer": 1, "explain_vi": "Chủ ngữ \"Mr. Lee and I\" là số nhiều, có \"last week\" → were." },
+      { "q": "The shipment ___ late two days ago.", "options": ["were", "is", "was", "are"], "answer": 2, "explain_vi": "\"two days ago\" → quá khứ; \"The shipment\" số ít → was." },
+      { "q": "Everyone in the team ___ ready for the presentation now.", "options": ["are", "am", "were", "is"], "answer": 3, "explain_vi": "\"Everyone\" luôn được xem là số ít; có \"now\" → is." }
+    ]
+  },
+  {
+    "code": "present-simple",
+    "order_no": 2,
+    "band": 1,
+    "emoji": "🔁",
+    "title_vi": "Thì hiện tại đơn",
+    "title_en": "Present simple",
+    "summary_vi": "Diễn tả thói quen, lịch trình và sự thật bằng thì hiện tại đơn, chia đúng động từ thêm -s/-es.",
+    "sections": [
+      {
+        "heading": "Khi nào dùng?",
+        "text": "• **Thói quen, việc lặp lại**: every day, usually, often, always, sometimes, never.\n• **Sự thật, điều luôn đúng**.\n• **Lịch trình cố định** (tàu, xe, giờ mở cửa).",
+        "examples": [
+          { "en": "Mr. Kim goes to work by bus every day.", "vi": "Anh Kim đi làm bằng xe buýt mỗi ngày." },
+          { "en": "The store opens at 8 a.m.", "vi": "Cửa hàng mở cửa lúc 8 giờ sáng." }
+        ]
+      },
+      {
+        "heading": "Công thức",
+        "text": "Với **He / She / It / danh từ số ít**, động từ thêm **-s/-es**. Câu phủ định và nghi vấn mượn **do / does**, động từ chính trở về **nguyên mẫu**.",
+        "formulas": [
+          "(+) I/You/We/They + V · He/She/It + V-s/es",
+          "(−) S + do/does + not + V (nguyên mẫu)",
+          "(?) Do/Does + S + V (nguyên mẫu)?"
+        ],
+        "examples": [
+          { "en": "Mr. Park doesn't like long meetings.", "vi": "Anh Park không thích những cuộc họp dài." },
+          { "en": "Does the manager check emails in the morning?", "vi": "Quản lý có kiểm tra email vào buổi sáng không?" }
+        ]
+      },
+      {
+        "heading": "Cách thêm -s / -es",
+        "text": "• Thường: work → works, open → opens\n• Tận cùng -o, -s, -sh, -ch, -x, -z → thêm **-es**: go → goes, watch → watches\n• Phụ âm + y → **-ies**: study → studies (nhưng play → plays)\n• Đặc biệt: have → **has**"
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: thấy every day / usually / often / always → nghĩ ngay đến hiện tại đơn.",
+      "Bẫy thường gặp: sau does / doesn't phải là động từ nguyên mẫu (doesn't like, KHÔNG phải doesn't likes).",
+      "Chủ ngữ số nhiều (customers, members) → động từ KHÔNG thêm -s."
+    ],
+    "questions": [
+      { "q": "Mr. Kim ___ to work by bus every day.", "options": ["go", "goes", "going", "gone"], "answer": 1, "explain_vi": "\"every day\" → hiện tại đơn; chủ ngữ số ít Mr. Kim → goes." },
+      { "q": "Our store ___ at 8 a.m. on weekdays.", "options": ["opens", "open", "opening", "to open"], "answer": 0, "explain_vi": "Lịch cố định → hiện tại đơn; \"Our store\" số ít → opens." },
+      { "q": "The staff members ___ not work on public holidays.", "options": ["does", "do", "is", "are"], "answer": 1, "explain_vi": "Chủ ngữ số nhiều \"staff members\" + động từ thường work → phủ định dùng do not." },
+      { "q": "___ the manager usually check emails in the morning?", "options": ["Do", "Is", "Are", "Does"], "answer": 3, "explain_vi": "Có \"usually\" và động từ nguyên mẫu check; chủ ngữ số ít → Does." },
+      { "q": "She usually ___ lunch at her desk.", "options": ["has", "have", "having", "to have"], "answer": 0, "explain_vi": "Chủ ngữ She, có \"usually\" → have chia thành has." },
+      { "q": "The company ___ office supplies from a local supplier.", "options": ["buy", "buying", "buys", "are buy"], "answer": 2, "explain_vi": "\"The company\" số ít, nói về việc thường làm → buys." },
+      { "q": "Mr. Park ___ like long meetings.", "options": ["don't", "doesn't", "isn't", "not"], "answer": 1, "explain_vi": "Chủ ngữ số ít + động từ thường like → phủ định dùng doesn't." },
+      { "q": "Our customers often ___ about delivery times.", "options": ["asks", "asking", "is asking", "ask"], "answer": 3, "explain_vi": "\"often\" → hiện tại đơn; \"customers\" số nhiều → ask (không thêm -s)." },
+      { "q": "The train to Da Nang ___ at 7:30 every morning.", "options": ["leaves", "leave", "leaving", "is leave"], "answer": 0, "explain_vi": "Lịch trình cố định \"every morning\", chủ ngữ số ít → leaves." },
+      { "q": "How often ___ your team members hold meetings?", "options": ["does", "is", "do", "are"], "answer": 2, "explain_vi": "Chủ ngữ số nhiều \"team members\" + động từ nguyên mẫu hold → dùng do." }
+    ]
+  },
+  {
+    "code": "present-continuous",
+    "order_no": 3,
+    "band": 1,
+    "emoji": "⏳",
+    "title_vi": "Thì hiện tại tiếp diễn",
+    "title_en": "Present continuous",
+    "summary_vi": "Diễn tả việc đang xảy ra và phân biệt được với thì hiện tại đơn.",
+    "sections": [
+      {
+        "heading": "Công thức",
+        "text": "Dùng cho hành động **đang diễn ra** ngay lúc nói hoặc **trong giai đoạn này**.",
+        "formulas": [
+          "(+) S + am/is/are + V-ing",
+          "(−) S + am/is/are + not + V-ing",
+          "(?) Am/Is/Are + S + V-ing?"
+        ],
+        "examples": [
+          { "en": "Ms. Linh is writing a report at the moment.", "vi": "Chị Linh đang viết báo cáo lúc này." },
+          { "en": "We are looking for a new accountant this month.", "vi": "Tháng này chúng tôi đang tìm một kế toán mới." }
+        ]
+      },
+      {
+        "heading": "Dấu hiệu nhận biết",
+        "text": "now, right now, at the moment, currently, at present, this week/month, Look!, Listen!, Be quiet!"
+      },
+      {
+        "heading": "Phân biệt với hiện tại đơn",
+        "text": "**Hiện tại đơn**: thói quen, lịch cố định (usually, every day).\n**Hiện tại tiếp diễn**: việc đang xảy ra, tạm thời (now, this week).",
+        "examples": [
+          { "en": "Mr. Hai usually drives to work, but this week he is taking the train.", "vi": "Anh Hải thường lái xe đi làm, nhưng tuần này anh ấy đi tàu." },
+          { "en": "The manager holds meetings every Monday.", "vi": "Quản lý tổ chức họp mỗi thứ Hai." }
+        ]
+      },
+      {
+        "heading": "Động từ trạng thái",
+        "text": "Một số động từ chỉ suy nghĩ, cảm xúc, sở hữu **thường không chia tiếp diễn**: know, understand, want, need, like, believe, belong, own.\nVí dụ: I **understand** (KHÔNG nói I am understanding)."
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: \"currently\", \"at the moment\" là tín hiệu mạnh cho is/are + V-ing.",
+      "Bẫy: đừng quên to be — \"He working\" là sai, phải là \"He is working\".",
+      "Know, understand, need, want thường KHÔNG dùng dạng -ing."
+    ],
+    "questions": [
+      { "q": "Ms. Linh ___ a report at the moment.", "options": ["write", "writes", "is writing", "wrote"], "answer": 2, "explain_vi": "\"at the moment\" → hiện tại tiếp diễn; chủ ngữ số ít → is writing." },
+      { "q": "Look! The delivery truck ___ outside the building.", "options": ["arrives", "arrive", "arrived", "is arriving"], "answer": 3, "explain_vi": "\"Look!\" báo hiệu việc đang xảy ra → is arriving." },
+      { "q": "We ___ for a new accountant this month.", "options": ["are looking", "looks", "look", "is looking"], "answer": 0, "explain_vi": "\"this month\" chỉ việc tạm thời đang diễn ra; chủ ngữ We → are looking." },
+      { "q": "The manager ___ meetings every Monday.", "options": ["is holding", "holding", "are holding", "holds"], "answer": 3, "explain_vi": "\"every Monday\" là thói quen lặp lại → hiện tại đơn holds." },
+      { "q": "Please be quiet. The director ___ on the phone right now.", "options": ["talk", "talks", "is talking", "are talking"], "answer": 2, "explain_vi": "\"right now\" → tiếp diễn; \"The director\" số ít → is talking." },
+      { "q": "Currently, the company ___ its website.", "options": ["updates", "update", "is updating", "updated"], "answer": 2, "explain_vi": "\"Currently\" → việc đang diễn ra; chủ ngữ số ít → is updating." },
+      { "q": "I ___ what you mean about the new policy.", "options": ["am understanding", "understand", "understands", "understanding"], "answer": 1, "explain_vi": "\"understand\" là động từ trạng thái, không chia tiếp diễn; chủ ngữ I → understand." },
+      { "q": "They ___ not working today because it is a holiday.", "options": ["are", "do", "is", "does"], "answer": 0, "explain_vi": "Có \"working\" (V-ing) → cần to be; chủ ngữ They → are not working." },
+      { "q": "___ you attending the training session now?", "options": ["Are", "Do", "Is", "Does"], "answer": 0, "explain_vi": "Có V-ing \"attending\" và \"now\" → câu hỏi tiếp diễn với you → Are." },
+      { "q": "Mr. Hai usually drives to work, but this week he ___ the train.", "options": ["takes", "take", "taken", "is taking"], "answer": 3, "explain_vi": "\"this week\" là tình huống tạm thời khác với thói quen → is taking." }
+    ]
+  },
+  {
+    "code": "past-simple",
+    "order_no": 4,
+    "band": 1,
+    "emoji": "⏪",
+    "title_vi": "Thì quá khứ đơn",
+    "title_en": "Past simple",
+    "summary_vi": "Kể lại việc đã xảy ra và kết thúc trong quá khứ, dùng đúng động từ có quy tắc và bất quy tắc.",
+    "sections": [
+      {
+        "heading": "Công thức",
+        "text": "Dùng cho hành động **đã xảy ra và kết thúc** tại một thời điểm xác định trong quá khứ.",
+        "formulas": [
+          "(+) S + V-ed / V2 (bất quy tắc)",
+          "(−) S + did not (didn't) + V (nguyên mẫu)",
+          "(?) Did + S + V (nguyên mẫu)?"
+        ],
+        "examples": [
+          { "en": "We signed the contract yesterday.", "vi": "Chúng tôi đã ký hợp đồng hôm qua." },
+          { "en": "The package didn't arrive on time.", "vi": "Gói hàng đã không đến đúng hạn." }
+        ]
+      },
+      {
+        "heading": "Động từ có quy tắc",
+        "text": "Thêm **-ed**: finish → finished, call → called\nTận cùng -e: thêm -d: arrive → arrived\nPhụ âm + y → -ied: study → studied\nMột nguyên âm + một phụ âm (từ 1 âm tiết): gấp đôi phụ âm: stop → stopped"
+      },
+      {
+        "heading": "Động từ bất quy tắc thường gặp",
+        "text": "go → **went** · buy → **bought** · meet → **met** · send → **sent** · make → **made** · take → **took** · rise → **rose** · pay → **paid** · leave → **left** · write → **wrote** · get → **got** · have → **had**",
+        "examples": [
+          { "en": "Mr. Nam went to Singapore last month.", "vi": "Anh Nam đã đi Singapore tháng trước." },
+          { "en": "Our sales rose by 10% last quarter.", "vi": "Doanh số của chúng tôi đã tăng 10% quý trước." }
+        ]
+      },
+      {
+        "heading": "Dấu hiệu nhận biết",
+        "text": "yesterday, last week/month/year, ... ago, in 2023, when I was..."
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: thấy yesterday / last / ago / in + năm đã qua → chọn quá khứ đơn.",
+      "Bẫy: sau did / didn't động từ trở về nguyên mẫu (didn't arrive, KHÔNG phải didn't arrived).",
+      "Học thuộc bảng động từ bất quy tắc — \"buyed\", \"meeted\" là đáp án gây nhiễu."
+    ],
+    "questions": [
+      { "q": "We ___ the contract yesterday.", "options": ["sign", "signed", "signing", "signs"], "answer": 1, "explain_vi": "\"yesterday\" → quá khứ đơn; sign là động từ có quy tắc → signed." },
+      { "q": "Mr. Nam ___ to Singapore last month.", "options": ["go", "goes", "went", "gone"], "answer": 2, "explain_vi": "\"last month\" → quá khứ đơn; go bất quy tắc → went." },
+      { "q": "The client ___ not call back yesterday afternoon.", "options": ["did", "does", "was", "is"], "answer": 0, "explain_vi": "\"yesterday afternoon\" + động từ nguyên mẫu call → phủ định quá khứ did not." },
+      { "q": "___ you receive my email last night?", "options": ["Do", "Were", "Was", "Did"], "answer": 3, "explain_vi": "\"last night\" + động từ nguyên mẫu receive → câu hỏi quá khứ dùng Did." },
+      { "q": "She ___ a new laptop two weeks ago.", "options": ["buyed", "bought", "buys", "buy"], "answer": 1, "explain_vi": "\"two weeks ago\" → quá khứ; buy bất quy tắc → bought." },
+      { "q": "The team ___ the project in 2023.", "options": ["finish", "finishes", "finished", "finishing"], "answer": 2, "explain_vi": "\"in 2023\" là thời điểm đã qua → finished." },
+      { "q": "I ___ Ms. Hoa at the conference last week.", "options": ["met", "meet", "meets", "meeted"], "answer": 0, "explain_vi": "\"last week\" → quá khứ; meet bất quy tắc → met." },
+      { "q": "The package didn't ___ on time.", "options": ["arrived", "arrives", "arriving", "arrive"], "answer": 3, "explain_vi": "Sau \"didn't\" dùng động từ nguyên mẫu → arrive." },
+      { "q": "Our sales ___ by 10% last quarter.", "options": ["rise", "rose", "risen", "rises"], "answer": 1, "explain_vi": "\"last quarter\" → quá khứ; rise bất quy tắc → rose (risen là V3)." },
+      { "q": "When ___ the meeting start yesterday?", "options": ["does", "do", "did", "was"], "answer": 2, "explain_vi": "\"yesterday\" + động từ nguyên mẫu start → câu hỏi quá khứ dùng did." }
+    ]
+  },
+  {
+    "code": "future",
+    "order_no": 5,
+    "band": 1,
+    "emoji": "🚀",
+    "title_vi": "Tương lai: will / be going to",
+    "title_en": "Future: will / be going to",
+    "summary_vi": "Nói về kế hoạch, dự đoán và lời hứa trong tương lai bằng will và be going to.",
+    "sections": [
+      {
+        "heading": "Will",
+        "text": "Dùng cho **quyết định ngay lúc nói**, **lời hứa**, **đề nghị / yêu cầu**, và **dự đoán chung**.",
+        "formulas": [
+          "(+) S + will + V (nguyên mẫu)",
+          "(−) S + will not (won't) + V",
+          "(?) Will + S + V?"
+        ],
+        "examples": [
+          { "en": "I promise I will finish the report by Friday.", "vi": "Tôi hứa sẽ hoàn thành báo cáo trước thứ Sáu." },
+          { "en": "Will you send me the invoice tomorrow, please?", "vi": "Ngày mai bạn gửi giúp tôi hoá đơn nhé?" }
+        ]
+      },
+      {
+        "heading": "Be going to",
+        "text": "Dùng cho **kế hoạch đã định trước** và **dự đoán có bằng chứng** ngay trước mắt.",
+        "formulas": [
+          "(+) S + am/is/are + going to + V",
+          "(−) S + am/is/are + not + going to + V",
+          "(?) Am/Is/Are + S + going to + V?"
+        ],
+        "examples": [
+          { "en": "We are going to hire a new assistant next week.", "vi": "Tuần sau chúng tôi sẽ tuyển một trợ lý mới (đã lên kế hoạch)." },
+          { "en": "Look at those dark clouds! It is going to rain.", "vi": "Nhìn mây đen kìa! Trời sắp mưa." }
+        ]
+      },
+      {
+        "heading": "Dấu hiệu nhận biết",
+        "text": "tomorrow, next week/month/year, soon, in the future, in two days..."
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: sau will luôn là động từ nguyên mẫu — loại ngay các đáp án V-s, V-ing, V-ed.",
+      "Be going to cần to be chia theo chủ ngữ: is going to / are going to.",
+      "Thấy next / tomorrow mà chỗ trống đứng trước động từ nguyên mẫu → thường chọn will."
+    ],
+    "questions": [
+      { "q": "The new branch ___ open next month.", "options": ["will", "has", "was", "did"], "answer": 0, "explain_vi": "\"next month\" + động từ nguyên mẫu open → will." },
+      { "q": "We are going ___ a new assistant next week.", "options": ["hire", "to hire", "hiring", "hired"], "answer": 1, "explain_vi": "Cấu trúc be going to + V → going to hire." },
+      { "q": "Mr. Tuan ___ not attend the meeting tomorrow.", "options": ["is", "does", "will", "was"], "answer": 2, "explain_vi": "\"tomorrow\" → tương lai; will not + động từ nguyên mẫu attend." },
+      { "q": "Look at those dark clouds! It ___ rain.", "options": ["is going to", "will going to", "going to", "goes to"], "answer": 0, "explain_vi": "Dự đoán có bằng chứng (dark clouds) → is going to; các phương án khác sai cấu trúc." },
+      { "q": "___ you send me the invoice tomorrow, please?", "options": ["Do", "Are", "Did", "Will"], "answer": 3, "explain_vi": "Lời đề nghị về tương lai (\"tomorrow\", \"please\") + động từ nguyên mẫu → Will." },
+      { "q": "The CEO ___ going to visit our factory next Friday.", "options": ["will", "is", "are", "does"], "answer": 1, "explain_vi": "Be going to: chủ ngữ số ít \"The CEO\" → is going to." },
+      { "q": "I promise I ___ finish the report by Friday.", "options": ["did", "was", "will", "am"], "answer": 2, "explain_vi": "Lời hứa (\"I promise\") → will + động từ nguyên mẫu." },
+      { "q": "They ___ going to move to a new office next year.", "options": ["is", "was", "am", "are"], "answer": 3, "explain_vi": "Chủ ngữ They + going to, có \"next year\" → are going to." },
+      { "q": "The shipment will ___ on Monday.", "options": ["arrives", "arriving", "arrive", "arrived"], "answer": 2, "explain_vi": "Sau will luôn là động từ nguyên mẫu → arrive." },
+      { "q": "Next year, the company ___ 50 new employees.", "options": ["hire", "hired", "hiring", "will hire"], "answer": 3, "explain_vi": "\"Next year\" → tương lai; chủ ngữ số ít nên \"hire\" sai → will hire." }
+    ]
+  },
+  {
+    "code": "nouns-articles",
+    "order_no": 6,
+    "band": 1,
+    "emoji": "📦",
+    "title_vi": "Danh từ và mạo từ a / an / the",
+    "title_en": "Nouns and articles",
+    "summary_vi": "Phân biệt danh từ đếm được / không đếm được, viết số nhiều và chọn đúng a / an / the.",
+    "sections": [
+      {
+        "heading": "Đếm được và không đếm được",
+        "text": "**Đếm được**: có số ít / số nhiều (a chair → two chairs).\n**Không đếm được**: không có số nhiều, không đi với a/an: information, advice, equipment, furniture, money, luggage, news.\nmany + N số nhiều · much + N không đếm được · some / a lot of dùng cho cả hai.",
+        "examples": [
+          { "en": "Could you give me some information?", "vi": "Bạn có thể cho tôi một vài thông tin không?" },
+          { "en": "There isn't much equipment in the warehouse.", "vi": "Trong kho không có nhiều thiết bị." }
+        ]
+      },
+      {
+        "heading": "Số nhiều",
+        "text": "Thường thêm **-s**: chair → chairs\nTận cùng -s, -sh, -ch, -x → **-es**: box → boxes\nPhụ âm + y → **-ies**: company → companies\nBất quy tắc: man → **men**, woman → **women**, person → **people**, child → **children**"
+      },
+      {
+        "heading": "a / an",
+        "text": "Dùng với danh từ đếm được **số ít**, nhắc đến lần đầu hoặc không xác định.\n**a** + âm phụ âm: a manager, a **u**niform (/j/)\n**an** + âm nguyên âm: an engineer, an **h**our (h câm)\nQuy tắc theo **âm**, không theo chữ cái.",
+        "examples": [
+          { "en": "Ms. Hanh is an engineer.", "vi": "Chị Hạnh là kỹ sư." },
+          { "en": "The training lasts an hour.", "vi": "Buổi đào tạo kéo dài một tiếng." }
+        ]
+      },
+      {
+        "heading": "the",
+        "text": "Dùng khi người nghe **đã biết** đó là cái nào: đã nhắc trước đó, chỉ có một (the CEO of our company, the sun), hoặc có cụm bổ nghĩa xác định.",
+        "examples": [
+          { "en": "I'd like to meet the CEO of your company.", "vi": "Tôi muốn gặp giám đốc điều hành công ty bạn." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: information, advice, equipment, furniture, luggage KHÔNG bao giờ thêm -s và không đi với a/an.",
+      "Chọn a hay an theo cách phát âm: an hour, an MBA, nhưng a university, a European company.",
+      "How many + danh từ số nhiều; How much + danh từ không đếm được."
+    ],
+    "questions": [
+      { "q": "Ms. Hanh is ___ engineer at our company.", "options": ["a", "an", "the", "some"], "answer": 1, "explain_vi": "\"engineer\" bắt đầu bằng âm nguyên âm /e/, số ít, chưa xác định → an." },
+      { "q": "Could you give me some ___ about the new policy?", "options": ["information", "informations", "an information", "a information"], "answer": 0, "explain_vi": "\"information\" không đếm được: không thêm -s, không đi với a/an." },
+      { "q": "We need three new ___ for the meeting room.", "options": ["chairs", "chair", "a chair", "chaires"], "answer": 0, "explain_vi": "\"three\" → cần danh từ số nhiều; chair → chairs." },
+      { "q": "I'd like to meet ___ CEO of your company.", "options": ["a", "an", "the", "some"], "answer": 2, "explain_vi": "Một công ty chỉ có một CEO, đã xác định bởi \"of your company\" → the." },
+      { "q": "There isn't much ___ in the warehouse.", "options": ["boxes", "equipment", "chairs", "items"], "answer": 1, "explain_vi": "\"much\" đi với danh từ không đếm được → equipment." },
+      { "q": "How ___ employees work in this office?", "options": ["much", "little", "many", "a lot"], "answer": 2, "explain_vi": "\"employees\" là danh từ đếm được số nhiều → How many." },
+      { "q": "She bought ___ umbrella at the airport.", "options": ["some", "a", "any", "an"], "answer": 3, "explain_vi": "\"umbrella\" số ít, bắt đầu bằng âm nguyên âm /ʌ/ → an." },
+      { "q": "Two ___ from the bank visited our office.", "options": ["man", "mans", "men", "mens"], "answer": 2, "explain_vi": "\"Two\" cần số nhiều; man là bất quy tắc → men." },
+      { "q": "The training session lasts ___ hour.", "options": ["many", "much", "a", "an"], "answer": 3, "explain_vi": "\"hour\" có h câm, bắt đầu bằng âm nguyên âm → an hour." },
+      { "q": "I need ___ advice on choosing a supplier.", "options": ["an", "a", "many", "some"], "answer": 3, "explain_vi": "\"advice\" không đếm được nên không dùng a/an/many → some." }
+    ]
+  },
+  {
+    "code": "pronouns",
+    "order_no": 7,
+    "band": 1,
+    "emoji": "👥",
+    "title_vi": "Đại từ và tính từ sở hữu",
+    "title_en": "Pronouns and possessives",
+    "summary_vi": "Chọn đúng I / me / my / mine theo vị trí trong câu.",
+    "sections": [
+      {
+        "heading": "Bảng đại từ",
+        "text": "Chủ ngữ → Tân ngữ → Tính từ sở hữu → Đại từ sở hữu\n**I** → me → my → mine\n**You** → you → your → yours\n**He** → him → his → his\n**She** → her → her → hers\n**It** → it → its → (ít dùng)\n**We** → us → our → ours\n**They** → them → their → theirs"
+      },
+      {
+        "heading": "Vị trí trong câu",
+        "text": "• **Chủ ngữ** đứng trước động từ: **We** are meeting the clients.\n• **Tân ngữ** đứng sau động từ / giới từ: Please call **me**.\n• **Tính từ sở hữu** đứng trước danh từ: **her** password.\n• **Đại từ sở hữu** đứng một mình, thay cho \"tính từ sở hữu + danh từ\": This desk is **mine**.",
+        "examples": [
+          { "en": "Mr. Binh called me yesterday.", "vi": "Hôm qua anh Bình đã gọi cho tôi." },
+          { "en": "Is this laptop yours?", "vi": "Cái laptop này là của bạn à?" },
+          { "en": "These files are theirs, not ours.", "vi": "Những tập hồ sơ này là của họ, không phải của chúng tôi." }
+        ]
+      },
+      {
+        "heading": "own",
+        "text": "Cấu trúc **tính từ sở hữu + own + N** để nhấn mạnh \"của riêng\".",
+        "examples": [
+          { "en": "He brought his own laptop.", "vi": "Anh ấy mang laptop riêng của mình." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: chỗ trống đứng ngay trước danh từ → gần như chắc chắn là tính từ sở hữu (my, his, their...).",
+      "Chỗ trống đứng sau động từ / giới từ → tân ngữ (me, him, us, them).",
+      "Its (của nó) khác it's (= it is). \"The manager and I\" làm chủ ngữ, không phải \"The manager and me\"."
+    ],
+    "questions": [
+      { "q": "Mr. Binh called ___ yesterday about the order.", "options": ["I", "me", "my", "mine"], "answer": 1, "explain_vi": "Chỗ trống đứng sau động từ called → cần tân ngữ me." },
+      { "q": "This is not my desk. ___ is near the window.", "options": ["Mine", "My", "Me", "I"], "answer": 0, "explain_vi": "Chỗ trống đứng một mình làm chủ ngữ, thay cho \"my desk\" → đại từ sở hữu Mine." },
+      { "q": "Ms. Lan forgot ___ password again.", "options": ["her", "hers", "she", "herself"], "answer": 0, "explain_vi": "Đứng trước danh từ password → tính từ sở hữu her." },
+      { "q": "___ are meeting the clients at 3 p.m.", "options": ["Us", "Our", "We", "Ours"], "answer": 2, "explain_vi": "Đứng trước động từ are meeting → cần đại từ chủ ngữ We." },
+      { "q": "Is this laptop ___? — No, it's Mr. Duc's.", "options": ["your", "yours", "you", "you're"], "answer": 1, "explain_vi": "Đứng một mình sau is, không có danh từ theo sau → đại từ sở hữu yours." },
+      { "q": "Please tell ___ the results as soon as possible.", "options": ["we", "our", "ours", "us"], "answer": 3, "explain_vi": "Sau động từ tell cần tân ngữ → us." },
+      { "q": "The manager and ___ will travel to Tokyo next week.", "options": ["me", "I", "my", "mine"], "answer": 1, "explain_vi": "\"The manager and ___\" là chủ ngữ của will travel → dùng đại từ chủ ngữ I." },
+      { "q": "These files are ___, not ours.", "options": ["their", "them", "theirs", "they"], "answer": 2, "explain_vi": "Không có danh từ theo sau, song song với \"ours\" → đại từ sở hữu theirs." },
+      { "q": "Mr. Hung brought ___ own laptop to the meeting.", "options": ["he", "him", "himself", "his"], "answer": 3, "explain_vi": "Cấu trúc tính từ sở hữu + own + danh từ → his own laptop." },
+      { "q": "Your report is longer than ___.", "options": ["mine", "my", "me", "I"], "answer": 0, "explain_vi": "So sánh report với report của tôi (= my report) → đại từ sở hữu mine." }
+    ]
+  },
+  {
+    "code": "prep-time",
+    "order_no": 8,
+    "band": 1,
+    "emoji": "🕘",
+    "title_vi": "Giới từ chỉ thời gian",
+    "title_en": "Prepositions of time",
+    "summary_vi": "Dùng đúng in / on / at và các giới từ for, since, by, until khi nói về thời gian.",
+    "sections": [
+      {
+        "heading": "in / on / at",
+        "text": "**at** + giờ, thời điểm: at 9 a.m., at noon, at night, at the weekend (Anh-Anh)\n**on** + ngày, thứ, ngày tháng: on Monday, on May 15, on my birthday\n**in** + tháng, năm, mùa, buổi, khoảng dài: in March, in 2015, in summer, in the morning",
+        "examples": [
+          { "en": "The meeting starts at 9 a.m.", "vi": "Cuộc họp bắt đầu lúc 9 giờ sáng." },
+          { "en": "The conference is on May 15.", "vi": "Hội nghị diễn ra vào ngày 15 tháng 5." },
+          { "en": "The company was founded in 2015.", "vi": "Công ty được thành lập năm 2015." }
+        ]
+      },
+      {
+        "heading": "for / since",
+        "text": "Thường đi với thì hiện tại hoàn thành (has/have + V3).\n**for** + khoảng thời gian: for five years, for two weeks\n**since** + mốc thời gian: since 2020, since Monday",
+        "examples": [
+          { "en": "Ms. Thu has worked here since 2020.", "vi": "Chị Thu làm việc ở đây từ năm 2020." },
+          { "en": "He has been the manager for five years.", "vi": "Anh ấy làm quản lý được 5 năm rồi." }
+        ]
+      },
+      {
+        "heading": "by / until",
+        "text": "**by** = trước hoặc muộn nhất là (hạn chót): submit **by** Friday.\n**until** = kéo dài liên tục cho đến: stay open **until** 10 p.m.",
+        "examples": [
+          { "en": "Please submit the report by Friday.", "vi": "Vui lòng nộp báo cáo chậm nhất vào thứ Sáu." },
+          { "en": "The store stays open until 10 p.m.", "vi": "Cửa hàng mở cửa đến 10 giờ tối." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: ngày cụ thể (on May 15, on Monday morning) dùng on, kể cả khi có buổi đi kèm.",
+      "for + khoảng (5 years), since + mốc (2020) — bẫy kinh điển của Part 5.",
+      "by dùng cho hạn chót (deadline, submit, complete); until dùng cho hành động kéo dài (stay, wait, remain open)."
+    ],
+    "questions": [
+      { "q": "The meeting starts ___ 9 a.m.", "options": ["in", "on", "at", "for"], "answer": 2, "explain_vi": "Giờ cụ thể (9 a.m.) → at." },
+      { "q": "Our office is closed ___ Sunday.", "options": ["on", "in", "at", "since"], "answer": 0, "explain_vi": "Thứ trong tuần (Sunday) → on." },
+      { "q": "The company was founded ___ 2015.", "options": ["on", "at", "in", "for"], "answer": 2, "explain_vi": "Năm (2015) → in." },
+      { "q": "Ms. Thu has worked here ___ 2020.", "options": ["for", "since", "in", "at"], "answer": 1, "explain_vi": "Hiện tại hoàn thành (has worked) + mốc thời gian 2020 → since." },
+      { "q": "He has been the manager ___ five years.", "options": ["since", "at", "on", "for"], "answer": 3, "explain_vi": "\"five years\" là khoảng thời gian → for." },
+      { "q": "Please submit the report ___ Friday at the latest.", "options": ["until", "by", "since", "in"], "answer": 1, "explain_vi": "Hạn chót (\"at the latest\", submit) → by." },
+      { "q": "The store stays open ___ 10 p.m.", "options": ["by", "since", "until", "on"], "answer": 2, "explain_vi": "Hành động kéo dài liên tục (stays open) đến một mốc → until." },
+      { "q": "We will launch the product ___ March.", "options": ["in", "at", "on", "since"], "answer": 0, "explain_vi": "Tháng (March) → in." },
+      { "q": "The conference is ___ May 15.", "options": ["in", "at", "for", "on"], "answer": 3, "explain_vi": "Ngày tháng cụ thể (May 15) → on." },
+      { "q": "I usually check my email ___ the morning.", "options": ["in", "on", "at", "by"], "answer": 0, "explain_vi": "Buổi trong ngày (the morning) → in the morning." }
+    ]
+  }
+]

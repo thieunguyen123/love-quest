@@ -1,0 +1,454 @@
+[
+  {
+    "code": "prep-place",
+    "order_no": 9,
+    "band": 2,
+    "emoji": "📍",
+    "title_vi": "Giới từ nơi chốn & chuyển động",
+    "title_en": "Prepositions of Place and Movement",
+    "summary_vi": "Chọn đúng in / on / at và các giới từ chỉ vị trí, hướng di chuyển trong câu công sở.",
+    "sections": [
+      {
+        "heading": "IN – ON – AT chỉ nơi chốn",
+        "text": "**in**: bên trong một không gian, khu vực lớn (phòng, toà nhà, thành phố, quốc gia).\n**on**: trên bề mặt, trên tầng, trên đường phố (không có số nhà).\n**at**: tại một điểm cụ thể (quầy lễ tân, cửa, sân bay) hoặc địa chỉ có số nhà.",
+        "formulas": ["in + phòng / toà nhà / thành phố / quốc gia", "on + the + số thứ tự + floor / bề mặt / tên đường", "at + điểm cụ thể / địa chỉ có số nhà"],
+        "examples": [
+          { "en": "Our office is in Hanoi.", "vi": "Văn phòng chúng tôi ở Hà Nội." },
+          { "en": "The HR department is on the third floor.", "vi": "Phòng nhân sự ở tầng ba." },
+          { "en": "Please wait at the reception desk.", "vi": "Vui lòng đợi ở quầy lễ tân." },
+          { "en": "The bank is at 12 Le Loi Street.", "vi": "Ngân hàng ở số 12 đường Lê Lợi." }
+        ]
+      },
+      {
+        "heading": "Giới từ chỉ vị trí tương đối",
+        "text": "**next to** = bên cạnh · **between A and B** = ở giữa A và B · **across from** = đối diện · **in front of** = phía trước · **behind** = phía sau.\nLưu ý: **next** luôn đi với **to**; **between** đi với **and**.",
+        "formulas": ["next to + N", "between + A + and + B", "across from + N"],
+        "examples": [
+          { "en": "The copier is next to the window.", "vi": "Máy photo ở cạnh cửa sổ." },
+          { "en": "The café is across from the hotel.", "vi": "Quán cà phê ở đối diện khách sạn." },
+          { "en": "The meeting room is between the kitchen and the elevator.", "vi": "Phòng họp nằm giữa bếp và thang máy." }
+        ]
+      },
+      {
+        "heading": "Giới từ chỉ chuyển động",
+        "text": "**into** = đi vào bên trong · **out of** = ra khỏi · **through** = xuyên qua (từ đầu này sang đầu kia) · **across** = băng ngang qua · **to** = đến (đích).",
+        "examples": [
+          { "en": "She put the files into the cabinet.", "vi": "Cô ấy cất hồ sơ vào tủ." },
+          { "en": "The truck drove through the tunnel.", "vi": "Xe tải chạy xuyên qua đường hầm." },
+          { "en": "He walked across the street to the bank.", "vi": "Anh ấy đi băng qua đường tới ngân hàng." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: thấy \"floor\" → gần như luôn chọn **on** (on the fifth floor).",
+      "Mẹo TOEIC: địa chỉ có số nhà dùng **at**, chỉ có tên đường dùng **on**, thành phố/quốc gia dùng **in**.",
+      "Bẫy thường gặp: \"next ___ the entrance\" phải là **to**, không phải of; \"between A ___ B\" phải là **and**."
+    ],
+    "questions": [
+      { "q": "Ms. Kim's office is located ___ the fifth floor of the building.", "options": ["in", "at", "into", "on"], "answer": 3, "explain_vi": "Trước \"the fifth floor\" (tầng) dùng on." },
+      { "q": "Please leave the package ___ the front desk when you arrive.", "options": ["into", "through", "at", "between"], "answer": 2, "explain_vi": "\"The front desk\" là một điểm cụ thể nên dùng at." },
+      { "q": "The printer is ___ the copier and the water cooler.", "options": ["between", "among", "across", "through"], "answer": 0, "explain_vi": "Cấu trúc \"between A and B\" (ở giữa hai vật); có \"and\" là dấu hiệu." },
+      { "q": "Our new branch is located ___ from the city bank.", "options": ["next", "between", "through", "across"], "answer": 3, "explain_vi": "\"Across from\" = đối diện; dấu hiệu là \"from\" đứng sau chỗ trống." },
+      { "q": "The visitors walked ___ the main lobby and out the back door.", "options": ["into", "through", "at", "on"], "answer": 1, "explain_vi": "Đi từ đầu này sang đầu kia (\"and out the back door\") nên dùng through = xuyên qua." },
+      { "q": "Mr. Tanaka put the signed documents ___ his briefcase before leaving.", "options": ["at", "across", "between", "into"], "answer": 3, "explain_vi": "Động từ \"put\" + chuyển động vào bên trong cặp → into." },
+      { "q": "The company headquarters is ___ 25 Nguyen Hue Street.", "options": ["at", "in", "on", "into"], "answer": 0, "explain_vi": "Địa chỉ có số nhà (25 Nguyen Hue Street) dùng at." },
+      { "q": "The visitor parking lot is located right next ___ the main entrance.", "options": ["of", "from", "to", "at"], "answer": 2, "explain_vi": "Cụm cố định \"next to\" = bên cạnh." },
+      { "q": "Employees can find the new schedule posted ___ the wall near the elevator.", "options": ["in", "on", "at", "into"], "answer": 1, "explain_vi": "Dán trên bề mặt tường (the wall) dùng on." },
+      { "q": "Our main office is ___ Ho Chi Minh City, near the airport.", "options": ["in", "at", "on", "into"], "answer": 0, "explain_vi": "Trước tên thành phố (Ho Chi Minh City) dùng in." }
+    ]
+  },
+  {
+    "code": "word-forms",
+    "order_no": 10,
+    "band": 2,
+    "emoji": "🧩",
+    "title_vi": "Từ loại: danh từ – động từ – tính từ – trạng từ",
+    "title_en": "Word Forms: Nouns, Verbs, Adjectives, Adverbs",
+    "summary_vi": "Nhận ra từ loại qua hậu tố và chọn đúng dạng từ theo vị trí trong câu — dạng bài gặp nhiều nhất ở TOEIC Part 5.",
+    "sections": [
+      {
+        "heading": "Nhận diện từ loại qua hậu tố",
+        "text": "**Danh từ (N)**: -tion, -sion, -ment, -ness, -ity, -ance/-ence, -er/-or, -ee.\n**Động từ (V)**: -ize, -ify, -en, -ate.\n**Tính từ (Adj)**: -ive, -ful, -less, -able/-ible, -al, -ous, -ent/-ant.\n**Trạng từ (Adv)**: thường là tính từ + **-ly**.",
+        "examples": [
+          { "en": "decide (V) → decision (N) → decisive (Adj) → decisively (Adv)", "vi": "quyết định → sự quyết định → quyết đoán → một cách quyết đoán" },
+          { "en": "success (N) → succeed (V) → successful (Adj) → successfully (Adv)", "vi": "sự thành công → thành công → thành công (tính từ) → một cách thành công" }
+        ]
+      },
+      {
+        "heading": "Vị trí của danh từ và tính từ",
+        "text": "**Danh từ** đứng sau mạo từ (a/an/the), tính từ sở hữu (my, our, its), tính từ, giới từ; làm chủ ngữ hoặc tân ngữ.\n**Tính từ** đứng trước danh từ, hoặc sau động từ to be / become / seem / remain.",
+        "formulas": ["a/the/our + (Adj) + N", "be / become / seem + Adj"],
+        "examples": [
+          { "en": "The construction of the bridge was delayed.", "vi": "Việc xây dựng cây cầu bị trì hoãn." },
+          { "en": "The new policy seems effective.", "vi": "Chính sách mới có vẻ hiệu quả." }
+        ]
+      },
+      {
+        "heading": "Vị trí của trạng từ và động từ",
+        "text": "**Trạng từ** bổ nghĩa cho động từ, tính từ hoặc cả câu: đứng sau động từ thường / cuối câu, trước tính từ, hoặc giữa trợ động từ và động từ chính.\n**Động từ** đứng sau chủ ngữ, sau to, sau động từ khuyết thiếu (will, can, must…).",
+        "formulas": ["S + V + (O) + Adv", "be + Adv + Adj", "will / must / to + V nguyên mẫu"],
+        "examples": [
+          { "en": "She completed the project quickly.", "vi": "Cô ấy hoàn thành dự án nhanh chóng." },
+          { "en": "The results were extremely positive.", "vi": "Kết quả cực kỳ khả quan." },
+          { "en": "We plan to expand our services.", "vi": "Chúng tôi dự định mở rộng dịch vụ." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: 4 đáp án cùng gốc từ (impress / impression / impressive / impressively) → đừng dịch cả câu, chỉ nhìn từ đứng trước và sau chỗ trống để xác định từ loại cần điền.",
+      "Mẹo TOEIC: \"a/the/our + ___ + danh từ\" → tính từ; \"a/the/our + ___ + giới từ/động từ\" → danh từ.",
+      "Bẫy: sau động từ thường dùng trạng từ (she works efficient ✗ → she works efficient**ly** ✓), nhưng sau to be dùng tính từ (is efficient)."
+    ],
+    "questions": [
+      { "q": "The manager gave a very ___ presentation at the annual conference.", "options": ["impress", "impression", "impressive", "impressively"], "answer": 2, "explain_vi": "Giữa \"a very\" và danh từ \"presentation\" cần tính từ → impressive." },
+      { "q": "Please read the instructions ___ before using the new machine.", "options": ["careful", "carefully", "care", "carefulness"], "answer": 1, "explain_vi": "Bổ nghĩa cho động từ \"read\" cần trạng từ → carefully." },
+      { "q": "The ___ of the new factory will take about two years.", "options": ["construct", "constructive", "constructively", "construction"], "answer": 3, "explain_vi": "Sau \"The\" và trước \"of\" cần danh từ → construction." },
+      { "q": "Ms. Lee was promoted because she works very ___.", "options": ["efficiently", "efficient", "efficiency", "efficiencies"], "answer": 0, "explain_vi": "Bổ nghĩa cho động từ thường \"works\" cần trạng từ → efficiently." },
+      { "q": "Customer ___ is the top priority of our service department.", "options": ["satisfy", "satisfaction", "satisfied", "satisfying"], "answer": 1, "explain_vi": "Chỗ trống là chủ ngữ (danh từ ghép \"customer ___\") trước động từ \"is\" → danh từ satisfaction." },
+      { "q": "The company plans to ___ its operations to Southeast Asia next year.", "options": ["expansion", "expansive", "expand", "expansively"], "answer": 2, "explain_vi": "Sau \"to\" và có tân ngữ \"its operations\" cần động từ nguyên mẫu → expand." },
+      { "q": "The new scheduling software is very ___ for busy managers.", "options": ["use", "useful", "usefully", "usefulness"], "answer": 1, "explain_vi": "Sau \"is very\" cần tính từ → useful." },
+      { "q": "Sales increased ___ after the advertising campaign started.", "options": ["significant", "significance", "signify", "significantly"], "answer": 3, "explain_vi": "Bổ nghĩa cho động từ \"increased\" cần trạng từ → significantly." },
+      { "q": "We received more than fifty ___ for the marketing position.", "options": ["applications", "apply", "applicable", "applied"], "answer": 0, "explain_vi": "Sau số lượng \"fifty\" và làm tân ngữ của \"received\" cần danh từ số nhiều → applications." },
+      { "q": "Mr. Park is ___ for checking all invoices before payment.", "options": ["respond", "responsibly", "responsible", "responsibility"], "answer": 2, "explain_vi": "Sau \"is\" cần tính từ; cụm \"be responsible for\" = chịu trách nhiệm về." }
+    ]
+  },
+  {
+    "code": "present-perfect",
+    "order_no": 11,
+    "band": 2,
+    "emoji": "⏳",
+    "title_vi": "Thì hiện tại hoàn thành",
+    "title_en": "Present Perfect Tense",
+    "summary_vi": "Dùng đúng thì hiện tại hoàn thành với for / since / already / yet / just và phân biệt với quá khứ đơn.",
+    "sections": [
+      {
+        "heading": "Cấu trúc",
+        "text": "Dùng **have** với I / you / we / they / danh từ số nhiều; **has** với he / she / it / danh từ số ít. Động từ chính chia **V3/ed** (quá khứ phân từ).",
+        "formulas": ["(+) S + have/has + V3/ed", "(−) S + have/has + not + V3/ed", "(?) Have/Has + S + V3/ed?"],
+        "examples": [
+          { "en": "We have signed the contract.", "vi": "Chúng tôi đã ký hợp đồng." },
+          { "en": "She hasn't replied to my e-mail.", "vi": "Cô ấy chưa trả lời e-mail của tôi." }
+        ]
+      },
+      {
+        "heading": "Khi nào dùng?",
+        "text": "1. Hành động bắt đầu trong quá khứ, **kéo dài đến hiện tại**: dùng **for** + khoảng thời gian, **since** + mốc thời gian.\n2. Hành động **vừa xảy ra** hoặc **đã xảy ra nhưng không rõ thời điểm**, kết quả còn liên quan hiện tại.\n3. Kinh nghiệm / số lần: twice, three times, ever, never.",
+        "formulas": ["for + khoảng thời gian (for three years)", "since + mốc thời gian (since 2018, since Monday)"],
+        "examples": [
+          { "en": "Mr. Hoang has worked here for ten years.", "vi": "Anh Hoàng đã làm ở đây được mười năm." },
+          { "en": "The price has increased since January.", "vi": "Giá đã tăng từ tháng Một." }
+        ]
+      },
+      {
+        "heading": "Already – yet – just",
+        "text": "**already** (đã rồi): câu khẳng định, đứng giữa have/has và V3.\n**just** (vừa mới): đứng giữa have/has và V3.\n**yet** (chưa / đã … chưa): câu phủ định và câu hỏi, đứng cuối câu.",
+        "examples": [
+          { "en": "The shipment has already arrived.", "vi": "Lô hàng đã đến rồi." },
+          { "en": "I have just finished the report.", "vi": "Tôi vừa hoàn thành bản báo cáo." },
+          { "en": "Have you called the client yet?", "vi": "Bạn đã gọi cho khách hàng chưa?" }
+        ]
+      },
+      {
+        "heading": "Phân biệt với quá khứ đơn",
+        "text": "**Quá khứ đơn** dùng khi có thời điểm xác định đã kết thúc: yesterday, last week, in 2020, two days **ago**.\n**Hiện tại hoàn thành** không đi với các mốc đã kết thúc đó.",
+        "examples": [
+          { "en": "We launched the product last month.", "vi": "Chúng tôi ra mắt sản phẩm tháng trước." },
+          { "en": "We have launched three products this year.", "vi": "Năm nay chúng tôi đã ra mắt ba sản phẩm." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: thấy **since / for + khoảng thời gian / so far / recently** → ưu tiên have/has + V3.",
+      "Mẹo TOEIC: thấy **ago / last + thời gian / yesterday / in + năm quá khứ** → chọn quá khứ đơn, KHÔNG chọn hiện tại hoàn thành.",
+      "Bẫy: yet dùng trong câu phủ định/câu hỏi; already dùng trong câu khẳng định."
+    ],
+    "questions": [
+      { "q": "Ms. Tran ___ for this company since 2018.", "options": ["works", "worked", "has worked", "is working"], "answer": 2, "explain_vi": "\"Since 2018\" là mốc thời gian kéo dài đến hiện tại → hiện tại hoàn thành has worked." },
+      { "q": "We ___ the contract with ABC Corporation last Monday.", "options": ["signed", "have signed", "sign", "has signed"], "answer": 0, "explain_vi": "\"Last Monday\" là thời điểm xác định trong quá khứ → quá khứ đơn signed." },
+      { "q": "The shipment from our supplier has not arrived ___.", "options": ["already", "yet", "since", "ago"], "answer": 1, "explain_vi": "Câu phủ định \"has not arrived\" đi với yet đứng cuối câu." },
+      { "q": "Mr. Lopez has ___ finished the quarterly report, so you can review it now.", "options": ["yet", "since", "ago", "just"], "answer": 3, "explain_vi": "Giữa \"has\" và V3 trong câu khẳng định, nghĩa \"vừa mới\" → just." },
+      { "q": "Our team has used this accounting software ___ three years.", "options": ["since", "for", "ago", "yet"], "answer": 1, "explain_vi": "\"Three years\" là khoảng thời gian → for." },
+      { "q": "The director ___ to Singapore twice this year.", "options": ["has traveled", "travels", "is traveling", "travel"], "answer": 0, "explain_vi": "Số lần (\"twice\") trong khoảng thời gian chưa kết thúc (\"this year\") → has traveled." },
+      { "q": "Have you ___ the new safety guidelines yet?", "options": ["receive", "received", "receiving", "receives"], "answer": 1, "explain_vi": "Câu hỏi \"Have you … yet?\" là hiện tại hoàn thành → cần V3 received." },
+      { "q": "The client called two hours ___ to change the delivery date.", "options": ["since", "for", "yet", "ago"], "answer": 3, "explain_vi": "Động từ quá khứ đơn \"called\" + khoảng thời gian → \"two hours ago\" (cách đây hai giờ)." },
+      { "q": "The company has ___ hired five new engineers this month.", "options": ["already", "yet", "ago", "since"], "answer": 0, "explain_vi": "Câu khẳng định, vị trí giữa \"has\" và V3 → already." },
+      { "q": "Sales ___ steadily since the new product was launched.", "options": ["increase", "increased", "were increasing", "have increased"], "answer": 3, "explain_vi": "\"Since + mốc thời gian\" → hiện tại hoàn thành; chủ ngữ số nhiều \"Sales\" → have increased." }
+    ]
+  },
+  {
+    "code": "comparison",
+    "order_no": 12,
+    "band": 2,
+    "emoji": "📊",
+    "title_vi": "So sánh bằng, so sánh hơn, so sánh nhất",
+    "title_en": "Comparatives and Superlatives",
+    "summary_vi": "Chọn đúng dạng so sánh bằng, hơn, nhất và các dạng bất quy tắc như good – better – best.",
+    "sections": [
+      {
+        "heading": "So sánh bằng",
+        "text": "Dùng **as + tính từ/trạng từ + as**. Phủ định: **not as/so … as**.",
+        "formulas": ["S + be + as + Adj + as + N", "S + V + as + Adv + as + N"],
+        "examples": [
+          { "en": "The new model is as reliable as the old one.", "vi": "Mẫu mới đáng tin cậy như mẫu cũ." },
+          { "en": "Please reply as soon as possible.", "vi": "Vui lòng trả lời càng sớm càng tốt." }
+        ]
+      },
+      {
+        "heading": "So sánh hơn",
+        "text": "Tính từ **ngắn** (1 âm tiết, hoặc 2 âm tiết tận cùng -y): thêm **-er** (cheap → cheaper, busy → busier).\nTính từ **dài**: dùng **more** + tính từ (more expensive).\nLuôn đi với **than**. Nhấn mạnh bằng **much / far / a lot** (much cheaper), không dùng very.",
+        "formulas": ["Adj-er + than", "more + Adj dài + than", "much / far + so sánh hơn"],
+        "examples": [
+          { "en": "Shipping by air is faster than shipping by sea.", "vi": "Gửi bằng đường hàng không nhanh hơn đường biển." },
+          { "en": "This plan is much more practical than that one.", "vi": "Kế hoạch này thực tế hơn nhiều so với kế hoạch kia." }
+        ]
+      },
+      {
+        "heading": "So sánh nhất",
+        "text": "Tính từ ngắn: **the + Adj-est**; tính từ dài: **the most + Adj**. Thường đi với: in + nơi chốn/nhóm, of all, ever, hoặc mệnh đề \"we have ever …\".",
+        "formulas": ["the + Adj-est", "the most + Adj dài"],
+        "examples": [
+          { "en": "She is the most experienced member of the team.", "vi": "Cô ấy là thành viên giàu kinh nghiệm nhất nhóm." },
+          { "en": "This is the largest order we have ever received.", "vi": "Đây là đơn hàng lớn nhất chúng tôi từng nhận." }
+        ]
+      },
+      {
+        "heading": "Dạng bất quy tắc",
+        "text": "**good/well → better → the best**\n**bad/badly → worse → the worst**\n**many/much → more → the most**\n**little → less → the least**\n**far → farther/further → the farthest/furthest**"
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: thấy **than** → chọn so sánh hơn; thấy **the … in/of/ever** → so sánh nhất; thấy **as … as** → giữ nguyên tính từ/trạng từ.",
+      "Bẫy: trước so sánh hơn dùng **much / far / even** để nhấn mạnh, KHÔNG dùng very (very larger ✗).",
+      "Bẫy: \"than\" (hơn) khác \"then\" (sau đó) — đề hay cài then làm đáp án nhiễu."
+    ],
+    "questions": [
+      { "q": "This year's sales figures are ___ than last year's.", "options": ["high", "higher", "highest", "more high"], "answer": 1, "explain_vi": "Có \"than\" → so sánh hơn; \"high\" là tính từ ngắn → higher." },
+      { "q": "Ms. Nguyen is the ___ experienced candidate we have interviewed so far.", "options": ["more", "much", "most", "very"], "answer": 2, "explain_vi": "\"The ___ experienced\" + \"we have interviewed\" → so sánh nhất với tính từ dài: the most." },
+      { "q": "The new printer works ___ fast as the old one.", "options": ["as", "so", "than", "more"], "answer": 0, "explain_vi": "Cấu trúc so sánh bằng trong câu khẳng định \"as … as\"; dấu hiệu là \"as\" thứ hai." },
+      { "q": "Customers say our service is ___ than our competitor's.", "options": ["good", "best", "well", "better"], "answer": 3, "explain_vi": "Có \"than\" → so sánh hơn của \"good\" là better (bất quy tắc)." },
+      { "q": "The Grand Palace is the ___ hotel in the city center.", "options": ["more expensive", "most expensive", "expensiver", "expensivest"], "answer": 1, "explain_vi": "\"The ___ in the city center\" → so sánh nhất; tính từ dài → most expensive." },
+      { "q": "The second proposal was ___ than the first one, so the board approved it.", "options": ["more detailed", "most detailed", "detailed", "as detailed"], "answer": 0, "explain_vi": "Có \"than\" → so sánh hơn; tính từ dài \"detailed\" → more detailed." },
+      { "q": "Shipping by air is faster ___ shipping by sea.", "options": ["as", "then", "than", "that"], "answer": 2, "explain_vi": "So sánh hơn \"faster\" phải đi với than (không nhầm với then = sau đó)." },
+      { "q": "Last quarter was the ___ period in the company's history.", "options": ["bad", "worse", "badly", "worst"], "answer": 3, "explain_vi": "\"The ___ in the company's history\" → so sánh nhất của bad là worst." },
+      { "q": "The meeting room on the second floor is ___ larger than this one.", "options": ["very", "much", "most", "more"], "answer": 1, "explain_vi": "Nhấn mạnh so sánh hơn \"larger\" dùng much; không dùng very." },
+      { "q": "Please send us your feedback ___ soon as possible.", "options": ["as", "so", "more", "than"], "answer": 0, "explain_vi": "Cụm cố định \"as soon as possible\" (càng sớm càng tốt)." }
+    ]
+  },
+  {
+    "code": "modals",
+    "order_no": 13,
+    "band": 2,
+    "emoji": "🔑",
+    "title_vi": "Động từ khuyết thiếu",
+    "title_en": "Modal Verbs",
+    "summary_vi": "Dùng đúng can / could / must / have to / should / may / might để nói về khả năng, bắt buộc, lời khuyên và sự cho phép.",
+    "sections": [
+      {
+        "heading": "Quy tắc chung",
+        "text": "Sau động từ khuyết thiếu luôn là **V nguyên mẫu không to**. Động từ khuyết thiếu **không thêm -s**, không chia theo chủ ngữ.\nPhủ định thêm **not** (cannot/can't, must not/mustn't, should not/shouldn't).",
+        "formulas": ["S + modal + V nguyên mẫu", "S + modal + not + V nguyên mẫu", "Modal + S + V nguyên mẫu?"],
+        "examples": [
+          { "en": "She can speak Korean.", "vi": "Cô ấy có thể nói tiếng Hàn." },
+          { "en": "Could you send me the file?", "vi": "Bạn có thể gửi tôi tập tin được không?" }
+        ]
+      },
+      {
+        "heading": "Ý nghĩa từng từ",
+        "text": "**can**: có thể (khả năng hiện tại / xin phép thân mật) · **could**: có thể (khả năng trong quá khứ / đề nghị lịch sự).\n**must**: phải (quy định, người nói thấy cần) · **have to**: phải (do hoàn cảnh/quy định bên ngoài).\n**should**: nên (lời khuyên).\n**may / might**: có lẽ (khả năng không chắc chắn); **may** còn dùng để cho phép lịch sự.",
+        "examples": [
+          { "en": "All visitors must wear a badge.", "vi": "Mọi khách đến thăm phải đeo thẻ." },
+          { "en": "You should back up your files regularly.", "vi": "Bạn nên sao lưu tập tin thường xuyên." },
+          { "en": "The train might be late due to the storm.", "vi": "Tàu có thể bị trễ vì bão." }
+        ]
+      },
+      {
+        "heading": "Have to – lưu ý đặc biệt",
+        "text": "**have to** chia theo chủ ngữ (he/she/it **has to**) và theo thì (**had to**).\n**don't/doesn't have to** = không cần phải (không bắt buộc) — khác hẳn **mustn't** = cấm.",
+        "formulas": ["S + have/has to + V", "S + don't/doesn't have to + V"],
+        "examples": [
+          { "en": "He has to finish the report today.", "vi": "Anh ấy phải hoàn thành báo cáo hôm nay." },
+          { "en": "You don't have to come in on Saturday.", "vi": "Bạn không cần phải đi làm thứ Bảy." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: chỗ trống ngay sau can / must / should / may / will → chọn V nguyên mẫu (không -s, không -ing, không to).",
+      "Bẫy: \"must to\", \"should to\", \"can to\" đều sai; chỉ có have to / ought to mới có to.",
+      "Phân biệt: mustn't = cấm; don't have to = không bắt buộc."
+    ],
+    "questions": [
+      { "q": "All visitors ___ sign in at the reception desk before entering the building.", "options": ["must", "should to", "have", "can to"], "answer": 0, "explain_vi": "Quy định bắt buộc → must + V nguyên mẫu; \"should to\", \"can to\" sai, \"have\" thiếu to." },
+      { "q": "Employees ___ wear their ID badges at all times in the factory.", "options": ["must to", "has to", "have to", "having to"], "answer": 2, "explain_vi": "Chủ ngữ số nhiều \"Employees\" → have to + V nguyên mẫu." },
+      { "q": "Mr. Davis ___ attend today's meeting because he is on a business trip.", "options": ["must", "has to", "can't", "should"], "answer": 2, "explain_vi": "Lý do \"because he is on a business trip\" cho thấy anh ấy không thể tham dự → can't." },
+      { "q": "The manager said that we ___ leave early on Friday if we finish our work.", "options": ["may", "must to", "should to", "has"], "answer": 0, "explain_vi": "Diễn tả sự cho phép (\"if we finish our work\") → may + V; các lựa chọn còn lại sai ngữ pháp." },
+      { "q": "Customers can ___ their orders online 24 hours a day.", "options": ["tracking", "tracked", "track", "to track"], "answer": 2, "explain_vi": "Sau động từ khuyết thiếu \"can\" là V nguyên mẫu không to → track." },
+      { "q": "You ___ check your e-mail before the meeting because the agenda may change.", "options": ["musts", "should", "ought", "shouldn't to"], "answer": 1, "explain_vi": "Lời khuyên → should + V; \"musts\" sai (modal không thêm -s), \"ought\" thiếu to." },
+      { "q": "When Ms. Chen was a student, she ___ speak three languages fluently.", "options": ["can", "could", "must", "should"], "answer": 1, "explain_vi": "Khả năng trong quá khứ (\"was a student\") → could." },
+      { "q": "The flight ___ be delayed because of the storm, so please check the schedule.", "options": ["must to", "has", "should to", "might"], "answer": 3, "explain_vi": "Khả năng không chắc chắn → might + V nguyên mẫu \"be\"." },
+      { "q": "Staff members ___ have to work on Sunday; it is completely optional.", "options": ["don't", "doesn't", "aren't", "not"], "answer": 0, "explain_vi": "\"It is optional\" → không bắt buộc: don't have to; chủ ngữ số nhiều nên dùng don't." },
+      { "q": "Could you ___ me the sales report by noon tomorrow?", "options": ["sending", "to send", "sent", "send"], "answer": 3, "explain_vi": "Sau \"Could you\" là V nguyên mẫu không to → send." }
+    ]
+  },
+  {
+    "code": "quantifiers",
+    "order_no": 14,
+    "band": 2,
+    "emoji": "🧮",
+    "title_vi": "Lượng từ",
+    "title_en": "Quantifiers",
+    "summary_vi": "Chọn đúng lượng từ theo danh từ đếm được / không đếm được và số ít / số nhiều.",
+    "sections": [
+      {
+        "heading": "Đếm được hay không đếm được?",
+        "text": "**Danh từ đếm được số nhiều** (employees, orders, questions): many, a few, few, several, a number of.\n**Danh từ không đếm được** (information, equipment, time, money, furniture, advice): much, a little, little, a great deal of, an amount of.\n**Dùng cho cả hai**: some, any, a lot of, lots of, plenty of, most, all.",
+        "examples": [
+          { "en": "We received many orders this week.", "vi": "Tuần này chúng tôi nhận được nhiều đơn hàng." },
+          { "en": "We don't have much time.", "vi": "Chúng ta không có nhiều thời gian." }
+        ]
+      },
+      {
+        "heading": "A few / a little khác few / little",
+        "text": "**a few / a little** = một vài, một ít (đủ dùng, nghĩa tích cực).\n**few / little** = rất ít, hầu như không (nghĩa tiêu cực, thường đi với very).",
+        "examples": [
+          { "en": "I have a few questions about the contract.", "vi": "Tôi có vài câu hỏi về hợp đồng." },
+          { "en": "Very few people came, so the event was canceled.", "vi": "Rất ít người đến nên sự kiện bị huỷ." }
+        ]
+      },
+      {
+        "heading": "Some / any – each / every / all",
+        "text": "**some**: câu khẳng định, lời mời/đề nghị · **any**: câu phủ định và câu hỏi.\n**each / every** + danh từ **số ít** + động từ số ít. **each of the** + N số nhiều (every không đi với of).\n**all (the)** + danh từ số nhiều/không đếm được.",
+        "formulas": ["each / every + N số ít + V số ít", "each of the + N số nhiều + V số ít", "all (of) the + N số nhiều + V số nhiều"],
+        "examples": [
+          { "en": "Every employee has a locker.", "vi": "Mỗi nhân viên đều có một tủ đồ." },
+          { "en": "All the reports are ready.", "vi": "Tất cả báo cáo đã sẵn sàng." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: nhìn danh từ phía sau trước — số nhiều hay không đếm được, rồi mới chọn lượng từ.",
+      "Bẫy: information, equipment, furniture, advice, luggage là danh từ KHÔNG đếm được → dùng much / a little, không thêm -s.",
+      "Bẫy: \"every of\" luôn sai; \"each of the + N số nhiều\" thì đúng."
+    ],
+    "questions": [
+      { "q": "We have received ___ complaints about the new product this week.", "options": ["much", "a little", "many", "little"], "answer": 2, "explain_vi": "\"Complaints\" là danh từ đếm được số nhiều → many." },
+      { "q": "There isn't ___ time left before the project deadline.", "options": ["many", "much", "few", "a few"], "answer": 1, "explain_vi": "\"Time\" là danh từ không đếm được, câu phủ định → much." },
+      { "q": "___ employee must complete the safety course by the end of the month.", "options": ["Every", "All", "Many", "Few"], "answer": 0, "explain_vi": "\"Employee\" là danh từ số ít → Every; All/Many/Few cần danh từ số nhiều." },
+      { "q": "Could I ask you ___ questions about the contract?", "options": ["much", "a little", "every", "a few"], "answer": 3, "explain_vi": "\"Questions\" đếm được số nhiều, nghĩa \"một vài\" → a few." },
+      { "q": "Do you have ___ questions before we finish the meeting?", "options": ["any", "much", "a little", "every"], "answer": 0, "explain_vi": "Câu hỏi + danh từ số nhiều \"questions\" → any." },
+      { "q": "We need ___ more information before making a final decision.", "options": ["a few", "many", "a little", "each"], "answer": 2, "explain_vi": "\"Information\" là danh từ không đếm được → a little." },
+      { "q": "___ the staff members attended the year-end party.", "options": ["Every", "Each", "All", "Much"], "answer": 2, "explain_vi": "Đứng ngay trước \"the + danh từ số nhiều\" (không có of) → All; Every/Each không đi trực tiếp với \"the staff members\"." },
+      { "q": "Unfortunately, very ___ people signed up for the workshop, so it was canceled.", "options": ["little", "few", "much", "a few"], "answer": 1, "explain_vi": "\"People\" đếm được số nhiều, nghĩa tiêu cực (\"so it was canceled\"), đi sau very → few." },
+      { "q": "___ of the two candidates has strong experience in sales.", "options": ["Each", "Every", "All", "Many"], "answer": 0, "explain_vi": "\"___ of the two candidates\" + động từ số ít \"has\" → Each (every không đi với of)." },
+      { "q": "The office has very ___ paper left, so please order more today.", "options": ["few", "many", "a few", "little"], "answer": 3, "explain_vi": "\"Paper\" không đếm được, nghĩa \"rất ít\" (\"so please order more\") → little." }
+    ]
+  },
+  {
+    "code": "conjunctions",
+    "order_no": 15,
+    "band": 2,
+    "emoji": "🔗",
+    "title_vi": "Liên từ",
+    "title_en": "Conjunctions",
+    "summary_vi": "Nối ý đúng bằng and / but / or / so / because / although và các cặp liên từ both…and, either…or, neither…nor.",
+    "sections": [
+      {
+        "heading": "Liên từ đẳng lập",
+        "text": "**and** = và (bổ sung) · **but** = nhưng (đối lập) · **or** = hoặc (lựa chọn) · **so** = vì vậy (kết quả).\nTrước **so** và **but** khi nối hai mệnh đề thường có dấu phẩy.",
+        "examples": [
+          { "en": "The printer was broken, so we used the one downstairs.", "vi": "Máy in bị hỏng nên chúng tôi dùng máy ở tầng dưới." },
+          { "en": "The hotel is small but very comfortable.", "vi": "Khách sạn nhỏ nhưng rất thoải mái." }
+        ]
+      },
+      {
+        "heading": "Liên từ phụ thuộc: because / although",
+        "text": "**because** + mệnh đề = bởi vì (nguyên nhân).\n**although / though / even though** + mệnh đề = mặc dù (nhượng bộ, hai ý trái ngược).\nLưu ý: **because of / despite** + danh từ (không phải mệnh đề).",
+        "formulas": ["because + S + V", "although + S + V, S + V", "because of / despite + N"],
+        "examples": [
+          { "en": "The meeting was postponed because the director was ill.", "vi": "Cuộc họp bị hoãn vì giám đốc bị ốm." },
+          { "en": "Although sales were low, the company made a profit.", "vi": "Mặc dù doanh số thấp, công ty vẫn có lãi." }
+        ]
+      },
+      {
+        "heading": "Cặp liên từ (tương quan)",
+        "text": "**both A and B** = cả A và B (động từ số nhiều).\n**either A or B** = hoặc A hoặc B.\n**neither A nor B** = không A cũng không B.\n**not only A but (also) B** = không những A mà còn B.",
+        "examples": [
+          { "en": "Both the manager and the staff agreed.", "vi": "Cả quản lý lẫn nhân viên đều đồng ý." },
+          { "en": "You can either call or e-mail us.", "vi": "Bạn có thể gọi điện hoặc gửi e-mail cho chúng tôi." },
+          { "en": "Neither the invoice nor the receipt was attached.", "vi": "Cả hoá đơn lẫn biên lai đều không được đính kèm." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: nhìn từ đi cặp trong câu — có **both** → and; có **either** → or; có **neither** → nor.",
+      "Mẹo TOEIC: hai vế trái ngược trong cùng một câu → although (đầu câu) hoặc but (giữa câu).",
+      "Bẫy: sau chỗ trống là mệnh đề (có S + V) → because / although; là cụm danh từ → because of / despite."
+    ],
+    "questions": [
+      { "q": "The hotel is expensive, ___ the service is excellent.", "options": ["so", "but", "or", "because"], "answer": 1, "explain_vi": "Hai ý trái ngược (đắt – dịch vụ tuyệt vời) → but." },
+      { "q": "The meeting was canceled ___ the manager was sick.", "options": ["because", "although", "but", "or"], "answer": 0, "explain_vi": "Vế sau là nguyên nhân của việc huỷ họp → because + mệnh đề." },
+      { "q": "___ the price was high, many customers bought the new model.", "options": ["Because", "So", "Although", "Or"], "answer": 2, "explain_vi": "Giá cao nhưng khách vẫn mua → ý nhượng bộ: Although." },
+      { "q": "You can pay ___ by credit card or in cash.", "options": ["both", "neither", "and", "either"], "answer": 3, "explain_vi": "Có \"or\" phía sau → cặp either … or." },
+      { "q": "___ the sales team and the marketing team will attend the conference.", "options": ["Either", "Both", "Neither", "Not"], "answer": 1, "explain_vi": "Có \"and\" phía sau → cặp both … and." },
+      { "q": "Neither the manager ___ his assistant was available yesterday afternoon.", "options": ["or", "and", "but", "nor"], "answer": 3, "explain_vi": "Có \"Neither\" phía trước → cặp neither … nor." },
+      { "q": "Our printer was broken, ___ we sent the documents to a print shop.", "options": ["so", "because", "although", "or"], "answer": 0, "explain_vi": "Vế sau là kết quả của việc máy in hỏng → so." },
+      { "q": "Please call me ___ send me an e-mail if you have any questions.", "options": ["but", "or", "so", "nor"], "answer": 1, "explain_vi": "Lựa chọn giữa gọi điện và gửi e-mail → or." },
+      { "q": "The company hired more staff ___ it received many new orders.", "options": ["although", "but", "or", "because"], "answer": 3, "explain_vi": "Vế sau là lý do tuyển thêm người → because." },
+      { "q": "Mr. Kim speaks English ___ Japanese fluently.", "options": ["so", "but", "and", "nor"], "answer": 2, "explain_vi": "Bổ sung thêm một ngôn ngữ nữa, hai ý cùng chiều → and." }
+    ]
+  },
+  {
+    "code": "gerund-infinitive",
+    "order_no": 16,
+    "band": 2,
+    "emoji": "🔀",
+    "title_vi": "To V hay V-ing",
+    "title_en": "Gerunds and Infinitives",
+    "summary_vi": "Biết động từ nào đi với to V, động từ nào đi với V-ing và dùng V-ing sau giới từ.",
+    "sections": [
+      {
+        "heading": "Động từ + to V",
+        "text": "Thường là các động từ hướng tới **tương lai, dự định, mong muốn**: want, plan, decide, hope, expect, agree, refuse, promise, offer, need, intend, manage, fail, afford, would like.",
+        "formulas": ["S + want / plan / decide … + to V"],
+        "examples": [
+          { "en": "We decided to postpone the launch.", "vi": "Chúng tôi quyết định hoãn ra mắt." },
+          { "en": "She agreed to lead the project.", "vi": "Cô ấy đồng ý dẫn dắt dự án." }
+        ]
+      },
+      {
+        "heading": "Động từ + V-ing",
+        "text": "Các động từ hay gặp: enjoy, avoid, finish, consider, suggest, recommend, mind, keep, deny, postpone, delay, practice, risk, quit.",
+        "formulas": ["S + enjoy / avoid / suggest … + V-ing"],
+        "examples": [
+          { "en": "Please avoid using your phone during the meeting.", "vi": "Vui lòng tránh dùng điện thoại trong cuộc họp." },
+          { "en": "He suggested hiring a consultant.", "vi": "Anh ấy đề xuất thuê một chuyên gia tư vấn." }
+        ]
+      },
+      {
+        "heading": "Sau giới từ dùng V-ing",
+        "text": "Sau mọi **giới từ** (for, of, in, about, before, after, without…) dùng **V-ing**.\nĐặc biệt các cụm có **to là giới từ**: look forward to, be used to, be committed to, object to → + **V-ing**.",
+        "formulas": ["giới từ + V-ing", "look forward to + V-ing"],
+        "examples": [
+          { "en": "Thank you for attending the seminar.", "vi": "Cảm ơn bạn đã tham dự hội thảo." },
+          { "en": "We look forward to working with you.", "vi": "Chúng tôi mong được hợp tác với bạn." }
+        ]
+      }
+    ],
+    "tips": [
+      "Mẹo TOEIC: học thuộc theo nhóm — \"muốn/dự định/quyết định\" → to V; \"thích/tránh/đề nghị/hoàn thành\" → V-ing.",
+      "Bẫy lớn nhất: look forward to **meeting** (✓), không phải look forward to meet (✗).",
+      "Mẹo TOEIC: \"Thank you for ___\", \"before ___\", \"without ___\" → luôn chọn V-ing."
+    ],
+    "questions": [
+      { "q": "The company decided ___ a new branch in Da Nang next year.", "options": ["opening", "to open", "open", "opened"], "answer": 1, "explain_vi": "\"Decide\" + to V → to open." },
+      { "q": "Our customers enjoy ___ with our friendly and helpful staff.", "options": ["to talk", "talk", "talking", "talked"], "answer": 2, "explain_vi": "\"Enjoy\" + V-ing → talking." },
+      { "q": "We look forward to ___ you at the trade show in March.", "options": ["meet", "met", "be meeting", "meeting"], "answer": 3, "explain_vi": "Trong \"look forward to\", to là giới từ → + V-ing: meeting." },
+      { "q": "Please avoid ___ personal calls during working hours.", "options": ["making", "to make", "make", "made"], "answer": 0, "explain_vi": "\"Avoid\" + V-ing → making." },
+      { "q": "Mr. Lee wants ___ his presentation once more before the meeting.", "options": ["practicing", "practice", "to practice", "practiced"], "answer": 2, "explain_vi": "\"Want\" + to V → to practice." },
+      { "q": "The manager suggested ___ the deadline by one week.", "options": ["to extend", "extending", "extend", "extended"], "answer": 1, "explain_vi": "\"Suggest\" + V-ing → extending." },
+      { "q": "Ms. Hara has agreed ___ the training session next month.", "options": ["to lead", "leading", "lead", "led"], "answer": 0, "explain_vi": "\"Agree\" + to V → to lead." },
+      { "q": "Would you mind ___ the door for the delivery person?", "options": ["to open", "open", "opened", "opening"], "answer": 3, "explain_vi": "\"Mind\" + V-ing → opening." },
+      { "q": "The company plans ___ 20 new employees this year.", "options": ["to hire", "hiring", "hire", "hired"], "answer": 0, "explain_vi": "\"Plan\" + to V → to hire." },
+      { "q": "Thank you for ___ our online customer survey.", "options": ["complete", "completing", "to complete", "completed"], "answer": 1, "explain_vi": "Sau giới từ \"for\" dùng V-ing → completing." }
+    ]
+  }
+]
