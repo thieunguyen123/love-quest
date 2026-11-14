@@ -364,5 +364,47 @@
     "value": 10,
     "unit": "phút",
     "description": "Trận bỏ dở quá lâu → kết thúc với 0 sát thương (vẫn mất lượt)"
+  },
+  {
+    "key": "LOGIN_BASE_COINS",
+    "value": 250,
+    "unit": "xu",
+    "description": "Điểm danh ngày 1 của chuỗi (DAY-01)"
+  },
+  {
+    "key": "LOGIN_STEP_COINS",
+    "value": 50,
+    "unit": "xu",
+    "description": "Mỗi ngày điểm danh liên tiếp cộng thêm (ngày n = BASE + STEP×(n−1))"
+  },
+  {
+    "key": "LOGIN_STREAK_DAYS",
+    "value": 7,
+    "unit": "ngày",
+    "description": "Độ dài chuỗi; sau ngày cuối quay về ngày 1"
+  },
+  {
+    "key": "LOGIN_DAY7_PET_TOKENS",
+    "value": 1,
+    "unit": "🐾",
+    "description": "Ngày cuối chuỗi tặng thêm Nâng cấp thú cưng"
+  },
+  {
+    "key": "QUEST_ALL_BONUS_COINS",
+    "value": 200,
+    "unit": "xu",
+    "description": "Rương chăm chỉ: nhận hết nhiệm vụ trong ngày (DAY-03)"
+  },
+  {
+    "key": "QUEST_ALL_PET_TOKENS",
+    "value": 1,
+    "unit": "🐾",
+    "description": "Rương chăm chỉ tặng thêm Nâng cấp thú cưng"
+  },
+  {
+    "key": "COUPLE_QUEST_BONUS_COINS",
+    "value": 150,
+    "unit": "xu",
+    "description": "Thưởng đôi: cả hai cùng mở rương trong ngày"
   }
 ]

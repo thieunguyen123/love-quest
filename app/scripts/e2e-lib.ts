@@ -28,9 +28,11 @@ export async function sessionCookies(email: string, password: string) {
 // WSLg đặt WAYLAND_DISPLAY/DISPLAY: Chrome headless sẽ đòi VK_KHR_wayland_surface và KHÔNG khởi tạo được WebGL → bỏ 2 biến đó
 const cleanEnv = () => { const e: Record<string, string> = {}; for (const [k, v] of Object.entries(process.env)) if (v !== undefined && k !== "WAYLAND_DISPLAY" && k !== "DISPLAY" && k !== "XDG_SESSION_TYPE") e[k] = v; return e; };
 export const launch = () => chromium.launch({ env: cleanEnv(), args: ["--use-angle=swiftshader-webgl", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
-export async function context(browser: Browser, cookies?: Awaited<ReturnType<typeof sessionCookies>>, mobile = false) {
+export async function context(browser: Browser, cookies?: Awaited<ReturnType<typeof sessionCookies>>, mobile = false, dailyPopup = false) {
   const c = await browser.newContext(mobile ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : { viewport: { width: 1366, height: 860 } });
   if (cookies) await c.addCookies(cookies);
+  // bảng điểm danh tự bật (DAY-01) che trang → các test khác coi như đã xem hôm nay
+  if (!dailyPopup) await c.addInitScript(() => { try { localStorage.setItem("lq:daily-auto", new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(new Date())); } catch { /* bỏ qua */ } });
   return c;
 }
 /** Bắt lỗi JS trên trang: lỗi nào cũng là FAIL */

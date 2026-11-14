@@ -95,6 +95,38 @@ async function main() {
   const w1 = await p.evaluate(() => (window as any).__base.placed.filter((x: any) => x.kind === "WALL").length);
   check(`Tường mới tự xây quanh nhà (${w0} → ${w1})`, w1 === w0 + 5, { w0, w1 });
   await p.waitForTimeout(2500); await shot("5-walls");
+  await c.close();
+
+  // ---- Phase 13: điểm danh & nhiệm vụ (DAY-01..03) ----
+  const c13 = await context(b, await sessionCookies("moheo@lovequest.local", "moheo-dev-2026"), true, true);
+  const q = await c13.newPage(); watchErrors(q, "thưởng ngày");
+  await q.goto(`${BASE}/battles`, { waitUntil: "domcontentloaded", timeout: 180000 });
+  await q.getByTestId("daily-panel").waitFor({ timeout: 30000 });
+  check("Lần đầu trong ngày: bảng điểm danh tự bật", true);
+  const dp = (await q.getByTestId("daily-panel").boundingBox())!;
+  check(`Bảng điểm danh nằm gọn màn hình điện thoại (${Math.round(dp.x)}..${Math.round(dp.x + dp.width)}, cao ${Math.round(dp.height)})`, dp.x >= 0 && dp.x + dp.width <= 390 && dp.y >= 0 && dp.y + dp.height <= 844);
+  await q.screenshot({ path: path.join(SHOTS, "p13-1-login.png") });
+  const k0 = Number((await q.getByTestId("coins").innerText()).replace(/[^\d]/g, ""));
+  await q.getByTestId("claim-login").click();
+  await q.getByTestId("daily-panel").getByRole("status").waitFor({ timeout: 30000 });
+  await q.waitForTimeout(1500);
+  const k1 = Number((await q.getByTestId("coins").innerText()).replace(/[^\d]/g, ""));
+  check(`Điểm danh ngày 1 → +250 xu ngay (${k0} → ${k1})`, k1 === k0 + 250, { k0, k1 });
+  check("Nút điểm danh chuyển sang 'Đã điểm danh'", (await q.getByTestId("claim-login").innerText()).includes("Đã điểm danh"));
+  // nhiệm vụ: ôn 10 từ rồi nhận
+  const words = (await admin.from("words").select("id").eq("level_id", (await admin.from("levels").select("id").eq("order_no", 1).single()).data!.id).limit(10)).data!;
+  for (const w of words) await m.c.rpc("mark_word", { p_word: w.id, p_known: true });
+  await q.getByTestId("daily-tab-quests").click();
+  await q.getByTestId("claim-study10").waitFor({ timeout: 30000 });
+  await q.screenshot({ path: path.join(SHOTS, "p13-2-quests.png") });
+  await q.getByTestId("claim-study10").click();
+  await q.getByTestId("quest-study10").getByText("Đã nhận").waitFor({ timeout: 30000 });
+  check("Nhiệm vụ Ôn 10 từ: bấm Nhận → ✅ Đã nhận", true);
+  await q.getByTestId("daily-backdrop").click({ position: { x: 5, y: 5 } });
+  await q.waitForTimeout(300);
+  check("Chạm ngoài → đóng bảng thưởng", (await q.getByTestId("daily-panel").count()) === 0);
+  await q.reload({ waitUntil: "domcontentloaded" }); await q.waitForTimeout(3000);
+  check("Mở lại trong ngày: không tự bật nữa", (await q.getByTestId("daily-panel").count()) === 0);
   await b.close();
   finish();
 }

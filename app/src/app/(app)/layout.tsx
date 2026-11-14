@@ -4,6 +4,7 @@ import { Avatar } from "@/components/ui";
 import { NotificationBell, UserMenu } from "@/components/live";
 import { CoinBadge } from "@/components/coins";
 import { BackgroundMusic, MusicToggle } from "@/components/music";
+import { DailyRewards } from "@/components/daily-rewards";
 import { signOut } from "../login/actions";
 
 const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/words", "Sổ từ"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"], ["/battles", "Nhật ký"], ["/world", "🌍 3D"]];
@@ -21,13 +22,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <script dangerouslySetInnerHTML={{ __html: EMBED_SCRIPT }} />
       <header className="app-header sticky top-0 z-20 bg-white/85 backdrop-blur border-b border-love-100">
         <div className="mx-auto max-w-5xl flex items-center gap-3 px-4 h-14">
-          <Link href="/?view=2d" className="font-extrabold text-love-700 text-lg">💕 Love Quest</Link>
+          <Link href="/?view=2d" className="font-extrabold text-love-700 text-lg" aria-label="Love Quest">💕<span className="hidden sm:inline"> Love Quest</span></Link>
           <nav className="hidden md:flex gap-4 ml-4 text-sm font-bold text-love-700/80">
             {NAV.map(([h, t]) => <Link key={h} href={h} className="hover:text-love-600">{t}</Link>)}
             {me.role === "ADMIN" && <Link href="/admin/levels" className="hover:text-love-600">Admin</Link>}
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <MusicToggle />
+            <DailyRewards />
             <NotificationBell userId={me.id} />
             <CoinBadge userId={me.id} initial={me.coins} />
             <UserMenu avatar={<Avatar url={me.avatar_url} name={me.display_name} color={me.favorite_color} size={36} />}

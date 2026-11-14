@@ -36,10 +36,15 @@ export function BackgroundMusic() {
     let cancelled = false;
     void loadApi().then((YT) => {
       if (cancelled || !host.current || player.current) return;
-      player.current = new YT.Player(host.current, {
+      // chỉ dùng trình phát sau onReady (trước đó chưa có playVideo/pauseVideo)
+      new YT.Player(host.current, {
         videoId: VIDEO_ID, width: "1", height: "1",
         playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: VIDEO_ID, playsinline: 1, rel: 0 },
-        events: { onReady: () => { player.current?.setVolume(35); if (musicEnabled() && navigator.userActivation?.hasBeenActive) player.current?.playVideo(); } },
+        events: { onReady: (e: { target: YTPlayer }) => {
+          if (cancelled) return;
+          player.current = e.target; e.target.setVolume(35);
+          if (musicEnabled() && navigator.userActivation?.hasBeenActive) e.target.playVideo();
+        } },
       });
     });
     // bắt đầu phát ở lần tương tác đầu tiên (iOS/Android yêu cầu cử chỉ người dùng)
