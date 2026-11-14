@@ -26,7 +26,7 @@ export function BuildPanel({ catalog, coins: coins0, onClose, onBought }: { cata
     setBusy(null);
     if (error) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[error.message] ?? "Không mua được" }); }
     play("coin");
-    setMsg({ ok: true, t: it.category === "STYLE" ? `Nhà đã đổi sang kiểu ${it.name} ✨` : it.category === "HOUSE" ? `Đã nâng cấp lên ${it.name}! 🎉` : it.category === "WALL" ? `Đã mua ${qty} đoạn tường — vào 🔨 Xây dựng → 🧱 để xây` : it.category === "FACTORY" ? `Đã xây ${it.name}! Chạm vào nhà máy trong căn cứ để luyện quân ⚒️` : `Đã mua ${it.name} — vật mới đã được đặt vào căn cứ` });
+    setMsg({ ok: true, t: it.category === "STYLE" ? `Nhà đã đổi sang kiểu ${it.name} ✨` : it.category === "HOUSE" ? `Đã nâng cấp lên ${it.name}! 🎉` : it.category === "WALL" ? `Đã mua ${qty} đoạn tường — đã tự xây quanh nhà (sửa vị trí ở 🔨 Xây dựng → 🧱)` : it.category === "FACTORY" ? `Đã xây ${it.name}! Chạm vào nhà máy trong căn cứ để luyện quân ⚒️` : `Đã mua ${it.name} — vật mới đã được đặt vào căn cứ` });
     onBought(it); void refreshCoins(); router.refresh();
   }
   const list = catalog.filter((c) => c.category === tab);

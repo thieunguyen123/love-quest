@@ -39,6 +39,8 @@ export type AttackInfo = { reason: string | null; left: number; total: number; m
 export type ReplayInfo = { snapshot: Snapshot; deploys: Deploy[]; endTick: number | null; damage: number; loot: number; hpAfter: number; shieldBroken: boolean; stats: BattleOutcome | null };
 export type BaseSceneProps = {
   mode: "own" | "partner" | "replay";
+  /** popup phụ (chế độ own): 🛡️ khiên, 🎒 túi đồ — nội dung do trang dựng sẵn */
+  panels?: { shield?: React.ReactNode; bag?: React.ReactNode };
   /** chạm vào mô hình → popup nâng cấp (chế độ own): giá, token, cấp quân, nhà kế tiếp */
   econ?: Econ;
   /** luyện quân (chế độ own): thông tin từng loại lính + số chỗ quân còn trống */
@@ -255,7 +257,7 @@ function BattleClock({ sim }: { sim: Sim }) {
   return <span ref={ref} data-testid="battle-timer" className="tabular-nums" />;
 }
 
-export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0, me, attack, replay, train, econ }: BaseSceneProps) {
+export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0, me, attack, replay, train, econ, panels }: BaseSceneProps) {
   const coins = useCoins(coins0);   // xu cập nhật ngay sau mỗi giao dịch (Realtime)
   const router = useRouter();
   const Q = useQuality();
@@ -292,6 +294,7 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
   const paint = useRef<"add" | "erase" | null>(null);
   const [selFac, setSelFac] = useState<string | null>(null);
   const [picked, setPicked] = useState<Picked | null>(null);   // popup khi chạm mô hình (nhà / thú cưng / lính…)
+  const [extra, setExtra] = useState<"shield" | "bag" | null>(null);   // popup 🛡️ / 🎒
   const [clearing, setClearing] = useState(false);
   const [goneObs, setGoneObs] = useState<{ id: string; x: number; z: number; s: number }[]>([]);
   const [sel, setSel] = useState<string | null>(null);
@@ -341,13 +344,13 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
   // chạm (không kéo) vào mô hình khi KHÔNG ở chế độ xây → mở popup tương ứng
   const clickItem = (key: string) => (e: ThreeEvent<MouseEvent>) => {
     if (editing || fight || mode !== "own" || e.delta > 8) return;
-    e.stopPropagation(); play("click"); setSelObs(null);
+    e.stopPropagation(); play("click"); setSelObs(null); setExtra(null);
     if (key.startsWith("FACTORY:")) { setPicked(null); setSelFac(key.slice(8)); return; }
     const it = byKey.get(key); if (it) { setSelFac(null); setPicked({ kind: "item", item: it }); }
   };
   const clickHouse = (e: ThreeEvent<MouseEvent>) => {
     if (editing || fight || mode !== "own" || e.delta > 8 || !data.house.exists) return;
-    e.stopPropagation(); play("click"); setSelObs(null); setSelFac(null); setPicked({ kind: "house" });
+    e.stopPropagation(); play("click"); setSelObs(null); setSelFac(null); setExtra(null); setPicked({ kind: "house" });
   };
   const pickItem = (key: string) => (e: ThreeEvent<PointerEvent>) => {
     if (!editing || fight || wallMode) return;
@@ -491,7 +494,7 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
     if (!editing && mode === "own" && !fight) {   // chạm vật cản → bảng dọn
       const c = cellFromPoint(e.point.x, e.point.z, 1, grid);
       const o = data.obstacles.find((q) => c.x >= q.x && c.x < q.x + q.size && c.z >= q.z && c.z < q.z + q.size && !goneObs.some((g) => g.id === q.id));
-      setSelObs(o ?? null); setSelFac(null); setPicked(null); if (o) play("click");
+      setSelObs(o ?? null); setSelFac(null); setPicked(null); setExtra(null); if (o) play("click");
       return;
     }
     if (!editing || !selItem) return;
@@ -568,10 +571,19 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
         <div className="hidden rounded-2xl bg-white/90 px-3 py-1.5 text-sm font-extrabold text-pink-700 shadow sm:block">
           {mode === "own" ? "🏠 Căn cứ của tôi" : `🏡 Căn cứ của ${data.owner.name}`} · {HOUSE_NAMES[data.house.level]}{data.shield ? " · 🛡️" : ""}
         </div>
-        {mode === "own" && <div className="rounded-full bg-white/90 px-3 py-1 text-xs font-extrabold text-amber-700 shadow">🪙 {coins.toLocaleString("vi-VN")}</div>}
+        {mode === "own" && <div className="hidden rounded-full bg-white/90 px-3 py-1 text-xs font-extrabold text-amber-700 shadow sm:block">🪙 {coins.toLocaleString("vi-VN")}</div>}
         {msg && <div role="status" className={`pointer-events-auto rounded-xl px-3 py-1.5 text-xs font-bold shadow ${msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>{msg.t}</div>}
       </div>
 
+      {mode === "own" && !editing && !fight && extra && panels?.[extra] && (
+        <div className="absolute inset-x-3 bottom-3 z-20 mx-auto max-h-[75%] max-w-md overflow-y-auto rounded-2xl bg-white/95 p-3 shadow-xl" data-testid="extra-panel">
+          <div className="mb-2 flex items-center gap-2">
+            <b className="flex-1 text-pink-700">{extra === "shield" ? "🛡️ Khiên" : "🎒 Túi đồ & quân đội"}</b>
+            <button onClick={() => setExtra(null)} aria-label="Đóng" className="grid h-8 w-8 place-items-center rounded-full bg-pink-50 text-base font-black text-pink-700" data-testid="panel-close">✕</button>
+          </div>
+          {panels[extra]}
+        </div>
+      )}
       {mode === "own" && !editing && !fight && picked && econ && (
         <ObjectPanel picked={picked} data={data} econ={econ} coins={coins} onClose={() => setPicked(null)}
           onMove={(key) => { setPicked(null); setEditing(true); setShop(false); setSel(key); setMsg({ ok: true, t: "Kéo thả hoặc chạm ô trống để chuyển tới đó" }); }}
@@ -597,7 +609,9 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
       {mode === "own" && !editing && (
         <div className="pointer-events-none absolute right-3 top-3 z-10 flex flex-wrap justify-end gap-2">
           <button className={btnHot} onClick={() => { setEditing(true); setShop(false); setMsg(null); }} data-testid="edit-base">🔨 Xây dựng</button>
-          <button className={btnHot} onClick={() => { setShop(true); setPicked(null); setSelFac(null); }} data-testid="open-shop">🛒 Xây thêm</button>
+          {panels?.shield && <button className={btnHot} onClick={() => { setExtra((v) => (v === "shield" ? null : "shield")); setPicked(null); setSelFac(null); setSelObs(null); setShop(false); }} data-testid="open-shield" aria-label="Khiên">🛡️<span className="hidden sm:inline"> Khiên</span></button>}
+          {panels?.bag && <button className={btnHot} onClick={() => { setExtra((v) => (v === "bag" ? null : "bag")); setPicked(null); setSelFac(null); setSelObs(null); setShop(false); }} data-testid="open-bag" aria-label="Túi đồ">🎒<span className="hidden sm:inline"> Túi đồ</span></button>}
+          <button className={btnHot} onClick={() => { setShop(true); setPicked(null); setSelFac(null); setExtra(null); }} data-testid="open-shop">🛒 Xây thêm</button>
         </div>
       )}
       {mode === "own" && editing && (

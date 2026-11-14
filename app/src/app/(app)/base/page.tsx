@@ -40,15 +40,21 @@ export default async function BasePage() {
   };
   const armyCost = Number(cfg.ARMY_UPGRADE_COST_STEP) * (me.army_level + 1);
 
-  return (
+  // Túi đồ (popup 🎒 trong cảnh 3D): token, cấp quân đội, phòng thủ, vũ khí
+  const bag = (
+    <div key="bag" className="space-y-2 text-sm">
+      <div className="font-semibold">🐾 Nâng cấp thú cưng ×{tok("PET_UPGRADE")} · 🪖 Nâng cấp quân đội ×{tok("ARMY_UPGRADE")} · 🛡️ Khiên mua ×{b.shields.filter((x: any) => x.source === "PAID" && !x.activated_at).length}</div>
+      <div className="font-semibold">🪖 Cấp quân {me.army_level}/{String(cfg.ARMY_MAX_LEVEL)} (+{Math.round(Number(cfg.ARMY_UPGRADE_ATK_PCT) * me.army_level * 100)}% ATK) · quân {b.used}/{cap} chỗ</div>
+      <RpcButton small fn="upgrade_army" label={`⬆️ Nâng cấp quân (${armyCost} xu + 1 🪖)`} disabledReason={me.army_level >= Number(cfg.ARMY_MAX_LEVEL) ? "Đã tối đa" : tok("ARMY_UPGRADE") < 1 ? "Cần 1 Nâng cấp quân đội" : null} />
+      {b.defenses.length > 0 && <div className="text-xs">🗼 {[...new Set(b.defenses.map((d: any) => d.code as string))].map((c) => `${b.byCode.get(c)?.emoji} ${b.byCode.get(c)?.name_vi} ×${b.defenses.filter((d: any) => d.code === c).length}`).join(" · ")}</div>}
+      {b.weapons.length > 0 && <div className="text-xs">⚔️ {b.weapons.map((w: any) => `${b.byCode.get(w.weapon_code)?.emoji} ${b.byCode.get(w.weapon_code)?.name_vi} (+${Math.round(b.byCode.get(w.weapon_code)?.stats.atk_pct * 100)}% ATK)`).join(" · ")}</div>}
+      <div className="flex gap-3 text-xs font-bold"><Link href="/shop" className="text-love-600 underline">🛒 Cửa hàng</Link><Link href="/battles" className="text-love-600 underline">📜 Nhật ký trận</Link></div>
+    </div>
+  );
+  const shield = <ShieldPanel key="shield" shields={b.shields} freeCfg={Number(cfg.FREE_SHIELDS_PER_DAY)} hours={Number(cfg.SHIELD_DURATION_HOURS)} />;
+  // Thẻ 2D: chỉ hiện trên máy tính (điện thoại dùng popup khi chạm mô hình) hoặc khi máy không có WebGL
+  const cards = () => (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-extrabold text-love-700">🏠 Căn cứ của {me.display_name}</h1>
-        <div className="flex gap-4"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Ra làng</Link><Link href="/base/partner" className="font-bold text-love-600 underline">⚔️ Thăm nhà người ấy →</Link></div>
-      </div>
-
-      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} train={trainProps} econ={econ} />
-
       <Card className={`space-y-3 ${h.hp === 0 ? "border-red-300" : ""}`}>
         <div className="flex items-center gap-4">
           <div className="text-6xl" style={{ filter: h.hp === 0 ? "grayscale(1)" : undefined }}>{b.houseDef?.emoji}{h.hp < h.max_hp * 0.5 ? "💨" : ""}</div>
@@ -95,6 +101,21 @@ export default async function BasePage() {
         </Card>
       </div>
       <Card className="text-sm font-semibold">🎒 Vật phẩm: 🐾 Nâng cấp thú cưng ×{tok("PET_UPGRADE")} · 🪖 Nâng cấp quân đội ×{tok("ARMY_UPGRADE")} · 🛡️ Khiên mua ×{b.shields.filter((x: any) => x.source === "PAID" && !x.activated_at).length}</Card>
+    </div>
+  );
+
+  return (
+    <div className="space-y-3 md:space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="hidden text-2xl font-extrabold text-love-700 md:block">🏠 Căn cứ của {me.display_name}</h1>
+        <div className="flex w-full justify-between gap-4 text-sm md:w-auto md:text-base"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Ra làng</Link><Link href="/base/partner" className="font-bold text-love-600 underline">⚔️ Thăm nhà người ấy →</Link></div>
+      </div>
+
+      {/* điện thoại: căn cứ 3D vừa khít 1 màn hình, không phải cuộn */}
+      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} train={trainProps} econ={econ}
+        panels={{ shield, bag }} fallback={cards()} className="h-[calc(100dvh-11.5rem)] min-h-[360px] md:h-[72vh] md:min-h-[420px]" />
+
+      <div className="hidden md:block">{cards()}</div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { requirePlayer } from "@/lib/session";
 import { Avatar } from "@/components/ui";
 import { NotificationBell, UserMenu } from "@/components/live";
 import { CoinBadge } from "@/components/coins";
-import { BackgroundMusic } from "@/components/music";
+import { BackgroundMusic, MusicToggle } from "@/components/music";
 import { signOut } from "../login/actions";
 
 const NAV: [string, string][] = [["/levels", "Màn chơi"], ["/learn", "Học"], ["/words", "Sổ từ"], ["/learn/typing", "Mưa chữ"], ["/base", "Căn cứ"], ["/shop", "Cửa hàng"], ["/rivalry", "Đối đầu"], ["/battles", "Nhật ký"], ["/world", "🌍 3D"]];
@@ -26,7 +26,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             {NAV.map(([h, t]) => <Link key={h} href={h} className="hover:text-love-600">{t}</Link>)}
             {me.role === "ADMIN" && <Link href="/admin/levels" className="hover:text-love-600">Admin</Link>}
           </nav>
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            <MusicToggle />
             <NotificationBell userId={me.id} />
             <CoinBadge userId={me.id} initial={me.coins} />
             <UserMenu avatar={<Avatar url={me.avatar_url} name={me.display_name} color={me.favorite_color} size={36} />}

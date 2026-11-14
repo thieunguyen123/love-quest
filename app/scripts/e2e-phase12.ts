@@ -35,7 +35,10 @@ async function main() {
   await p.getByLabel(/Thông báo/).first().click(); await panel.waitFor();
   await p.getByTestId("notif-panel").getByLabel("Đóng").click(); await p.waitForTimeout(300);
   check("Nút ✕ đóng popup thông báo", (await panel.count()) === 0);
-  check("Khung nhạc nền có trên trang", (await p.getByTestId("music").count()) === 1);
+  check("Nhạc nền: trình phát ẩn + nút loa trên thanh trên", (await p.getByTestId("music").count()) === 1 && (await p.getByTestId("music-toggle").isVisible()) && ((await p.getByTestId("music").boundingBox())?.width ?? 9) <= 1);
+  await p.getByTestId("music-toggle").click(); await p.waitForTimeout(200);
+  check("Bấm loa → 🔇 (tắt nhạc)", (await p.getByTestId("music-toggle").innerText()).includes("🔇"));
+  await p.getByTestId("music-toggle").click(); await p.waitForTimeout(200);
 
   // ---- căn cứ: chạm nhà → popup → Sửa nhà, xu đổi ngay ----
   await p.goto(`${BASE}/base`, { waitUntil: "domcontentloaded", timeout: 180000 });
@@ -70,6 +73,28 @@ async function main() {
   const c2 = await coinsText();
   check(`Nâng cấp Mướp lên cấp 2 (−100 xu, xu hiển thị ${c1} → ${c2})`, lv === 2 && c2 === c1 - 100, { lv, c1, c2 });
   await shot("3-pet-panel");
+  await p.getByTestId("panel-close").click(); await p.waitForTimeout(300);
+
+  // ---- 1 màn hình, không phải cuộn; khiên & túi đồ là popup ----
+  const sc = await p.evaluate(() => ({ h: document.documentElement.scrollHeight, v: window.innerHeight }));
+  check(`Căn cứ vừa 1 màn hình điện thoại (cao ${sc.h} / ${sc.v})`, sc.h <= sc.v + 1, sc);
+  for (const [btn, word] of [["open-shield", "Khiên"], ["open-bag", "quân"]] as const) {
+    await p.getByTestId(btn).click();
+    await p.getByTestId("extra-panel").waitFor({ timeout: 10000 });
+    check(`Nút ${btn} → popup ${word}`, (await p.getByTestId("extra-panel").innerText()).includes(word));
+    await shot(`4-${btn}`);
+    await p.getByTestId("extra-panel").getByTestId("panel-close").click(); await p.waitForTimeout(300);
+  }
+
+  // ---- mua tường → tường hiện quanh nhà ngay ----
+  const w0 = await p.evaluate(() => (window as any).__base.placed.filter((x: any) => x.kind === "WALL").length);
+  const r = await m.c.rpc("buy_walls", { p_qty: 5 });
+  check("Mua 5 đoạn tường", !r.error, r.error);
+  await p.reload({ waitUntil: "domcontentloaded" });
+  await p.waitForFunction(() => (window as any).__base?.placed, null, { timeout: 180000 });
+  const w1 = await p.evaluate(() => (window as any).__base.placed.filter((x: any) => x.kind === "WALL").length);
+  check(`Tường mới tự xây quanh nhà (${w0} → ${w1})`, w1 === w0 + 5, { w0, w1 });
+  await p.waitForTimeout(2500); await shot("5-walls");
   await b.close();
   finish();
 }

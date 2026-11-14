@@ -59,7 +59,7 @@ export function autoPlace(saved: Placed[], items: Item[], grid: number, houseSiz
   const cells: [number, number][] = [];
   for (let x = 0; x < grid; x++) for (let z = 0; z < grid; z++) cells.push([x, z]);
   const unplaced: Item[] = [];
-  // vật to đặt trước để không bị vật nhỏ chiếm chỗ; vật có `near` đặt sau vật nó bám theo; tường KHÔNG tự đặt (nằm kho tới khi xây tay)
+  // vật to đặt trước để không bị vật nhỏ chiếm chỗ; vật có `near` đặt sau vật nó bám theo; tường đặt sau cùng (vòng quanh nhà)
   const order = [...items].filter((i) => !done.has(keyOf(i)) && i.kind !== "WALL").sort((a, b) => (a.near ? 1 : 0) - (b.near ? 1 : 0) || b.size - a.size);
   const unplacedWalls = items.filter((i) => !done.has(keyOf(i)) && i.kind === "WALL");
   for (const it of order) {
@@ -74,7 +74,23 @@ export function autoPlace(saved: Placed[], items: Item[], grid: number, houseSiz
     if (spot) placed.push({ kind: it.kind, ref: it.ref, x: spot.x, z: spot.z, rot: 0 });
     else unplaced.push(it);
   }
-  return { placed, unplaced: [...unplaced, ...unplacedWalls] };
+  // tường mới mua tự xây thành vòng quanh nhà (cách nhà 2 ô, đầy thì vòng ngoài hơn) — thứ tự cố định để 2 máy & server thấy giống nhau
+  const pool = [...unplacedWalls];
+  for (let g = 2; pool.length && g < grid; g++) {
+    const x0 = h.x - g - 1, z0 = h.z - g - 1, x1 = h.x + h.s + g, z1 = h.z + h.s + g;
+    if (x0 < 0 && z0 < 0 && x1 >= grid && z1 >= grid) break;
+    const ring: [number, number][] = [];
+    for (let x = x0; x <= x1; x++) ring.push([x, z0]);
+    for (let z = z0 + 1; z <= z1; z++) ring.push([x1, z]);
+    for (let x = x1 - 1; x >= x0; x--) ring.push([x, z1]);
+    for (let z = z1 - 1; z > z0; z--) ring.push([x0, z]);
+    for (const [x, z] of ring) {
+      if (!pool.length) break;
+      if (canPlace(pool[0], x, z, placed, size, grid, houseSize, blocked)) continue;
+      const w = pool.shift()!; placed.push({ kind: "WALL", ref: w.ref, x, z, rot: 0 });
+    }
+  }
+  return { placed, unplaced: [...unplaced, ...pool] };
 }
 
 /** Tâm (mét) của 1 vật trên lưới, gốc toạ độ = tâm lưới */

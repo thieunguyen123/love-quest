@@ -99,7 +99,7 @@ describe("vật cản & mở rộng căn cứ (BASE-13)", () => {
 });
 
 describe("nhà máy & tường (BASE-04, BASE-15)", () => {
-  it("lính mới luyện đứng sát rìa nhà máy của nó; tường không tự đặt", () => {
+  it("lính mới luyện đứng sát rìa nhà máy của nó; tường mới tự xây vòng quanh nhà", () => {
     const items: Item[] = [
       { kind: "FACTORY", ref: "fac_sword", size: 3 },
       { kind: "UNIT", ref: "sword", size: 2, near: "FACTORY:fac_sword" },
@@ -110,8 +110,14 @@ describe("nhà máy & tường (BASE-04, BASE-15)", () => {
     const u = placed.find((p) => p.kind === "UNIT")!;
     const d = Math.max(Math.abs(u.x + 1 - 5.5), Math.abs(u.z + 1 - 5.5));
     expect(d).toBeLessThanOrEqual(2.5);   // sát nhà máy (3×3 ở ô 4..6)
-    expect(placed.some((p) => p.kind === "WALL")).toBe(false);
-    expect(unplaced.filter((i) => i.kind === "WALL")).toHaveLength(2);
+    const walls = placed.filter((p) => p.kind === "WALL");
+    expect(walls).toHaveLength(2);
+    expect(unplaced).toHaveLength(0);
+    const h = houseRect(40, 2);
+    for (const w of walls) expect(Math.max(h.x - w.x, w.x - (h.x + h.s - 1), h.z - w.z, w.z - (h.z + h.s - 1))).toBe(3);   // cách nhà 2 ô
+    // đã lưu vị trí tường thì giữ nguyên
+    const kept = autoPlace([...saved, { kind: "WALL", ref: "w1", x: 30, z: 30, rot: 0 }], items, 40, 2).placed.find((p) => p.ref === "w1")!;
+    expect([kept.x, kept.z]).toEqual([30, 30]);
     expect(autoPlace(saved, items, 40, 2)).toEqual(autoPlace(saved, items, 40, 2));
   });
 });
