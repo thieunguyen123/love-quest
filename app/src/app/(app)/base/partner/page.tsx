@@ -37,12 +37,13 @@ export default async function PartnerBasePage() {
   const shieldActive = theirs.shields.find((s: any) => s.activated_at && !s.broken_at && s.expires_at && Date.parse(s.expires_at) > now);
   const myShield = mine.shields.some((s: any) => s.activated_at && !s.broken_at && s.expires_at && Date.parse(s.expires_at) > now);
   const protectedUntil = lastHit?.[0] ? Date.parse(lastHit[0].created_at) + Number(cfg.POST_ATTACK_PROTECT_HOURS) * 3600000 : 0;
-  const left = Number(cfg.ATTACKS_PER_DAY) - (daily?.attacks_used ?? 0);
+  const perDay = Number(cfg.ATTACKS_PER_DAY ?? 0);   // 0 = không giới hạn (BTL-01)
+  const left = perDay > 0 ? perDay - (daily?.attacks_used ?? 0) : Infinity;
   const t = theirs.house!;
-  const reason = t.hp <= 0 ? "Nhà người ấy đã đổ nát" : shieldActive ? `🛡️ Người ấy đang có khiên (hết ${new Date(shieldActive.expires_at).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })})` : protectedUntil > now ? "Người ấy vừa bị tấn công, đang được bảo hộ" : left <= 0 ? "Hôm nay bạn đã hết lượt tấn công" : mine.army.every((a: any) => a.quantity === 0) ? "Bạn chưa có lính nào" : null;
+  const reason = t.hp <= 0 ? "Nhà người ấy đã đổ nát" : shieldActive ? `🛡️ Người ấy đang có khiên (hết ${new Date(shieldActive.expires_at).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })})` : protectedUntil > now ? "Người ấy vừa bị tấn công, đang được bảo hộ" : perDay > 0 && left <= 0 ? "Hôm nay bạn đã hết lượt tấn công" : mine.army.every((a: any) => a.quantity === 0) ? "Bạn chưa có lính nào" : null;
 
   const army = mine.army.filter((x: any) => x.quantity > 0).map((x: any) => ({ unit: x.unit_code, qty: x.quantity, emoji: mine.byCode.get(x.unit_code)?.emoji ?? "🪖", name: mine.byCode.get(x.unit_code)?.name_vi ?? x.unit_code }));
-  const attackInfo = { reason, left, total: Number(cfg.ATTACKS_PER_DAY), myShield, army, armorPct, defenses: theirs.defenses.filter((d: any) => d.kind === "DEFENSE").length, dps };
+  const attackInfo = { reason, left, total: perDay, myShield, army, armorPct, defenses: theirs.defenses.filter((d: any) => d.kind === "DEFENSE").length, dps };
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -67,7 +68,7 @@ export default async function PartnerBasePage() {
           <span>🪖 {theirs.army.filter((a: any) => a.quantity).map((a: any) => `${theirs.byCode.get(a.unit_code)?.emoji}×${a.quantity}`).join(" ") || "Chưa có quân"}</span>
         </div>
       </Card>
-      <AttackPanel dps={Math.round(dps)} armorPct={armorPct} reason={reason} left={left} total={Number(cfg.ATTACKS_PER_DAY)} myShield={myShield} />
+      <AttackPanel dps={Math.round(dps)} armorPct={armorPct} reason={reason} left={left} total={perDay} myShield={myShield} />
         </div>} />
     </div>
   );

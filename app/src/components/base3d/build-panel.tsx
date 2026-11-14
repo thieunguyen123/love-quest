@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { RPC_MSG } from "@/components/rpc-button";
 import { play } from "@/lib/sfx";
+import { refreshCoins, useCoins } from "@/components/coins";
 
 export type CatalogItem = { code: string; category: "UNIT" | "PET" | "WEAPON" | "DECOR" | "HOUSE" | "DEFENSE" | "STYLE" | "FACTORY" | "WALL"; name: string; emoji: string; price: number; size: number; desc: string; reason: string | null; owned?: boolean; using?: boolean; max?: number };
 const TABS: [CatalogItem["category"], string][] = [["DEFENSE", "🛡️ Phòng thủ"], ["WALL", "🧱 Tường"], ["FACTORY", "🏭 Nhà máy quân"], ["PET", "🐾 Thú cưng"], ["DECOR", "🌸 Trang trí"], ["HOUSE", "🏠 Nhà"], ["STYLE", "🎨 Kiểu nhà"]];
 const RPC: Record<CatalogItem["category"], string> = { UNIT: "buy_unit", PET: "buy_pet", WEAPON: "buy_weapon", DECOR: "buy_decor", HOUSE: "upgrade_house", DEFENSE: "buy_defense", STYLE: "buy_style", FACTORY: "buy_factory", WALL: "buy_walls" };
 
-export function BuildPanel({ catalog, coins, onClose, onBought }: { catalog: CatalogItem[]; coins: number; onClose: () => void; onBought: (it: CatalogItem) => void }) {
+export function BuildPanel({ catalog, coins: coins0, onClose, onBought }: { catalog: CatalogItem[]; coins: number; onClose: () => void; onBought: (it: CatalogItem) => void }) {
+  const coins = useCoins(coins0);
   const router = useRouter();
   const [tab, setTab] = useState<CatalogItem["category"]>("FACTORY");
   const [qty, setQty] = useState(1);
@@ -25,7 +27,7 @@ export function BuildPanel({ catalog, coins, onClose, onBought }: { catalog: Cat
     if (error) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[error.message] ?? "Không mua được" }); }
     play("coin");
     setMsg({ ok: true, t: it.category === "STYLE" ? `Nhà đã đổi sang kiểu ${it.name} ✨` : it.category === "HOUSE" ? `Đã nâng cấp lên ${it.name}! 🎉` : it.category === "WALL" ? `Đã mua ${qty} đoạn tường — vào 🔨 Xây dựng → 🧱 để xây` : it.category === "FACTORY" ? `Đã xây ${it.name}! Chạm vào nhà máy trong căn cứ để luyện quân ⚒️` : `Đã mua ${it.name} — vật mới đã được đặt vào căn cứ` });
-    onBought(it); router.refresh();
+    onBought(it); void refreshCoins(); router.refresh();
   }
   const list = catalog.filter((c) => c.category === tab);
   return (

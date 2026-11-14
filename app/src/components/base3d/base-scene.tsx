@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { RPC_MSG } from "@/components/rpc-button";
+import { refreshCoins, useCoins } from "@/components/coins";
 import { play } from "@/lib/sfx";
 import { autoPlace, canPlace, cellCenter, cellFromPoint, houseRect, keyOf, TILE, type Item, type Placed } from "@/lib/game/layout";
 import { obstacleKind, obstacleRects, type Obstacle } from "@/lib/game/obstacles";
@@ -25,12 +26,21 @@ import { Badge, GameCanvas, InstancedModel, useQuality, type Inst } from "@/comp
 import { autoDeploys, createSim, deploy, q as quant, step, type BattleOutcome, type Deploy, type EndReason, type Sim, type Snapshot } from "@/lib/game/sim";
 import { BattleField, DeployZones } from "./battlefield";
 import { BuildPanel, type CatalogItem } from "./build-panel";
+import { ObjectPanel, type Picked } from "./object-panel";
 
+export type Econ = {
+  petStep: number; petMax: number; armyStep: number; armyLevel: number; armyMax: number; armyPct: number; repairPerHp: number;
+  tokens: { pet: number; army: number }; cap: number; used: number;
+  houseName: string; houseDef: number; next: { name: string; price: number; maxHp: number; def: number } | null;
+  petBuff: Record<string, string>;   // mã thú cưng → mô tả buff
+};
 export type ArmyRow = { unit: string; qty: number; emoji: string; name: string };
 export type AttackInfo = { reason: string | null; left: number; total: number; myShield: boolean; army: ArmyRow[]; armorPct: number; defenses: number; dps: number };
 export type ReplayInfo = { snapshot: Snapshot; deploys: Deploy[]; endTick: number | null; damage: number; loot: number; hpAfter: number; shieldBroken: boolean; stats: BattleOutcome | null };
 export type BaseSceneProps = {
   mode: "own" | "partner" | "replay";
+  /** chạm vào mô hình → popup nâng cấp (chế độ own): giá, token, cấp quân, nhà kế tiếp */
+  econ?: Econ;
   /** luyện quân (chế độ own): thông tin từng loại lính + số chỗ quân còn trống */
   train?: { info: Record<string, TrainInfo>; freeSlots: number };
   data: BaseData;
@@ -245,7 +255,8 @@ function BattleClock({ sim }: { sim: Sim }) {
   return <span ref={ref} data-testid="battle-timer" className="tabular-nums" />;
 }
 
-export default function BaseScene({ mode, data, catalog = [], coins = 0, me, attack, replay, train }: BaseSceneProps) {
+export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0, me, attack, replay, train, econ }: BaseSceneProps) {
+  const coins = useCoins(coins0);   // xu cập nhật ngay sau mỗi giao dịch (Realtime)
   const router = useRouter();
   const Q = useQuality();
   const grid = data.grid, W = grid * TILE;
@@ -280,6 +291,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
   const [wallMode, setWallMode] = useState(false);
   const paint = useRef<"add" | "erase" | null>(null);
   const [selFac, setSelFac] = useState<string | null>(null);
+  const [picked, setPicked] = useState<Picked | null>(null);   // popup khi chạm mô hình (nhà / thú cưng / lính…)
   const [clearing, setClearing] = useState(false);
   const [goneObs, setGoneObs] = useState<{ id: string; x: number; z: number; s: number }[]>([]);
   const [sel, setSel] = useState<string | null>(null);
@@ -326,8 +338,18 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
     return () => window.removeEventListener("pointerup", up);
   }, [drag, sel, ghost, moveTo]);
 
+  // chạm (không kéo) vào mô hình khi KHÔNG ở chế độ xây → mở popup tương ứng
+  const clickItem = (key: string) => (e: ThreeEvent<MouseEvent>) => {
+    if (editing || fight || mode !== "own" || e.delta > 8) return;
+    e.stopPropagation(); play("click"); setSelObs(null);
+    if (key.startsWith("FACTORY:")) { setPicked(null); setSelFac(key.slice(8)); return; }
+    const it = byKey.get(key); if (it) { setSelFac(null); setPicked({ kind: "item", item: it }); }
+  };
+  const clickHouse = (e: ThreeEvent<MouseEvent>) => {
+    if (editing || fight || mode !== "own" || e.delta > 8 || !data.house.exists) return;
+    e.stopPropagation(); play("click"); setSelObs(null); setSelFac(null); setPicked({ kind: "house" });
+  };
   const pickItem = (key: string) => (e: ThreeEvent<PointerEvent>) => {
-    if (!editing && !fight && mode === "own" && key.startsWith("FACTORY:")) { e.stopPropagation(); setSelFac(key.slice(8)); setSelObs(null); play("click"); return; }
     if (!editing || fight || wallMode) return;
     e.stopPropagation();
     setSel(key); setDrag(true);
@@ -404,7 +426,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
   // ---------- tấn công: bắt đầu → rải quân → gửi nhật ký ----------
   async function startAttack() {
     if (!attack) return;
-    if (!window.confirm(attack.myShield ? "Bạn đang bật khiên. Đi tấn công sẽ làm VỠ khiên của bạn. Vẫn tấn công?" : `Tấn công nhà ${data.owner.name}? (mất 1 lượt hôm nay)`)) return;
+    if (!window.confirm(attack.myShield ? "Bạn đang bật khiên. Đi tấn công sẽ làm VỠ khiên của bạn. Vẫn tấn công?" : `Tấn công nhà ${data.owner.name}?${attack.total > 0 ? " (mất 1 lượt hôm nay)" : ""}`)) return;
     setBusyAtk(true); setMsg(null);
     const res = await fetch("/api/attack/start", { method: "POST" }).catch(() => null);
     const j = res ? await res.json().catch(() => null) : null;
@@ -440,7 +462,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
     const j = res ? await res.json().catch(() => null) : null;
     setSending(false);
     if (!res?.ok || !j) return setSendErr(j?.error === "ATTACK_NOT_PENDING" ? "Trận này đã được ghi nhận trước đó." : "Chưa gửi được kết quả lên máy chủ.");
-    hpRef.current = j.hp_after; setHpView(j.hp_after);
+    hpRef.current = j.hp_after; setHpView(j.hp_after); void refreshCoins();
     setResult({ damage: j.damage, loot: j.loot, hpAfter: j.hp_after, ruined: j.ruined, shieldBroken: j.shield_broken, expired: j.expired, reason, out: j.out ?? null });
     play(j.damage > 0 ? "coin" : "wrong");
   }
@@ -459,7 +481,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
     const { error } = await createClient().rpc("clear_obstacle", { p_id: o.id });
     setClearing(false);
     if (error) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[error.message] ?? "Không dọn được" }); }
-    play("coin"); setSelObs(null); setGoneObs((g) => [...g, { id: o.id, x: o.x, z: o.z, s: o.size }]);
+    play("coin"); setSelObs(null); setGoneObs((g) => [...g, { id: o.id, x: o.x, z: o.z, s: o.size }]); void refreshCoins();
     setMsg({ ok: true, t: `Đã dọn ${obstacleKind(o.code).name} — căn cứ rộng thêm ${o.size * o.size} ô 🎉` }); router.refresh();
   }
   const onGroundClick = (e: ThreeEvent<MouseEvent>) => {
@@ -469,7 +491,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
     if (!editing && mode === "own" && !fight) {   // chạm vật cản → bảng dọn
       const c = cellFromPoint(e.point.x, e.point.z, 1, grid);
       const o = data.obstacles.find((q) => c.x >= q.x && c.x < q.x + q.size && c.z >= q.z && c.z < q.z + q.size && !goneObs.some((g) => g.id === q.id));
-      setSelObs(o ?? null); setSelFac(null); if (o) play("click");
+      setSelObs(o ?? null); setSelFac(null); setPicked(null); if (o) play("click");
       return;
     }
     if (!editing || !selItem) return;
@@ -506,7 +528,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
           <Suspense fallback={null}><Obstacles list={data.obstacles} hidden={goneObs} grid={grid} /></Suspense>
           {goneObs.map((g) => { const c = cellCenter(g.x, g.z, g.s, grid); return <group key={g.id} position={[c.x, 0, c.z]}><Dust k={g.id} r={g.s * TILE * 0.5} /></group>; })}
           {selObs && (() => { const c = cellCenter(selObs.x, selObs.z, selObs.size, grid); return <RangeRing x={c.x} z={c.z} r={selObs.size * TILE * 0.62} />; })()}
-          <group position={[houseC.x, 0, houseC.z]}>
+          <group position={[houseC.x, 0, houseC.z]} onClick={clickHouse}>
             {data.house.exists ? <HouseModel level={data.house.level} style={data.house.style} color={data.owner.color} hpPct={hpView / Math.max(1, data.house.max_hp)} shield={data.shield && !inFight} size={hs * TILE} shakeRef={shakeRef} />
               : <Model name="scaffolding" size={hs * TILE * 0.9} />}
             <Html position={[0, hs * TILE * 1.1 + 1.5, 0]} center zIndexRange={[8, 0]} style={{ pointerEvents: "none" }}>
@@ -520,7 +542,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
             const pos = isSel && drag && ghost ? ghost : p;
             const c = cellCenter(pos.x, pos.z, it.size, grid);
             return (
-              <group key={k} position={[c.x, 0, c.z]} rotation={[0, (p.rot * Math.PI) / 2, 0]} onPointerDown={pickItem(k)}>
+              <group key={k} position={[c.x, 0, c.z]} rotation={[0, (p.rot * Math.PI) / 2, 0]} onPointerDown={pickItem(k)} onClick={clickItem(k)}>
                 <Pop k={`${pos.x},${pos.z},${p.rot}`} delay={mountDelay(k)} strength={0.8}><Suspense fallback={null}><ItemView it={it} color={data.owner.color} sad={hpView <= 0} cap={Q.squadCap} shadows={Q.shadows} stone={data.house.level >= 3} queue={data.training} /></Suspense></Pop>
                 {it.kind !== "UNIT" && it.kind !== "PET" && <Dust k={`${pos.x},${pos.z}`} r={it.size * TILE * 0.45} />}
                 {editing && <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[it.size * TILE - 0.2, it.size * TILE - 0.2]} /><meshBasicMaterial color={isSel ? "#facc15" : it.kind === "TRAP" ? "#f87171" : "#ffffff"} transparent opacity={isSel ? 0.5 : 0.18} depthWrite={false} /></mesh>}
@@ -550,12 +572,17 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
         {msg && <div role="status" className={`pointer-events-auto rounded-xl px-3 py-1.5 text-xs font-bold shadow ${msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>{msg.t}</div>}
       </div>
 
+      {mode === "own" && !editing && !fight && picked && econ && (
+        <ObjectPanel picked={picked} data={data} econ={econ} coins={coins} onClose={() => setPicked(null)}
+          onMove={(key) => { setPicked(null); setEditing(true); setShop(false); setSel(key); setMsg({ ok: true, t: "Kéo thả hoặc chạm ô trống để chuyển tới đó" }); }}
+          onTrain={(fac) => { setPicked(null); setSelFac(fac); }} />
+      )}
       {mode === "own" && !editing && !fight && selFac && train && (() => {
         const fi = data.items.find((i) => i.kind === "FACTORY" && i.ref === selFac); const info = fi?.unit ? train.info[fi.unit] : undefined;
         if (!fi || !info) return null;
         return (
           <div className="absolute inset-x-3 bottom-3 z-10 mx-auto max-w-md rounded-2xl bg-white/95 p-3 shadow-xl" data-testid="factory-panel">
-            <div className="mb-1 flex items-center gap-2"><span className="text-2xl">{fi.emoji}</span><b className="flex-1 text-pink-700">{fi.name} → {info.emoji} {info.name}</b><button className="text-lg font-black text-slate-400" onClick={() => setSelFac(null)} aria-label="Đóng">✕</button></div>
+            <div className="mb-1 flex items-center gap-2"><span className="text-2xl">{fi.emoji}</span><b className="flex-1 text-pink-700">{fi.name} → {info.emoji} {info.name}</b><button className="grid h-8 w-8 place-items-center rounded-full bg-pink-50 text-base font-black text-pink-700" onClick={() => setSelFac(null)} aria-label="Đóng" data-testid="panel-close">✕</button></div>
             <TrainBox info={info} queue={data.training} coins={coins} freeSlots={train.freeSlots} compact />
           </div>
         );
@@ -570,7 +597,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
       {mode === "own" && !editing && (
         <div className="pointer-events-none absolute right-3 top-3 z-10 flex flex-wrap justify-end gap-2">
           <button className={btnHot} onClick={() => { setEditing(true); setShop(false); setMsg(null); }} data-testid="edit-base">🔨 Xây dựng</button>
-          <button className={btnHot} onClick={() => setShop(true)} data-testid="open-shop">🛒 Xây thêm</button>
+          <button className={btnHot} onClick={() => { setShop(true); setPicked(null); setSelFac(null); }} data-testid="open-shop">🛒 Xây thêm</button>
         </div>
       )}
       {mode === "own" && editing && (
@@ -608,7 +635,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
             <div><div className="text-xl font-black text-red-600">{Math.round(attack.dps)}</div><div className="text-[10px] font-bold">Sức đánh / giây</div></div>
             <div><div className="text-xl font-black text-blue-600">{attack.armorPct}%</div><div className="text-[10px] font-bold">Giáp nhà</div></div>
             <div><div className="text-xl font-black text-violet-600">{attack.defenses}</div><div className="text-[10px] font-bold">Tháp / pháo</div></div>
-            <div><div className="text-xl font-black text-slate-700">{attack.left}/{attack.total}</div><div className="text-[10px] font-bold">Lượt hôm nay</div></div>
+            <div><div className="text-xl font-black text-slate-700">{attack.total > 0 ? `${attack.left}/${attack.total}` : "∞"}</div><div className="text-[10px] font-bold">Lượt hôm nay</div></div>
           </div>
           {attack.army.length > 0 && <div className="mt-1 text-center text-[11px] font-semibold text-slate-600">Quân của bạn: {attack.army.map((s) => `${s.emoji}×${s.qty}`).join("  ")} · bẫy thì không nhìn thấy đâu 👀</div>}
           {attack.myShield && !attack.reason && <p className="mt-1 text-center text-xs font-bold text-amber-700">⚠️ Tấn công sẽ làm vỡ khiên của bạn.</p>}
@@ -667,7 +694,7 @@ export default function BaseScene({ mode, data, catalog = [], coins = 0, me, att
         </div>
       )}
       {!editing && !fight && (
-        <div className="pointer-events-none absolute bottom-3 left-3 z-0 hidden rounded-xl bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-pink-800 sm:block">🖱️ Kéo để xoay · cuộn để zoom · chuột phải để di chuyển</div>
+        <div className="pointer-events-none absolute bottom-3 left-3 z-0 hidden rounded-xl bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-pink-800 sm:block">👆 Chạm nhà / thú cưng / lính để nâng cấp · kéo để xoay · cuộn để zoom</div>
       )}
     </div>
   );

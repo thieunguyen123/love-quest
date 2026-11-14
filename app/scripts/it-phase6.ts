@@ -83,7 +83,10 @@ async function main() {
     "Lượt 2: có phòng thủ → sát thương thấp hơn, bẫy nổ, lính ngã", r2.body);
   ok((await admin.from("user_army").select("quantity").eq("user_id", u.id).single()).data!.quantity === 10, "Lính ngã trong trận nhưng không mất quân");
   await admin.from("attacks").update({ created_at: new Date(Date.now() - 2 * 3600000).toISOString() }).eq("defender_id", m.id);
-  ok((await begin()).body.error === "ATTACK_LIMIT", "TC-27 tối đa 2 lần/ngày");
+  const b3x = await begin();
+  ok(b3x.status === 200, "TC-27 không giới hạn lượt: lần thứ 3 trong ngày vẫn đánh được (ATTACKS_PER_DAY = 0)", b3x.body);
+  if (b3x.status === 200) await finishBattle(admin, u.id, { id: b3x.body.id as string, deploys: [], endTick: 0 });
+  await admin.from("attacks").update({ created_at: new Date(Date.now() - 2 * 3600000).toISOString() }).eq("defender_id", m.id);
   ok((await beginBattle(admin, u.id, u.id)).body.error === "INVALID_TARGET", "Không tự đánh mình");
   await admin.from("user_army").delete().eq("user_id", m.id);
   ok((await beginBattle(admin, m.id, u.id)).body.error === "NO_ARMY", "Không có lính không đánh được");

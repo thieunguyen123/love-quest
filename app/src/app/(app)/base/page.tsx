@@ -29,6 +29,15 @@ export default async function BasePage() {
     info: Object.fromEntries(units.map((u) => [u.code, { unit: u.code, name: u.name_vi, emoji: u.emoji, price: Number(u.stats.train_price), sec: Number(u.stats.train_sec), slots: u.slots }])),
     freeSlots: cap - b.used - queuedSlots(b.training, (c) => Number(b.byCode.get(c)?.slots ?? 1)),
   };
+  // dữ liệu cho popup nâng cấp khi chạm mô hình 3D
+  const econ = {
+    petStep: Number(cfg.PET_UPGRADE_COST_STEP), petMax: Number(cfg.PET_MAX_LEVEL), armyStep: Number(cfg.ARMY_UPGRADE_COST_STEP), armyLevel: me.army_level,
+    armyMax: Number(cfg.ARMY_MAX_LEVEL), armyPct: Number(cfg.ARMY_UPGRADE_ATK_PCT), repairPerHp: repairCost,
+    tokens: { pet: tok("PET_UPGRADE"), army: tok("ARMY_UPGRADE") }, cap, used: b.used,
+    houseName: b.houseDef?.name_vi ?? "", houseDef: Number(b.houseDef?.stats.def ?? 0),
+    next: nextHouse ? { name: nextHouse.name_vi, price: nextHouse.price, maxHp: Number(nextHouse.stats.max_hp), def: Number(nextHouse.stats.def) } : null,
+    petBuff: Object.fromEntries((b.items as any[]).filter((i) => i.category === "PET").map((i) => [i.code, String(i.stats?.desc ?? "")])),
+  };
   const armyCost = Number(cfg.ARMY_UPGRADE_COST_STEP) * (me.army_level + 1);
 
   return (
@@ -38,7 +47,7 @@ export default async function BasePage() {
         <div className="flex gap-4"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Ra làng</Link><Link href="/base/partner" className="font-bold text-love-600 underline">⚔️ Thăm nhà người ấy →</Link></div>
       </div>
 
-      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} train={trainProps} />
+      <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} train={trainProps} econ={econ} />
 
       <Card className={`space-y-3 ${h.hp === 0 ? "border-red-300" : ""}`}>
         <div className="flex items-center gap-4">

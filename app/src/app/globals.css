@@ -149,3 +149,6 @@ html[data-embed] .app-header { display: none; }
 html[data-embed] body { background: transparent; min-height: 0; }
 html[data-embed] main { padding-top: 1rem; }
 @keyframes lqpop { 0% { transform: translateY(0) scale(.6); opacity: 0 } 20% { transform: translateY(-6px) scale(1.15); opacity: 1 } 100% { transform: translateY(-40px) scale(1); opacity: 0 } }
+
+/* thanh tải khi chuyển trang (app/(app)/loading.tsx) */
+@keyframes lqload { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }

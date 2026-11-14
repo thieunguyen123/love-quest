@@ -4,8 +4,13 @@ let ctx: AudioContext | null = null;
 
 export function sfxEnabled(): boolean { try { return localStorage.getItem("sfx") !== "off"; } catch { return true; } }
 export function setSfx(on: boolean) { try { localStorage.setItem("sfx", on ? "on" : "off"); } catch { /* ignore */ } }
-export function musicEnabled(): boolean { try { return localStorage.getItem("music") === "on"; } catch { return false; } }
-export function setMusic(on: boolean) { try { localStorage.setItem("music", on ? "on" : "off"); } catch { /* ignore */ } if (!on) stopMusic(); }
+// Nhạc nền: mặc định BẬT (trình phát YouTube ở components/music.tsx nghe sự kiện MUSIC_EVENT)
+export const MUSIC_EVENT = "lq:music";
+export function musicEnabled(): boolean { try { return localStorage.getItem("music") !== "off"; } catch { return true; } }
+export function setMusic(on: boolean) {
+  try { localStorage.setItem("music", on ? "on" : "off"); } catch { /* ignore */ }
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(MUSIC_EVENT, { detail: on }));
+}
 
 function tone(freq: number, start: number, dur: number, type: OscillatorType = "sine", vol = 0.15) {
   if (!ctx) return;
@@ -34,15 +39,6 @@ export function play(kind: Kind) {
   } catch { /* trình duyệt chặn audio: bỏ qua */ }
 }
 
-let musicTimer: ReturnType<typeof setInterval> | null = null;
-export function startMusic() {
-  if (typeof window === "undefined" || !musicEnabled() || musicTimer) return;
-  const notes = [523, 659, 784, 659, 587, 698, 880, 698];
-  let i = 0;
-  try {
-    ctx ??= new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-    void ctx.resume();
-    musicTimer = setInterval(() => tone(notes[i++ % notes.length], 0, 0.5, "sine", 0.035), 600);
-  } catch { /* ignore */ }
-}
-export function stopMusic() { if (musicTimer) { clearInterval(musicTimer); musicTimer = null; } }
+/** giữ cho tương thích: phát nhạc nền (YouTube) nếu đang bật */
+export function startMusic() { if (musicEnabled()) setMusic(true); }
+export function stopMusic() { setMusic(false); }

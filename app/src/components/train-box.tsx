@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { RPC_MSG } from "@/components/rpc-button";
 import { play } from "@/lib/sfx";
+import { refreshCoins, useCoins } from "@/components/coins";
 import { fmtClock, fmtDur } from "@/lib/training";
 
 export type TrainInfo = { unit: string; name: string; emoji: string; price: number; sec: number; slots: number };
 export type QueueRow = { id: string; unit_code: string; qty: number; started_at: string; done_at: string };
 
-export function TrainBox({ info, queue, coins, freeSlots, compact = false }: { info: TrainInfo; queue: QueueRow[]; coins: number; freeSlots: number; compact?: boolean }) {
+export function TrainBox({ info, queue, coins: coins0, freeSlots, compact = false }: { info: TrainInfo; queue: QueueRow[]; coins: number; freeSlots: number; compact?: boolean }) {
+  const coins = useCoins(coins0);
   const router = useRouter();
   const [now, setNow] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
@@ -29,7 +31,7 @@ export function TrainBox({ info, queue, coins, freeSlots, compact = false }: { i
     const { error } = await createClient().rpc("train_units", { p_unit: info.unit, p_qty: qty });
     setBusy(false);
     if (error) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[error.message] ?? "Không luyện được" }); }
-    play("click"); setMsg({ ok: true, t: `Đã đặt luyện ${qty} ${info.name} ⏳` }); router.refresh();
+    play("click"); setMsg({ ok: true, t: `Đã đặt luyện ${qty} ${info.name} ⏳` }); void refreshCoins(); router.refresh();
   }
   return (
     <div className="space-y-2" data-testid={`train-${info.unit}`}>

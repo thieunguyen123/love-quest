@@ -14,7 +14,7 @@ export default function SettingsForm() {
   const [pw, setPw] = useState("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [sfx, setSfxS] = useState(true);
-  const [music, setMusicS] = useState(false);
+  const [music, setMusicS] = useState(true);
   const [view, setView] = useState("2d");
   const [perm, setPerm] = useState<string>("default");
   const [push, setPush] = useState<string | null>(null);

@@ -163,9 +163,9 @@
   },
   {
     "key": "ATTACKS_PER_DAY",
-    "value": 2,
+    "value": 0,
     "unit": "lần",
-    "description": "Số lần tấn công tối đa mỗi ngày"
+    "description": "Số lần tấn công tối đa mỗi ngày (0 = không giới hạn)"
   },
   {
     "key": "ARMY_UPGRADE_ATK_PCT",

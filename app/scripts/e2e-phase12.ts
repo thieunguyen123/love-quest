@@ -1,0 +1,76 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// E2E Phase 12 (điện thoại 390×844, DB test — XOÁ dữ liệu game): popup thông báo (vừa màn hình, chạm ngoài là đóng),
+// chạm mô hình nhà / thú cưng → popup nâng cấp có nút ✕, xu cập nhật ngay không tải lại trang, khung nhạc nền.
+import path from "node:path";
+import { admin, resetGame, moheoLogin, utdacLogin, ensureOnboarded } from "./it-lib";
+import { BASE, SHOTS, check, context, finish, launch, sessionCookies, watchErrors } from "./e2e-lib";
+
+async function main() {
+  await resetGame();
+  const m = await moheoLogin(), u = await utdacLogin();
+  await ensureOnboarded(m, "Mỡ heo"); await ensureOnboarded(u, "Út đặc");
+  await admin.rpc("apply_coins", { p_user: m.id, p_amount: 5000, p_reason: "LEVEL_WIN" });
+  await admin.from("user_house").update({ hp: 100 }).eq("user_id", m.id);               // nhà hỏng để thử Sửa
+  await admin.from("user_pets").insert({ user_id: m.id, pet_code: "cat", nickname: "Mướp", level: 1 });
+  await admin.from("inventory").upsert({ user_id: m.id, item_type: "PET_UPGRADE", quantity: 2 });
+  await admin.rpc("notify", { p_user: m.id, p_type: "TEST", p_title: "Thông báo thử một tiêu đề khá dài để xem có tràn màn hình điện thoại không", p_body: "Nội dung thông báo cũng dài để kiểm tra xuống dòng đúng" }).then(() => undefined, () => undefined);
+
+  const b = await launch();
+  const c = await context(b, await sessionCookies("moheo@lovequest.local", "moheo-dev-2026"), true);
+  const p = await c.newPage(); watchErrors(p, "điện thoại");
+  const shot = (n: string) => p.screenshot({ path: path.join(SHOTS, `p12-${n}.png`) });
+  const coinsText = async () => Number((await p.getByTestId("coins").innerText()).replace(/[^\d]/g, ""));
+
+  // ---- popup thông báo ----
+  await p.goto(`${BASE}/battles`, { waitUntil: "domcontentloaded", timeout: 180000 });
+  await p.getByLabel(/Thông báo/).first().click();
+  const panel = p.getByTestId("notif-panel");
+  await panel.waitFor({ timeout: 30000 });
+  const bx = (await panel.boundingBox())!;
+  check(`Popup thông báo nằm gọn trong màn hình (x=${Math.round(bx.x)}, rộng ${Math.round(bx.width)} / 390)`, bx.x >= 0 && bx.x + bx.width <= 390);
+  await shot("1-notif");
+  await p.mouse.click(195, 800);   // chạm ra ngoài
+  await p.waitForTimeout(400);
+  check("Chạm ra ngoài → popup thông báo đóng", (await panel.count()) === 0);
+  await p.getByLabel(/Thông báo/).first().click(); await panel.waitFor();
+  await p.getByTestId("notif-panel").getByLabel("Đóng").click(); await p.waitForTimeout(300);
+  check("Nút ✕ đóng popup thông báo", (await panel.count()) === 0);
+  check("Khung nhạc nền có trên trang", (await p.getByTestId("music").count()) === 1);
+
+  // ---- căn cứ: chạm nhà → popup → Sửa nhà, xu đổi ngay ----
+  await p.goto(`${BASE}/base`, { waitUntil: "domcontentloaded", timeout: 180000 });
+  await p.waitForFunction(() => (window as any).__base?.placed, null, { timeout: 180000 });
+  await p.waitForTimeout(3000);
+  const canvas = (await p.getByTestId("base-scene").locator("canvas").boundingBox())!;
+  const tap = async (pt: { x: number; y: number }) => p.mouse.click(canvas.x + pt.x, canvas.y + pt.y);
+  const c0 = await coinsText();
+  const housePt = await p.evaluate(() => (window as any).__base.projectM(0, 0));
+  await tap({ x: housePt.x, y: housePt.y - 25 });
+  await p.getByTestId("object-panel").waitFor({ timeout: 30000 });
+  check("Chạm nhà → popup nhà (HP, Sửa, Nâng cấp)", (await p.getByTestId("object-panel").innerText()).includes("Sửa hết"));
+  await shot("2-house-panel");
+  await p.getByTestId("repair-full").click();
+  await p.getByTestId("object-panel").getByRole("status").waitFor({ timeout: 30000 });
+  await p.waitForFunction((v) => Number(document.querySelector('[data-testid="coins"]')?.textContent?.replace(/[^\d]/g, "")) < v, c0, { timeout: 15000 }).catch(() => undefined);
+  const c1 = await coinsText();
+  check(`Sửa nhà → xu trên thanh trên giảm ngay (${c0} → ${c1}, không tải lại trang)`, c1 === c0 - (200 - 100) * 2, { c0, c1 });   // nhà cấp 0: 200 HP tối đa, đang 100 → 100 HP × 2 xu
+  await p.getByTestId("panel-close").click(); await p.waitForTimeout(300);
+  check("Nút ✕ đóng popup nhà", (await p.getByTestId("object-panel").count()) === 0);
+
+  // ---- chạm thú cưng → nâng cấp ----
+  const pet = await p.evaluate(() => (window as any).__base.placed.find((x: any) => x.kind === "PET"));
+  const petPt = await p.evaluate(([x, z]) => (window as any).__base.project(x, z, 1), [pet.x, pet.z]);
+  await tap({ x: petPt.x, y: petPt.y - 12 });
+  await p.getByTestId("object-panel").waitFor({ timeout: 30000 });
+  check("Chạm thú cưng → popup thú cưng có nút nâng cấp", (await p.getByTestId("upgrade-pet").count()) === 1);
+  await p.getByTestId("upgrade-pet").click();
+  await p.getByTestId("object-panel").getByRole("status").waitFor({ timeout: 30000 });
+  await p.waitForTimeout(1500);
+  const lv = (await admin.from("user_pets").select("level").eq("user_id", m.id).single()).data!.level;
+  const c2 = await coinsText();
+  check(`Nâng cấp Mướp lên cấp 2 (−100 xu, xu hiển thị ${c1} → ${c2})`, lv === 2 && c2 === c1 - 100, { lv, c1, c2 });
+  await shot("3-pet-panel");
+  await b.close();
+  finish();
+}
+main().catch((e) => { console.error(e); process.exit(1); });

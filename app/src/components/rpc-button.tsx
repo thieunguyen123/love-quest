@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { play } from "@/lib/sfx";
+import { refreshCoins } from "@/components/coins";
 import { btnGhost, btnPrimary } from "./ui";
 
 export const RPC_MSG: Record<string, string> = {
@@ -32,7 +33,7 @@ export function RpcButton({ fn, args, label, disabledReason, confirm: ask, ghost
     const { data, error } = await createClient().rpc(fn, args ?? {});
     setBusy(false);
     if (error) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[error.message] ?? "Không thực hiện được" }); }
-    play("coin"); setMsg({ ok: true, t: "Xong ✅" }); onDone?.(data); router.refresh();
+    play("coin"); setMsg({ ok: true, t: "Xong ✅" }); onDone?.(data); void refreshCoins(); router.refresh();
   }
   const cls = `${ghost ? btnGhost : btnPrimary} ${small ? "!px-3 !py-1 text-sm" : ""}`;
   return (

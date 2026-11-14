@@ -38,7 +38,7 @@ export const petBuff = (b: Base, key: string) => ((b.house?.hp ?? 1) <= 0 ? 0 : 
 export const activeShield = (b: Base, now = Date.now()) => b.shields.some((s: any) => s.activated_at && !s.broken_at && s.expires_at && Date.parse(s.expires_at) > now);
 
 // ---------- dữ liệu cho cảnh 3D căn cứ (BASE-07) ----------
-export type SceneItem = { kind: Kind; ref: string; code: string; size: number; name: string; emoji: string; qty?: number; level?: number; nickname?: string; model?: string; range?: number; near?: string; unit?: string };
+export type SceneItem = { kind: Kind; ref: string; code: string; size: number; name: string; emoji: string; qty?: number; level?: number; nickname?: string; model?: string; range?: number; near?: string; unit?: string; desc?: string };
 export type BaseData = {
   owner: { id: string; name: string; color: string };
   house: { level: number; hp: number; max_hp: number; exists: boolean; style: string };
@@ -60,6 +60,7 @@ export function baseSceneData(b: Base, grid: number): BaseData {
     ...b.decor.map((d: any) => ({ kind: "DECOR" as const, ref: d.id, code: d.code, size: size(d.code, 1), name: b.byCode.get(d.code)?.name_vi ?? d.code, emoji: b.byCode.get(d.code)?.emoji ?? "🌸", model: b.byCode.get(d.code)?.stats?.model ?? "bush" })),
     ...b.defenses.map((d: any) => ({ kind: d.kind as "DEFENSE" | "TRAP" | "WALL", ref: d.id, code: d.code, size: size(d.code, d.kind === "DEFENSE" ? 2 : 1), name: b.byCode.get(d.code)?.name_vi ?? d.code, emoji: b.byCode.get(d.code)?.emoji ?? "🗼", range: Number(b.byCode.get(d.code)?.stats?.range ?? b.byCode.get(d.code)?.stats?.trigger ?? 0) })),
   ];
+  for (const it of items) it.desc ??= b.byCode.get(it.code)?.stats?.desc;
   const houseSizes = [0, 1, 2, 3, 4, 5].map((l) => size(`house_${l}`, 2 + l));
   return {
     owner: { id: b.profile?.id ?? "", name: b.profile?.display_name || "Người ấy", color: b.profile?.favorite_color ?? "#ec4899" },

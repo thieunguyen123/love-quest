@@ -31,7 +31,7 @@ export function AttackPanel({ dps, armorPct, reason, left, total, myShield }: { 
         <div className="rounded-xl bg-red-50 p-3"><div className="text-2xl font-extrabold text-red-600">{dps}</div><div className="text-xs font-semibold">Sức đánh / giây của bạn</div></div>
         <div className="rounded-xl bg-blue-50 p-3"><div className="text-2xl font-extrabold text-blue-600">{armorPct}%</div><div className="text-xs font-semibold">Giáp nhà người ấy</div></div>
       </div>
-      <p className="text-sm">Máy này không hiển thị được 3D nên quân sẽ <b>tự rải quanh đảo</b>. Bạn còn <b>{left}/{total}</b> lượt hôm nay.</p>
+      <p className="text-sm">Máy này không hiển thị được 3D nên quân sẽ <b>tự rải quanh đảo</b>. {total > 0 ? <>Bạn còn <b>{left}/{total}</b> lượt hôm nay.</> : <>Không giới hạn lượt tấn công.</>}</p>
       {myShield && !reason && <p className="text-sm font-semibold text-amber-700">⚠️ Tấn công sẽ làm vỡ khiên của bạn.</p>}
       {reason && <p className="text-sm font-bold text-amber-700">{reason}</p>}
       {err && <p role="alert" className="text-sm font-bold text-red-600">{err}</p>}
