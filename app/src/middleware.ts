@@ -34,5 +34,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|sw.js|manifest.webmanifest|api/push/send|.*\\.(?:svg|png|jpg|webp|ico)$).*)"],
+  // tài nguyên tĩnh (ảnh, mô hình 3D .glb, CREDITS.txt) không cần kiểm tra đăng nhập — tránh gọi Supabase cho từng file
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|sw.js|manifest.webmanifest|api/push/send|models/|.*\\.(?:svg|png|jpg|jpeg|webp|ico|glb|gltf|txt)$).*)"],
 };
