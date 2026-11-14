@@ -28,16 +28,19 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
   const canvas = useRef<HTMLCanvasElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
+  const [speedUp, setSpeedUp] = useState(0);   // cấp tốc độ vừa tăng → hiện "⚡ Nhanh hơn!"
+  // điện thoại: khung chơi bám đúng phần màn hình còn thấy phía trên bàn phím (visualViewport) → ô nhập sát bàn phím, không khoảng trắng
+  const [vv, setVv] = useState<{ h: number; top: number } | null>(null);
 
   // trạng thái game trong ref để vòng lặp animation không bị re-render
-  const g = useRef({ items: [] as Falling[], key: 0, hits: 0, lives: cfg.lives, lastSpawn: 0, start: 0, hitIds: [] as string[], missIds: [] as string[], lost: [] as W[], over: false, pool: [] as W[], parts: [] as { x: number; y: number; vx: number; vy: number; t: number }[] });
+  const g = useRef({ items: [] as Falling[], key: 0, hits: 0, lives: cfg.lives, lastSpawn: 0, start: 0, hitIds: [] as string[], missIds: [] as string[], lost: [] as W[], over: false, step: 0, pool: [] as W[], parts: [] as { x: number; y: number; vx: number; vy: number; t: number }[] });
 
   const pool = words.filter((w) => source === "all" || w.levelId === source);
 
   function begin() {
     if (pool.length < 4) { setErr("Cần ít nhất 4 từ trong nguồn đã chọn"); return; }
     setErr(null);
-    Object.assign(g.current, { items: [], hits: 0, lives: cfg.lives, lastSpawn: 0, start: performance.now(), hitIds: [], missIds: [], lost: [], over: false, pool, parts: [] });
+    Object.assign(g.current, { items: [], hits: 0, lives: cfg.lives, lastSpawn: 0, start: performance.now(), hitIds: [], missIds: [], lost: [], over: false, step: 0, pool, parts: [] });
     setLives(cfg.lives); setHits(0); setLostList([]); setResult(null); setText("");
     setPhase("play");
     setTimeout(() => input.current?.focus(), 50);
@@ -57,6 +60,16 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
     play(s.lives <= 0 ? "lose" : "coin");
   }, [source]);
 
+  useEffect(() => {
+    if (phase !== "play") return;
+    const v = window.visualViewport;
+    if (!v || !window.matchMedia("(max-width: 767px)").matches) return;
+    const up = () => setVv({ h: Math.round(v.height), top: Math.round(v.offsetTop) });
+    up(); v.addEventListener("resize", up); v.addEventListener("scroll", up);
+    const prev = document.body.style.overflow; document.body.style.overflow = "hidden";
+    return () => { v.removeEventListener("resize", up); v.removeEventListener("scroll", up); document.body.style.overflow = prev; setVv(null); };
+  }, [phase]);
+
   // vòng lặp vẽ + logic rơi
   useEffect(() => {
     if (phase !== "play") return;
@@ -64,6 +77,7 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
     let raf = 0;
     const resize = () => { cv.width = cv.clientWidth * devicePixelRatio; cv.height = cv.clientHeight * devicePixelRatio; };
     resize(); window.addEventListener("resize", resize);
+    const ro = new ResizeObserver(resize); ro.observe(cv);   // khung đổi cỡ khi bàn phím điện thoại mở / đóng
 
     const frame = (now: number) => {
       const s = g.current;
@@ -71,7 +85,8 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
       const diff = difficulty(s.hits, cfg);
       // sinh từ mới
       const alive = s.items.filter((i) => !i.exploded);
-      if (!s.over && alive.length < diff.maxOnScreen && now - s.lastSpawn > 1200) {
+      if (diff.step > s.step) { s.step = diff.step; setSpeedUp(diff.step); setTimeout(() => setSpeedUp(0), 1600); }
+      if (!s.over && alive.length < diff.maxOnScreen && (s.lastSpawn === 0 || now - s.lastSpawn > diff.spawnGapSec * 1000)) {
         const w = pickWord(s.pool, new Set(alive.map((i) => i.w.id)));
         if (w) { s.items.push({ key: s.key++, w, x: 0.12 + Math.random() * 0.76, born: now, fallMs: diff.fallSec * 1000 }); s.lastSpawn = now; }
       }
@@ -105,7 +120,7 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); ro.disconnect(); };
   }, [phase, cfg, finish]);
 
   function submit(e: React.FormEvent) {
@@ -171,15 +186,17 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-3">
+    <div className={vv ? "fixed inset-x-0 z-40 flex flex-col gap-2 bg-[#fff7fb] px-3 py-2" : "max-w-2xl mx-auto space-y-3"}
+      style={vv ? { top: vv.top, height: vv.h } : undefined} data-testid="typing-play">
       <div className="flex items-center justify-between font-bold">
         <span aria-label={`${lives} mạng`}>{"❤️".repeat(Math.max(0, lives))}{"🖤".repeat(Math.max(0, cfg.lives - lives))}</span>
         <span>Từ: {hits}</span>
         <span className="text-amber-700">🪙 +{pc.grant}{pc.capped ? " (trần)" : ""}</span>
         <button className="text-sm underline text-love-700" onClick={finish}>Kết thúc</button>
       </div>
-      <div className="relative">
-        <canvas ref={canvas} className="w-full h-[55vh] rounded-2xl border border-love-200 block" />
+      <div className={vv ? "relative min-h-0 flex-1" : "relative"}>
+        <canvas ref={canvas} className={`block w-full rounded-2xl border border-love-200 ${vv ? "h-full" : "h-[55vh]"}`} />
+        {speedUp > 0 && <div className="pointer-events-none absolute inset-x-0 top-3 mx-auto w-fit animate-bounce rounded-full bg-amber-400 px-4 py-1 text-sm font-extrabold text-white shadow" data-testid="speed-up">⚡ Nhanh hơn! (cấp {speedUp + 1})</div>}
         {missedShow && <div className="absolute inset-x-0 bottom-3 mx-auto w-fit rounded-xl bg-white/95 px-4 py-2 font-bold text-red-600 shadow">{missedShow.en} = {missedShow.vi.join(", ")}</div>}
       </div>
       <form onSubmit={submit}>

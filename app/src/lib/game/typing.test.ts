@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { normalizeVi, matchesAny, difficulty, pendingCoins, pickWord, type TypingCfg } from "./typing";
 
-const C: TypingCfg = { lives: 3, fallStartSec: 10, fallMinSec: 4, speedupPct: 0.08, speedupEvery: 10, maxStart: 3, maxEnd: 5, rewardEvery: 10, rewardCoins: 20, dailyCap: 300, noDiacritics: true };
+// cấu hình mặc định (sheet 3): mới vào chậm, cứ 10 từ nhanh dần
+const C: TypingCfg = { lives: 3, fallStartSec: 16, fallMinSec: 5, speedupPct: 0.12, speedupEvery: 10, maxStart: 1, maxEnd: 4, rewardEvery: 10, rewardCoins: 20, dailyCap: 300, noDiacritics: true, spawnGapStartSec: 3.5, spawnGapMinSec: 1.2 };
 
 describe("normalizeVi", () => {
   it("bỏ dấu, đ→d, hoa thường, dấu câu", () => {
@@ -25,14 +26,18 @@ describe("matchesAny", () => {
   });
 });
 describe("difficulty", () => {
-  it("bắt đầu 10s, 3 từ", () => expect(difficulty(0, C)).toEqual({ fallSec: 10, maxOnScreen: 3 }));
-  it("sau 10 từ: giảm 8%, +1 từ", () => {
+  it("mới vào chậm: rơi 16s, 1 từ, 3.5s mới ra từ mới", () => expect(difficulty(0, C)).toEqual({ fallSec: 16, maxOnScreen: 1, spawnGapSec: 3.5, step: 0 }));
+  it("9 từ đầu vẫn tốc độ ban đầu", () => expect(difficulty(9, C).step).toBe(0));
+  it("sau 10 từ: rơi nhanh hơn 12%, +1 từ, ra từ nhanh hơn 15%", () => {
     const d = difficulty(10, C);
-    expect(d.fallSec).toBeCloseTo(9.2); expect(d.maxOnScreen).toBe(4);
+    expect(d.step).toBe(1); expect(d.fallSec).toBeCloseTo(14.08); expect(d.maxOnScreen).toBe(2); expect(d.spawnGapSec).toBeCloseTo(2.975);
   });
-  it("không dưới 4s và tối đa 5 từ", () => {
+  it("mỗi 10 từ lại nhanh dần (đơn điệu)", () => {
+    for (let h = 10; h <= 100; h += 10) expect(difficulty(h, C).fallSec).toBeLessThan(difficulty(h - 10, C).fallSec);
+  });
+  it("không dưới 5s, tối đa 4 từ, ra từ không dưới 1.2s", () => {
     const d = difficulty(1000, C);
-    expect(d.fallSec).toBe(4); expect(d.maxOnScreen).toBe(5);
+    expect(d.fallSec).toBe(5); expect(d.maxOnScreen).toBe(4); expect(d.spawnGapSec).toBe(1.2);
   });
 });
 describe("pendingCoins", () => {

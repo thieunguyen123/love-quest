@@ -13,6 +13,8 @@ export function matchesAny(input: string, meanings: string[], stripDiacritics = 
 export type TypingCfg = {
   lives: number; fallStartSec: number; fallMinSec: number; speedupPct: number; speedupEvery: number;
   maxStart: number; maxEnd: number; rewardEvery: number; rewardCoins: number; dailyCap: number; noDiacritics: boolean;
+  /** khoảng cách ra từ mới (giây) lúc đầu / ngắn nhất — mỗi lần tăng tốc ngắn lại speedupPct × 1.25 */
+  spawnGapStartSec: number; spawnGapMinSec: number;
 };
 
 // Độ khó theo số từ đã bắn trúng: cứ speedupEvery từ giảm speedupPct thời gian rơi (min fallMinSec), +1 từ cùng lúc
@@ -21,6 +23,8 @@ export function difficulty(hits: number, c: TypingCfg) {
   return {
     fallSec: Math.max(c.fallMinSec, c.fallStartSec * Math.pow(1 - c.speedupPct, steps)),
     maxOnScreen: Math.min(c.maxEnd, c.maxStart + steps),
+    spawnGapSec: Math.max(c.spawnGapMinSec, c.spawnGapStartSec * Math.pow(1 - Math.min(0.9, c.speedupPct * 1.25), steps)),
+    step: steps,   // cấp tốc độ (0 = mới vào)
   };
 }
 

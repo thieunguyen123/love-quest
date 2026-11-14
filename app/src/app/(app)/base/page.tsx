@@ -105,7 +105,7 @@ export default async function BasePage() {
   );
 
   return (
-    <div className="space-y-3 md:space-y-4">
+    <div className="space-y-3 max-md:-mb-4 md:space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="hidden text-2xl font-extrabold text-love-700 md:block">🏠 Căn cứ của {me.display_name}</h1>
         <div className="flex w-full justify-between gap-4 text-sm md:w-auto md:text-base"><Link href="/world?at=home" className="font-bold text-love-600 underline">🌍 Ra làng</Link><Link href="/base/partner" className="font-bold text-love-600 underline">⚔️ Thăm nhà người ấy →</Link></div>
@@ -113,7 +113,7 @@ export default async function BasePage() {
 
       {/* điện thoại: căn cứ 3D vừa khít 1 màn hình, không phải cuộn */}
       <BaseView mode="own" data={baseSceneData(b, grid)} catalog={catalog} coins={b.profile!.coins} train={trainProps} econ={econ}
-        panels={{ shield, bag }} fallback={cards()} className="h-[calc(100dvh-11.5rem)] min-h-[360px] md:h-[72vh] md:min-h-[420px]" />
+        panels={{ shield, bag }} fallback={cards()} fillMobile className="h-[calc(100dvh-11.5rem)] md:h-[72vh] md:min-h-[420px]" />
 
       <div className="hidden md:block">{cards()}</div>
     </div>

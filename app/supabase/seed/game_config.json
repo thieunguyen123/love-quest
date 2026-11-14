@@ -103,19 +103,19 @@
   },
   {
     "key": "TYPING_FALL_START_SEC",
-    "value": 10,
+    "value": 16,
     "unit": "giây",
     "description": "Thời gian 1 từ rơi từ đỉnh xuống đáy lúc bắt đầu"
   },
   {
     "key": "TYPING_FALL_MIN_SEC",
-    "value": 4,
+    "value": 5,
     "unit": "giây",
     "description": "Tốc độ nhanh nhất"
   },
   {
     "key": "TYPING_SPEEDUP_PCT",
-    "value": 0.08,
+    "value": 0.12,
     "unit": "%",
     "description": "Mỗi lần tăng tốc giảm thời gian rơi bao nhiêu %"
   },
@@ -127,13 +127,13 @@
   },
   {
     "key": "TYPING_MAX_ON_SCREEN_START",
-    "value": 3,
+    "value": 1,
     "unit": "từ",
     "description": "Số từ rơi cùng lúc ban đầu (+1 mỗi lần tăng tốc)"
   },
   {
     "key": "TYPING_MAX_ON_SCREEN_END",
-    "value": 5,
+    "value": 4,
     "unit": "từ",
     "description": "Số từ rơi cùng lúc tối đa"
   },
@@ -160,6 +160,18 @@
     "value": true,
     "unit": "",
     "description": "Cho phép gõ tiếng Việt không dấu (vd 'tam biet' = 'tạm biệt')"
+  },
+  {
+    "key": "TYPING_SPAWN_GAP_START_SEC",
+    "value": 3.5,
+    "unit": "giây",
+    "description": "Khoảng cách ra từ mới lúc bắt đầu (mỗi lần tăng tốc ngắn lại TYPING_SPEEDUP_PCT×1.25)"
+  },
+  {
+    "key": "TYPING_SPAWN_GAP_MIN_SEC",
+    "value": 1.2,
+    "unit": "giây",
+    "description": "Khoảng cách ra từ mới ngắn nhất"
   },
   {
     "key": "ATTACKS_PER_DAY",

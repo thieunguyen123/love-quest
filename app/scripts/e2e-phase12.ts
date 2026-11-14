@@ -75,9 +75,25 @@ async function main() {
   await shot("3-pet-panel");
   await p.getByTestId("panel-close").click(); await p.waitForTimeout(300);
 
-  // ---- 1 màn hình, không phải cuộn; khiên & túi đồ là popup ----
-  const sc = await p.evaluate(() => ({ h: document.documentElement.scrollHeight, v: window.innerHeight }));
-  check(`Căn cứ vừa 1 màn hình điện thoại (cao ${sc.h} / ${sc.v})`, sc.h <= sc.v + 1, sc);
+  // ---- 1 màn hình, không phải cuộn, không thừa khoảng trắng; khiên & túi đồ là popup ----
+  const sc = await p.evaluate(() => {
+    const v = document.querySelector('[data-testid="base-view"]')!.getBoundingClientRect();
+    return { h: document.documentElement.scrollHeight, v: window.innerHeight, gap: Math.round(window.innerHeight - v.bottom) };
+  });
+  check(`Căn cứ vừa 1 màn hình điện thoại (cao ${sc.h} / ${sc.v}), dưới khung 3D chỉ còn lề ${sc.gap}px`, sc.h <= sc.v + 1 && sc.gap <= 40, sc);
+  // ---- FPS: chỉ hiện số FPS, góc dưới trái, không đè nút ----
+  await p.evaluate(() => localStorage.setItem("show_fps", "1"));
+  await p.reload({ waitUntil: "domcontentloaded" });
+  await p.waitForFunction(() => (window as any).__base?.placed, null, { timeout: 180000 });
+  await p.waitForTimeout(2500);
+  const fpsText = await p.getByTestId("fps").innerText();
+  check(`FPS chỉ hiện số: "${fpsText}"`, /^\d+ FPS$/.test(fpsText.trim()));
+  const fb = (await p.getByTestId("fps").boundingBox())!;
+  let fpsClash = 0;
+  for (const bt of await p.getByTestId("base-scene").locator("button").all()) { const bb = await bt.boundingBox(); if (bb && fb.x < bb.x + bb.width && bb.x < fb.x + fb.width && fb.y < bb.y + bb.height && bb.y < fb.y + fb.height) fpsClash++; }
+  check("Ô FPS không đè lên nút nào", fpsClash === 0, { fb });
+  await shot("4b-fps");
+  await p.evaluate(() => localStorage.setItem("show_fps", "0"));
   for (const [btn, word] of [["open-shield", "Khiên"], ["open-bag", "quân"]] as const) {
     await p.getByTestId(btn).click();
     await p.getByTestId("extra-panel").waitFor({ timeout: 10000 });
@@ -104,7 +120,7 @@ async function main() {
   await p.getByTestId("scene-msg").waitFor({ timeout: 10000 });
   const btns = await p.getByTestId("edit-toolbar").locator("button").all();
   const msgBox = (await p.getByTestId("scene-msg").boundingBox())!;
-  let clash = 0, rows = new Set<number>();
+  let clash = 0; const rows = new Set<number>();
   for (const bt of btns) { const bb = (await bt.boundingBox())!; rows.add(Math.round(bb.y)); if (overlap(bb, msgBox)) clash++; }
   check(`Xây dựng → Tường: ${btns.length} nút trên ${rows.size} hàng, thông báo không đè nút`, clash === 0 && rows.size === 1, { clash, rows: [...rows] });
   const tray = (await p.getByTestId("tray").boundingBox())!;
@@ -147,6 +163,21 @@ async function main() {
   check("Chạm ngoài → đóng bảng thưởng", (await q.getByTestId("daily-panel").count()) === 0);
   await q.reload({ waitUntil: "domcontentloaded" }); await q.waitForTimeout(3000);
   check("Mở lại trong ngày: không tự bật nữa", (await q.getByTestId("daily-panel").count()) === 0);
+
+  // ---- Mưa chữ trên điện thoại: khung chơi phủ đúng vùng nhìn thấy, ô nhập sát đáy (bàn phím mở thì vùng này co lại) ----
+  await q.goto(`${BASE}/learn/typing`, { waitUntil: "domcontentloaded", timeout: 180000 });
+  await q.getByRole("button", { name: "Bắt đầu" }).click();
+  await q.getByTestId("typing-play").waitFor({ timeout: 30000 });
+  await q.waitForTimeout(800);
+  const tp = await q.evaluate(() => {
+    const box = document.querySelector('[data-testid="typing-play"]')!.getBoundingClientRect();
+    const inp = document.querySelector('input[aria-label="Nghĩa tiếng Việt"]')!.getBoundingClientRect();
+    return { top: Math.round(box.top), h: Math.round(box.height), vh: Math.round(window.visualViewport!.height), gap: Math.round(box.bottom - inp.bottom), pos: getComputedStyle(document.querySelector('[data-testid="typing-play"]')!).position };
+  });
+  check(`Mưa chữ: khung chơi phủ vùng nhìn thấy (${tp.h}/${tp.vh}px), ô nhập cách đáy ${tp.gap}px`, tp.pos === "fixed" && tp.top === 0 && Math.abs(tp.h - tp.vh) <= 1 && tp.gap <= 16, tp);
+  await q.screenshot({ path: path.join(SHOTS, "p15-typing.png") });
+  await q.getByRole("button", { name: "Kết thúc" }).click();
+  await q.waitForTimeout(1500);
 
   // ---- Phase 14: ngữ pháp trên điện thoại (GRM-01..03) ----
   await q.goto(`${BASE}/grammar`, { waitUntil: "domcontentloaded", timeout: 180000 });

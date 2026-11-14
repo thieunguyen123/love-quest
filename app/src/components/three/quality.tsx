@@ -59,7 +59,7 @@ function PerfProbe({ q, setDpr, dpr, badge }: { q: Quality; dpr: number; setDpr:
     s.frames = 0; s.t = 0;
     const perf: Perf = { fps, calls: gl.info.render.calls, tris: gl.info.render.triangles, dpr, tier: q.tier };
     (window as unknown as { __perf: Perf }).__perf = perf;
-    if (badge.current) badge.current.textContent = `${fps} FPS · ${perf.calls} lần vẽ · ${Math.round(perf.tris / 1000)}k tam giác · dpr ${dpr.toFixed(2)} · ${q.tier === "high" ? "Cao" : "Thấp"}`;
+    if (badge.current) badge.current.textContent = `${fps} FPS`;   // chi tiết (lần vẽ, tam giác, dpr) vẫn ở window.__perf
     if (s.warm > 0) { s.warm--; return; }          // bỏ vài giây đầu (đang tải mô hình, biên dịch shader)
     if (document.hidden) return;
     if (fps < 50) { s.low++; s.high = 0; } else if (fps >= 58) { s.high++; s.low = 0; } else { s.low = 0; s.high = 0; }
@@ -84,7 +84,8 @@ export function GameCanvas({ children, paused = false, shadows = true, ...rest }
         <PerfProbe q={q} dpr={dpr} setDpr={setDpr} badge={badge} />
         {children}
       </Canvas>
-      {q.showFps && <div ref={badge} data-testid="fps" className="pointer-events-none absolute left-1/2 top-1 z-40 -translate-x-1/2 whitespace-nowrap rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] text-lime-300">… FPS</div>}
+      {/* góc dưới trái, nằm DƯỚI mọi nút / bảng của cảnh (z thấp) → không bao giờ đè lên thao tác */}
+      {q.showFps && <div ref={badge} data-testid="fps" className="pointer-events-none absolute bottom-2 left-2 z-[5] whitespace-nowrap rounded-full bg-black/60 px-2 py-0.5 font-mono text-[10px] font-bold text-lime-300">… FPS</div>}
     </>
   );
 }
