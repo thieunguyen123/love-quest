@@ -35,6 +35,18 @@ async function main() {
   await p.getByLabel(/Thông báo/).first().click(); await panel.waitFor();
   await p.getByTestId("notif-panel").getByLabel("Đóng").click(); await p.waitForTimeout(300);
   check("Nút ✕ đóng popup thông báo", (await panel.count()) === 0);
+  // ---- Realtime: xu và thông báo đổi ở server → trang tự cập nhật, không bấm gì, không tải lại ----
+  const cr0 = await coinsText();
+  await p.waitForTimeout(2000);
+  await admin.rpc("apply_coins", { p_user: m.id, p_amount: 777, p_reason: "LEVEL_WIN" });   // vd. thưởng thắng màn do server trao
+  const crOk = await p.waitForFunction((v) => Number(document.querySelector('[data-testid="coins"]')?.textContent?.replace(/[^\d]/g, "")) === v, cr0 + 777, { timeout: 8000 }).then(() => true, () => false);
+  check(`Realtime: server cộng 777 xu → thanh trên tự đổi ${cr0} → ${cr0 + 777} (không tải lại)`, crOk);
+  await admin.rpc("apply_coins", { p_user: m.id, p_amount: -777, p_reason: "PURCHASE" });
+  const crBack = await p.waitForFunction((v) => Number(document.querySelector('[data-testid="coins"]')?.textContent?.replace(/[^\d]/g, "")) === v, cr0, { timeout: 8000 }).then(() => true, () => false);
+  check("Realtime: server trừ xu → thanh trên tự giảm", crBack);
+  await admin.rpc("notify", { p_user: m.id, p_type: "TEST", p_title: "Thông báo realtime thử", p_body: "" });
+  const ntOk = await p.getByText("Thông báo realtime thử").first().waitFor({ timeout: 8000 }).then(() => true, () => false);
+  check("Realtime: thông báo mới hiện ngay (toast)", ntOk);
   check("Nhạc nền: trình phát ẩn + nút loa trên thanh trên", (await p.getByTestId("music").count()) === 1 && (await p.getByTestId("music-toggle").isVisible()) && ((await p.getByTestId("music").boundingBox())?.width ?? 9) <= 1);
   await p.getByTestId("music-toggle").click(); await p.waitForTimeout(200);
   check("Bấm loa → 🔇 (tắt nhạc)", (await p.getByTestId("music-toggle").innerText()).includes("🔇"));
@@ -127,8 +139,8 @@ async function main() {
   check("Thông báo không đè khay vật phẩm dưới đáy", !overlap(msgBox, tray));
   await shot("6-edit-walls");
   await p.getByTestId("wall-ring").click();
-  await p.waitForTimeout(300);
-  check("Bấm Bao quanh nhà → 1 thông báo duy nhất", (await p.getByTestId("scene-msg").count()) === 1);
+  const ringMsg = await p.getByTestId("scene-msg").first().innerText({ timeout: 3000 }).catch(() => "");
+  check(`Bấm Bao quanh nhà → 1 thông báo duy nhất ("${ringMsg}")`, ringMsg !== "" && (await p.getByTestId("scene-msg").count()) === 1);
   await p.waitForTimeout(5500);
   check("Thông báo tự ẩn sau vài giây", (await p.getByTestId("scene-msg").count()) === 0);
   await c.close();

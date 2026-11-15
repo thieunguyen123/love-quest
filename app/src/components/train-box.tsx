@@ -24,7 +24,7 @@ export function TrainBox({ info, queue, coins: coins0, freeSlots, compact = fals
   useEffect(() => {
     if (collecting.current || !mine.some((q) => Date.parse(q.done_at) <= now)) return;
     collecting.current = true;
-    void createClient().rpc("collect_training").then(() => { play("coin"); setMsg({ ok: true, t: `${info.emoji} Lính đã luyện xong — đang đứng cạnh nhà máy!` }); router.refresh(); setTimeout(() => { collecting.current = false; }, 1500); });
+    void createClient().rpc("collect_training").then(() => { play("coin"); void refreshCoins(); setMsg({ ok: true, t: `${info.emoji} Lính đã luyện xong — đang đứng cạnh nhà máy!` }); router.refresh(); setTimeout(() => { collecting.current = false; }, 1500); });
   }, [now, mine, info, router]);
   async function train(qty: number) {
     setBusy(true); setMsg(null);

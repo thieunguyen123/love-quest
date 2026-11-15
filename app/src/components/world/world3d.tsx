@@ -7,7 +7,7 @@ import { Physics, RigidBody, CuboidCollider, CylinderCollider, type RapierRigidB
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, realtimeReady } from "@/lib/supabase/client";
 import { MY_HOUSE, PARTNER_HOUSE, ZONES } from "./data";
 import { mergeInput, nearestZone, spawnAt, type Input } from "./physics";
 import { House, HOUSE_LOT, type HouseInfo } from "./houses";
@@ -149,12 +149,13 @@ export default function World3D(p: WorldProps) {
       .subscribe();
     chanRef.current = ch;
     // Bị tấn công lúc đang ở làng → nhà rung + nổ + thông báo, rồi tải lại trạng thái nhà
-    const nc = sb.channel(`world-notif-${p.meId}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${p.meId}` }, ({ new: n }) => {
+    const nc = sb.channel(`world-notif-${p.meId}`);
+    void realtimeReady(sb).then(() => nc.on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${p.meId}` }, ({ new: n }) => {
       if ((n as { type: string }).type !== "ATTACKED") return;
       myHit.current = 1; play("boom");
       setToast(`💥 ${(n as { title: string }).title} ${(n as { body: string }).body}`);
       setTimeout(() => { setToast(null); router.refresh(); }, 3500);
-    }).subscribe();
+    }).subscribe());
     let last = { x: 0, z: 0, h: 0, at: 0 };
     const iv = setInterval(() => {
       const q = pose.current, now = Date.now();

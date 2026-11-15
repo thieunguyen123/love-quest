@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, realtimeReady } from "@/lib/supabase/client";
 import { play } from "@/lib/sfx";
 
 type Notif = { id: number; type: string; title: string; body: string; data: { level?: number }; read_at: string | null; created_at: string };
@@ -18,7 +18,8 @@ export function NotificationBell({ userId }: { userId: string }) {
   useEffect(() => {
     const sb = createClient();
     sb.from("notifications").select("*").order("created_at", { ascending: false }).limit(30).then(({ data }) => setItems((data as Notif[]) ?? []));
-    const ch = sb.channel(`live-${userId}`)
+    let ch: ReturnType<typeof sb.channel> | null = null, gone = false;
+    void realtimeReady(sb).then(() => { if (gone) return; ch = sb.channel(`live-${userId}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` }, (p) => {
         const n = p.new as Notif;
         setItems((x) => [n, ...x]); setToast(n); play("coin"); router.refresh();
@@ -26,8 +27,8 @@ export function NotificationBell({ userId }: { userId: string }) {
         try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(n.title, { body: n.body }); } catch { /* ignore */ }
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "levels" }, () => router.refresh())
-      .subscribe();
-    return () => { void sb.removeChannel(ch); };
+      .subscribe(); });
+    return () => { gone = true; if (ch) void sb.removeChannel(ch); };
   }, [userId, router]);
 
   const unread = items.filter((i) => !i.read_at).length;

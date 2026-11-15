@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { refreshCoins } from "@/components/coins";
 import { speak, defaultRate } from "@/lib/tts";
 import { play } from "@/lib/sfx";
 import { Card, btnGhost, btnPrimary, inputCls } from "@/components/ui";
@@ -26,6 +27,7 @@ export default function PlayClient({ attemptId, order, practice, revealMs }: { a
 
   const finish = useCallback(async () => {
     await sb.rpc("submit_attempt", { p_attempt: attemptId });
+    void refreshCoins();   // nộp bài có thể đóng màn → thưởng / trừ xu thắng-thua
     router.replace(`/levels/${order}/result?attempt=${attemptId}`);
   }, [sb, attemptId, order, router]);
 

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { refreshCoins } from "@/components/coins";
 import { speak, defaultRate } from "@/lib/tts";
 import { Card, btnGhost, btnPrimary } from "@/components/ui";
 import { StartButton } from "@/components/start-button";
@@ -57,6 +58,7 @@ export default function Flashcards({ level, words, known, bonusClaimed }: {
     const { data, error } = await createClient().rpc("finish_flashcards", { p_level: level.id });
     if (error) return setErr("Chưa hoàn tất được, hãy đánh dấu hết các thẻ");
     setBonus(data as number);
+    void refreshCoins();
     router.refresh();
   }
 

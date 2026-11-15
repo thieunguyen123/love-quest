@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { refreshCoins } from "@/components/coins";
 import { speak, defaultRate } from "@/lib/tts";
 import { play } from "@/lib/sfx";
 import { difficulty, matchesAny, pendingCoins, pickWord, type TypingCfg } from "@/lib/game/typing";
@@ -55,7 +56,7 @@ export default function TypingGame({ cfg, levels, words, usedToday, myRecord, pa
       p_duration_ms: Math.round(performance.now() - s.start), p_hit_ids: s.hitIds, p_missed_ids: s.missIds,
     });
     setSaving(false);
-    if (error) setErr("Không lưu được kết quả ván này"); else setResult(data as Result);
+    if (error) setErr("Không lưu được kết quả ván này"); else { setResult(data as Result); void refreshCoins(); }
     setLostList([...s.lost]);
     play(s.lives <= 0 ? "lose" : "coin");
   }, [source]);
