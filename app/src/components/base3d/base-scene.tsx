@@ -26,6 +26,7 @@ import { Badge, GameCanvas, InstancedModel, useQuality, type Inst } from "@/comp
 import { autoDeploys, createSim, deploy, q as quant, step, type BattleOutcome, type Deploy, type EndReason, type Sim, type Snapshot } from "@/lib/game/sim";
 import { BattleField, DeployZones } from "./battlefield";
 import { BuildPanel, type CatalogItem } from "./build-panel";
+import { ArmyPicker } from "./army-picker";
 import { ObjectPanel, type Picked } from "./object-panel";
 
 export type Econ = {
@@ -277,6 +278,8 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
   const [left, setLeft] = useState<Record<string, number>>({});
   const [selUnit, setSelUnit] = useState<string | null>(null);
   const [busyAtk, setBusyAtk] = useState(false);
+  const [picking, setPicking] = useState(false);                                     // bước chọn quân (BTL-01)
+  const [shieldHit, setShieldHit] = useState<{ lost: Record<string, number> } | null>(null);   // khiên bí mật chặn → mất quân
   const [sending, setSending] = useState(false);
   const [sendErr, setSendErr] = useState<string | null>(null);
   const [fast, setFast] = useState(false);
@@ -429,14 +432,16 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
   }
 
   // ---------- tấn công: bắt đầu → rải quân → gửi nhật ký ----------
-  async function startAttack() {
+  async function startAttack(pick: Record<string, number>) {
     if (!attack) return;
-    if (!window.confirm(attack.myShield ? "Bạn đang bật khiên. Đi tấn công sẽ làm VỠ khiên của bạn. Vẫn tấn công?" : `Tấn công nhà ${data.owner.name}?${attack.total > 0 ? " (mất 1 lượt hôm nay)" : ""}`)) return;
+    if (attack.myShield && !window.confirm("Bạn đang bật khiên. Đi tấn công sẽ làm VỠ khiên của bạn. Vẫn tấn công?")) return;
     setBusyAtk(true); setMsg(null);
-    const res = await fetch("/api/attack/start", { method: "POST" }).catch(() => null);
+    const res = await fetch("/api/attack/start", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ army: pick }) }).catch(() => null);
     const j = res ? await res.json().catch(() => null) : null;
     setBusyAtk(false);
+    if (res?.ok && j?.blocked) { play("boom"); setPicking(false); setShieldHit({ lost: j.lost ?? pick }); void refreshCoins(); return; }
     if (!res?.ok || !j?.snapshot) { play("wrong"); return setMsg({ ok: false, t: RPC_MSG[j?.error] ?? "Không tấn công được" }); }
+    setPicking(false);
     const sim = createSim(j.snapshot as Snapshot);
     log.current = []; endTick.current = null; hpRef.current = sim.snap.house.hp;
     setLeft({ ...sim.left }); setSelUnit(sim.snap.army[0]?.unit ?? null); setResult(null); setSendErr(null); setFast(false);
@@ -652,7 +657,24 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
       {mode === "own" && shop && <BuildPanel catalog={catalog} coins={coins} onClose={() => setShop(false)} onBought={() => undefined} />}
 
       {/* do thám nhà người ấy → bảng Tấn công (BTL-01) */}
-      {mode === "partner" && attack && !fight && (
+      {mode === "partner" && attack && !fight && picking && (
+        <div className="absolute inset-x-3 bottom-3 z-20 mx-auto max-h-[85%] max-w-md overflow-y-auto rounded-2xl bg-white/95 p-3 shadow-xl">
+          <ArmyPicker army={attack.army.map((a) => ({ unit: a.unit, qty: a.qty, emoji: a.emoji, name: a.name ?? a.unit }))} busy={busyAtk}
+            onConfirm={(pick) => void startAttack(pick)} onCancel={() => { setPicking(false); setMsg(null); }} />
+        </div>
+      )}
+      {mode === "partner" && shieldHit && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/40 p-4" data-testid="attack-blocked">
+          <div className="w-full max-w-sm space-y-2 rounded-3xl bg-white p-5 text-center shadow-2xl">
+            <div className="text-5xl">🛡️💥</div>
+            <div className="text-lg font-extrabold text-pink-700">Nhà {data.owner.name} đang có khiên!</div>
+            <p className="text-sm font-semibold text-slate-600">Khiên bí mật đã tiêu diệt toàn bộ quân bạn mang đi:</p>
+            <div className="text-xl font-black">{Object.entries(shieldHit.lost).map(([u, n]) => `${attack?.army.find((a) => a.unit === u)?.emoji ?? "🪖"}×${n}`).join("  ")}</div>
+            <button className="mt-2 w-full rounded-xl bg-pink-500 py-2 font-extrabold text-white" onClick={() => { setShieldHit(null); router.refresh(); }} data-testid="blocked-close">Đóng</button>
+          </div>
+        </div>
+      )}
+      {mode === "partner" && attack && !fight && !picking && !shieldHit && (
         <div className="absolute inset-x-3 bottom-3 z-10 mx-auto max-w-md rounded-2xl bg-white/95 p-3 shadow-xl" data-testid="attack-hud">
           <div className="flex items-center justify-around text-center">
             <div><div className="text-xl font-black text-red-600">{Math.round(attack.dps)}</div><div className="text-[10px] font-bold">Sức đánh / giây</div></div>
@@ -663,7 +685,7 @@ export default function BaseScene({ mode, data, catalog = [], coins: coins0 = 0,
           {attack.army.length > 0 && <div className="mt-1 text-center text-[11px] font-semibold text-slate-600">Quân của bạn: {attack.army.map((s) => `${s.emoji}×${s.qty}`).join("  ")} · bẫy thì không nhìn thấy đâu 👀</div>}
           {attack.myShield && !attack.reason && <p className="mt-1 text-center text-xs font-bold text-amber-700">⚠️ Tấn công sẽ làm vỡ khiên của bạn.</p>}
           {attack.reason && <p className="mt-1 text-center text-xs font-bold text-amber-700">{attack.reason}</p>}
-          <button className={`${btnHot} mt-2 w-full`} disabled={!!attack.reason || busyAtk} onClick={startAttack} data-testid="attack-btn">{busyAtk ? "Đang vào trận…" : "⚔️ Tấn công!"}</button>
+          <button className={`${btnHot} mt-2 w-full`} disabled={!!attack.reason || busyAtk} onClick={() => { setPicking(true); setMsg(null); }} data-testid="attack-btn">⚔️ Tấn công!</button>
         </div>
       )}
 

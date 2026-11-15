@@ -22,6 +22,8 @@ async function main() {
   await admin.from("word_progress").delete().eq("user_id", mid);
   await admin.from("coin_transactions").delete().eq("user_id", mid);
   await admin.from("user_house").delete().eq("user_id", mid);
+  // màn 1 phải đang mở (test khác — vd test thông luồng — có thể đã chơi xong & đóng màn 1); admin chỉ sửa được màn OPEN/LOCKED
+  await admin.from("levels").update({ status: "OPEN", closed_at: null, rewarded_at: null, winner_id: null, first_finished_at: null, deadline_at: null }).eq("order_no", 1);
   await admin.from("profiles").update({ onboarded_at: null, coins: 0, display_name: "" }).eq("id", mid);
 
   const bad = createClient(URL, ANON, { auth: { persistSession: false } });

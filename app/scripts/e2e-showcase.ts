@@ -3,7 +3,7 @@
 // Chạy: bật server test :3101 rồi `IT_ENV=.env.test npx tsx scripts/e2e-showcase.ts [cấp nhà…]` → .e2e-shots/show-*.png
 import path from "node:path";
 import { admin, resetGame, moheoLogin, utdacLogin, ensureOnboarded } from "./it-lib";
-import { BASE, SHOTS, check, context, finish, launch, sessionCookies, watchErrors } from "./e2e-lib";
+import { BASE, SHOTS, check, context, finish, launch, sessionCookies, watchErrors, pickAllAndGo } from "./e2e-lib";
 import type { Page } from "playwright";
 
 const shot = (p: Page, name: string) => p.screenshot({ path: path.join(SHOTS, `show-${name}.png`) });
@@ -63,6 +63,7 @@ async function main() {
   await pu.goto(`${BASE}/base/partner?fps=1&gfx=high`, { waitUntil: "domcontentloaded", timeout: 180000 });
   await pu.getByTestId("attack-hud").waitFor({ timeout: 180000 }); await settle(pu, 2000);
   await pu.getByTestId("attack-btn").click();
+  await pickAllAndGo(pu);
   await pu.getByTestId("troop-bar").waitFor({ timeout: 120000 });
   await pu.getByTestId("auto-deploy").click();
   await pu.waitForTimeout(9000); await shot(pu, "battle-1");

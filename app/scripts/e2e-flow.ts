@@ -2,9 +2,13 @@
 // TEST THÔNG LUỒNG toàn game bằng trình duyệt thật (2 người chơi cùng lúc), chạy trên DB TEST (xoá sạch dữ liệu game!).
 // Mỡ heo = A (PLAYER), Út đặc = B (ADMIN). Câu hỏi được trả lời qua giao diện; đáp án đúng tra trong DB (A đúng hết, B sai hết).
 // Chạy: bật server test :3101 rồi `npm run test:flow`
+import fs from "node:fs";
+import path from "node:path";
 import type { Page, BrowserContext } from "playwright";
 import { admin, resetGame } from "./it-lib";
-import { BASE, SHOTS, check, finish, launch, context, sessionCookies, watchErrors } from "./e2e-lib";
+import { BASE, SHOTS, check, finish, launch, context, sessionCookies, watchErrors, pickAllAndGo } from "./e2e-lib";
+// overlay iframe của làng 3D (không lẫn với trình phát nhạc YouTube ẩn, cũng là iframe)
+const OVERLAY = 'iframe:not([src*="youtube"])';
 
 const shot = (p: Page, n: string) => p.screenshot({ path: `${SHOTS}/flow-${n}.png` }).catch(() => undefined);
 const uid = async (email: string) => (await admin.auth.admin.listUsers()).data.users.find((u) => u.email === email)!.id;
@@ -18,6 +22,8 @@ async function go(p: Page, path: string, label = path) {
   const r = await p.goto(BASE + path, { timeout: 120000, waitUntil: "domcontentloaded" });
   const status = r?.status() ?? 0;
   await p.waitForLoadState("load").catch(() => undefined);
+  // (app)/loading.tsx: nội dung trang stream sau màn tải → chờ <main> có chữ thật (trang không có <main> thì bỏ qua)
+  await p.waitForFunction(() => { const m = document.querySelector("main"); return !m || (m.innerText.trim().length > 0 && !document.querySelector('[data-testid="page-loading"]')); }, null, { timeout: 90000 }).catch(() => undefined);
   const body = await p.locator("body").innerText().catch(() => "");
   const bad = /Runtime Error|Unhandled Runtime|Application error|Internal Server Error|This page could not be found/.test(body);
   check(`mở ${label} không lỗi (HTTP ${status})`, status < 500 && !bad, { status, body: body.slice(0, 300) });
@@ -45,7 +51,11 @@ async function onboard(p: Page, name: string, colorIdx: number) {
 const idle = (p: Page) => p.goto("about:blank").catch(() => undefined);
 
 async function worldReady(p: Page) {
-  await p.waitForFunction(() => { const w = (window as any).__world; return !!w && w.pose.current.y !== undefined && w.pose.current.y < 0.8; }, null, { timeout: 120000, polling: 250 });
+  await p.waitForFunction(() => { const w = (window as any).__world; return !!w && w.pose.current.y !== undefined && w.pose.current.y < 0.8; }, null, { timeout: 120000, polling: 250 }).catch(async (e) => {
+    await shot(p, `dbg-world-${Date.now()}`);
+    console.log("worldReady lỗi", p.url(), await p.evaluate(() => { const w = (window as any).__world; return w ? JSON.stringify(w.pose?.current ?? null) : "chưa có __world"; }), (await p.locator("body").innerText().catch(() => "")).slice(0, 300));
+    throw e;
+  });
   await p.waitForTimeout(500);
 }
 
@@ -124,9 +134,9 @@ async function main() {
   await pa.keyboard.up("ArrowUp");
   check("Lái xe tới gần Thư viện", (await pa.evaluate(() => (window as any).__world.near.current?.id)) === "library");
   await pa.keyboard.press("KeyE");
-  const ov = pa.frameLocator("iframe");
+  const ov = pa.frameLocator(OVERLAY);
   await ov.locator("main").waitFor({ timeout: 180000 });
-  check("Nhấn E → mở Thư viện dạng overlay trên nền 3D", (await pa.locator("iframe").getAttribute("src")) === "/learn");
+  check("Nhấn E → mở Thư viện dạng overlay trên nền 3D", (await pa.locator(OVERLAY).getAttribute("src")) === "/learn");
   await ov.locator('a[href="/learn/1"]').first().click();
   await ov.getByRole("button", { name: /Đã thuộc/ }).waitFor({ timeout: 180000 });
   const c0 = await coins(A_ID);
@@ -137,7 +147,7 @@ async function main() {
   check("Học hết flashcard màn 1 lần đầu → được thưởng xu", await coins(A_ID) > c0, { before: c0, after: await coins(A_ID) });
   await shot(pa, "02-overlay-flashcard");
   await pa.keyboard.press("Escape"); await pa.waitForTimeout(800);
-  check("Esc đóng overlay, về làng", await pa.locator("iframe").count() === 0);
+  check("Esc đóng overlay, về làng", await pa.locator(OVERLAY).count() === 0);
 
   console.log("\n== 3. Màn 1 thi đấu: A chơi trước (đúng hết) → đếm ngược 48h ==");
   const ra = await playLevel(pa, 1, "RANKED", true);
@@ -174,7 +184,8 @@ async function main() {
   await pa.getByTestId("open-shop").click();
   const panel = pa.getByTestId("build-panel");
   // BASE-04: lính luyện ở nhà máy — test cho luyện nhanh (1 giây/lính), trả lại giá trị gốc ở cuối bước 7
-  const swordStats = (await admin.from("shop_items").select("stats").eq("code", "sword").single()).data!.stats;
+  // giá trị gốc lấy từ file seed (không lấy từ DB: lần chạy trước dừng giữa chừng có thể đã để lại train_sec = 1)
+  const swordStats = (JSON.parse(fs.readFileSync(path.resolve(__dirname, "../supabase/seed/shop_items.json"), "utf8")) as any[]).find((x) => x.code === "sword").stats;
   await admin.from("shop_items").update({ stats: { ...swordStats, train_sec: 1 } }).eq("code", "sword");
   await panel.getByRole("button", { name: "🏭 Nhà máy quân" }).click();
   const cBuy = await coins(A_ID);
@@ -228,7 +239,7 @@ async function main() {
   const fence = await pa.evaluate(() => (window as any).__base.placed.find((p: any) => p.kind === "DECOR"));
   const fp = await proj(fence.x, fence.z, 1);
   await pa.mouse.click(canvasBox.x + fp.x, canvasBox.y + fp.y); await pa.waitForTimeout(400);
-  await pa.getByRole("button", { name: "📦 Cất vào kho" }).click();
+  await pa.getByRole("button", { name: "Cất vào kho" }).click();
   check("Cất hàng rào vào kho", await pa.getByTestId("tray").getByText("Hàng rào gỗ").count() > 0);
   await pa.getByTestId("tray").getByText("Hàng rào gỗ").click();
   const tgt = await proj(26, 14, 1);
@@ -265,6 +276,7 @@ async function main() {
   await pb.waitForFunction(() => !!(window as any).__base, null, { timeout: 120000 });
   pb.once("dialog", (d) => d.accept());
   await pb.getByTestId("attack-btn").click();
+  await pickAllAndGo(pb);   // BTL-01: chọn quân mang đi
   // BTL-07: vào trận rải quân → "Tự rải hết" → tua ×2 → chờ hết trận (server chạy lại mô phỏng từ nhật ký)
   await pb.getByTestId("troop-bar").waitFor({ timeout: 120000 });
   await pb.getByTestId("auto-deploy").click();
@@ -304,9 +316,19 @@ async function main() {
   }
   await pa.getByRole("button", { name: "🛡️ Bật khiên" }).click(); await pa.waitForTimeout(2000);
   check("Bật khiên miễn phí", ((await admin.from("shields").select("id").eq("user_id", A_ID).not("activated_at", "is", null)).data ?? []).length === 1);
+  await admin.from("attacks").update({ created_at: new Date(Date.now() - 2 * 3600000).toISOString() }).eq("defender_id", A_ID);   // hết 1 giờ bảo hộ sau trận ở bước 7
   await go(pb, "/base/partner");
   await pb.getByTestId("attack-hud").waitFor({ timeout: 120000 });
-  check("Người ấy có khiên → nút tấn công khoá, nêu lý do", !(await pb.getByTestId("attack-btn").isEnabled()) && (await pb.getByTestId("attack-hud").innerText()).includes("khiên"));
+  // BTL-04: khiên là bí mật — B không thấy; xuất quân vào thì mất toàn bộ quân đã chọn
+  check("Người ấy có khiên → B KHÔNG thấy khiên, nút tấn công vẫn bấm được", (await pb.getByTestId("attack-btn").isEnabled()) && !(await pb.getByTestId("attack-hud").innerText()).includes("khiên"));
+  const bArmy0 = ((await admin.from("user_army").select("quantity").eq("user_id", B_ID)).data ?? []).reduce((x: number, r: any) => x + r.quantity, 0);
+  await pb.getByTestId("attack-btn").click();
+  await pickAllAndGo(pb);
+  await pb.getByTestId("attack-blocked").waitFor({ timeout: 60000 });
+  await shot(pb, "09b-khien-chan");
+  const bArmy1 = ((await admin.from("user_army").select("quantity").eq("user_id", B_ID)).data ?? []).reduce((x: number, r: any) => x + r.quantity, 0);
+  check(`Xuất quân vào nhà có khiên → mất toàn bộ quân (${bArmy0} → ${bArmy1})`, bArmy0 > 0 && bArmy1 === 0);
+  await pb.getByTestId("blocked-close").click();
 
   console.log("\n== 10. Hai người cùng ở làng: thả tim realtime ==");
   await go(pa, "/world"); await worldReady(pa);

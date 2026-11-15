@@ -48,8 +48,10 @@ async function main() {
   const ntOk = await p.getByText("Thông báo realtime thử").first().waitFor({ timeout: 8000 }).then(() => true, () => false);
   check("Realtime: thông báo mới hiện ngay (toast)", ntOk);
   check("Nhạc nền: trình phát ẩn + nút loa trên thanh trên", (await p.getByTestId("music").count()) === 1 && (await p.getByTestId("music-toggle").isVisible()) && ((await p.getByTestId("music").boundingBox())?.width ?? 9) <= 1);
+  const spk0 = await p.getByTestId("music-toggle").innerText();   // test tắt nhạc sẵn (e2e-lib) → đang 🔇
   await p.getByTestId("music-toggle").click(); await p.waitForTimeout(200);
-  check("Bấm loa → 🔇 (tắt nhạc)", (await p.getByTestId("music-toggle").innerText()).includes("🔇"));
+  const spk1 = await p.getByTestId("music-toggle").innerText();
+  check(`Bấm loa → đổi bật/tắt nhạc (${spk0} → ${spk1})`, spk0 !== spk1 && /🔊|🔇/.test(spk1));
   await p.getByTestId("music-toggle").click(); await p.waitForTimeout(200);
 
   // ---- căn cứ: chạm nhà → popup → Sửa nhà, xu đổi ngay ----
@@ -143,6 +145,29 @@ async function main() {
   check(`Bấm Bao quanh nhà → 1 thông báo duy nhất ("${ringMsg}")`, ringMsg !== "" && (await p.getByTestId("scene-msg").count()) === 1);
   await p.waitForTimeout(5500);
   check("Thông báo tự ẩn sau vài giây", (await p.getByTestId("scene-msg").count()) === 0);
+
+  // ---- BTL-01: chọn quân trước khi tấn công (điện thoại) ----
+  await admin.from("user_army").upsert([{ user_id: m.id, unit_code: "sword", quantity: 8 }, { user_id: m.id, unit_code: "knight", quantity: 3 }]);
+  await p.goto(`${BASE}/base/partner`, { waitUntil: "domcontentloaded", timeout: 180000 });
+  await p.getByTestId("attack-btn").waitFor({ timeout: 120000 });
+  await p.getByTestId("attack-btn").click();
+  await p.getByTestId("army-picker").waitFor({ timeout: 15000 });
+  check("Bấm Tấn công → bảng chọn quân hiện hình 2 loại lính", (await p.getByTestId("pick-sword").count()) === 1 && (await p.getByTestId("pick-knight").count()) === 1);
+  check("Chưa chọn lính → nút Xuất quân khoá", !(await p.getByTestId("army-go").isEnabled()));
+  await p.getByTestId("pick-sword").click();
+  for (let i = 0; i < 4; i++) await p.getByTestId("pick-plus").click();
+  await p.getByTestId("pick-minus").click();
+  check("Chạm Lính kiếm, + 4 lần, − 1 lần → chọn 3", (await p.getByTestId("pick-count").innerText()) === "3" && (await p.getByTestId("picked-sword").innerText()) === "3");
+  const pk = (await p.getByTestId("army-picker").boundingBox())!;
+  check("Bảng chọn quân nằm gọn màn hình điện thoại", pk.x >= 0 && pk.x + pk.width <= 390 && pk.y >= 0 && pk.y + pk.height <= 844);
+  await shot("7-army-picker");
+  await p.getByTestId("army-go").click();
+  await p.getByTestId("troop-bar").waitFor({ timeout: 60000 });
+  const bar = await p.getByTestId("troop-bar").innerText();
+  const home = (await admin.from("user_army").select("unit_code,quantity").eq("user_id", m.id)).data ?? [];
+  check(`Trận chỉ có 3 Lính kiếm đã chọn; ở nhà còn 5 Lính kiếm + 3 Kỵ binh`, (await p.getByTestId("troop-sword").innerText()).includes("×3") && (await p.getByTestId("troop-knight").count()) === 0
+    && home.find((r: any) => r.unit_code === "sword")?.quantity === 5 && home.find((r: any) => r.unit_code === "knight")?.quantity === 3, { bar, home });
+  await shot("8-troop-bar");
   await c.close();
 
   // ---- Phase 13: điểm danh & nhiệm vụ (DAY-01..03) ----
@@ -213,6 +238,38 @@ async function main() {
   const sw = await q.evaluate(() => document.documentElement.scrollWidth);
   check(`Trang ngữ pháp không tràn ngang (rộng ${sw})`, sw <= 390);
   await q.screenshot({ path: path.join(SHOTS, "p14-3-result.png") });
+
+  // ---- Admin (ADM-00): menu & tổng quan, cấu hình chia nhóm — điện thoại + máy tính ----
+  for (const mobile of [true, false]) {
+    const ca = await context(b, await sessionCookies("utdac@lovequest.local", "utdac-dev-2026"), mobile);
+    const pa = await ca.newPage(); watchErrors(pa, `admin ${mobile ? "điện thoại" : "máy tính"}`);
+    const tag = mobile ? "mobile" : "desktop";
+    await pa.goto(`${BASE}/admin`, { waitUntil: "domcontentloaded", timeout: 180000 });
+    await pa.getByRole("heading", { name: /Tổng quan/ }).waitFor({ timeout: 60000 });
+    check(`[${tag}] /admin: menu 5 mục + tổng quan 2 người chơi`, (await pa.locator('[data-testid^="admin-nav-"]').count()) === 5 && (await pa.locator("main").innerText()).includes("Mỡ heo"));
+    const sw = await pa.evaluate(() => document.documentElement.scrollWidth);
+    check(`[${tag}] trang admin không tràn ngang (rộng ${sw})`, sw <= (mobile ? 390 : 1366));
+    await pa.screenshot({ path: path.join(SHOTS, `adm-${tag}-home.png`), fullPage: true });
+    await pa.getByTestId("admin-nav-config").click();
+    await pa.getByPlaceholder(/Tìm theo mô tả/).waitFor({ timeout: 60000 });
+    await pa.getByPlaceholder(/Tìm theo mô tả/).fill("khiên");
+    await pa.waitForTimeout(300);
+    check(`[${tag}] Cấu hình: tìm "khiên" → nhóm Khiên có SHIELD_PRICE`, (await pa.getByTestId("cfg-SHIELD_PRICE").isVisible()) && (await pa.getByTestId("cfg-TYPING_LIVES").count()) === 0);
+    await pa.screenshot({ path: path.join(SHOTS, `adm-${tag}-config.png`), fullPage: true });
+    if (!mobile) {
+      await pa.getByPlaceholder(/Tìm theo mô tả/).fill("dấu");
+      const sw2 = pa.getByTestId("cfg-TYPING_ALLOW_NO_DIACRITICS").getByRole("switch");
+      const before = await sw2.getAttribute("aria-checked");
+      await sw2.click(); await pa.getByTestId("cfg-TYPING_ALLOW_NO_DIACRITICS").getByRole("button", { name: "Lưu" }).click();
+      await pa.getByTestId("cfg-TYPING_ALLOW_NO_DIACRITICS").getByText("✓ Đã lưu").waitFor({ timeout: 15000 });
+      const v = (await admin.from("game_config").select("value").eq("key", "TYPING_ALLOW_NO_DIACRITICS").single()).data!.value;
+      check(`Công tắc true/false lưu đúng kiểu (${before} → ${v})`, String(v) === (before === "true" ? "false" : "true") && typeof v === "boolean");
+      await admin.from("game_config").update({ value: before === "true" }).eq("key", "TYPING_ALLOW_NO_DIACRITICS");
+      await pa.getByTestId("admin-nav-season").click();
+      check("Reset mùa ở trang riêng, cần gõ RESET", await pa.getByLabel("Xác nhận reset").waitFor({ timeout: 30000 }).then(() => true, () => false));
+    }
+    await ca.close();
+  }
   await b.close();
   finish();
 }

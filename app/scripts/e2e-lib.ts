@@ -32,6 +32,8 @@ export async function context(browser: Browser, cookies?: Awaited<ReturnType<typ
   const c = await browser.newContext(mobile ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : { viewport: { width: 1366, height: 860 } });
   if (cookies) await c.addCookies(cookies);
   // bảng điểm danh tự bật (DAY-01) che trang → các test khác coi như đã xem hôm nay
+  // nhạc nền YouTube (trình phát ẩn) tốn CPU giải mã video trên Chrome không GPU → tắt trong test
+  await c.addInitScript(() => { try { localStorage.setItem("music", "off"); } catch { /* bỏ qua */ } });
   if (!dailyPopup) await c.addInitScript(() => { try { localStorage.setItem("lq:daily-auto", new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(new Date())); } catch { /* bỏ qua */ } });
   return c;
 }
@@ -39,4 +41,15 @@ export async function context(browser: Browser, cookies?: Awaited<ReturnType<typ
 export function watchErrors(p: Page, label: string) {
   p.on("pageerror", (e) => check(`[${label}] không có lỗi JS: ${e.message.slice(0, 160)}`, false));
   p.on("console", (m) => { if (m.type() === "error" && !/favicon|Download the React DevTools|WebGL|GPU stall|net::ERR|Failed to load resource/.test(m.text())) console.log(`  [console.error ${label}]`, m.text().slice(0, 200)); });
+}
+
+/** BTL-01: bước chọn quân — chọn hết mọi loại lính rồi Xuất quân */
+export async function pickAllAndGo(p: import("playwright").Page) {
+  await p.getByTestId("army-picker").waitFor({ timeout: 30000 });
+  for (const card of await p.locator('[data-testid^="pick-"]').all()) {
+    const id = await card.getAttribute("data-testid");
+    if (!id || ["pick-minus", "pick-plus", "pick-all", "pick-count"].includes(id)) continue;
+    await card.click(); await p.getByTestId("pick-all").click();
+  }
+  await p.getByTestId("army-go").click();
 }

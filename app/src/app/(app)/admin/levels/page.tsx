@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/session";
 import { Card } from "@/components/ui";
-import { AdminNav } from "@/components/admin-nav";
 
 export default async function AdminLevels() {
   const { supabase } = await requireAdmin();
@@ -12,9 +11,11 @@ export default async function AdminLevels() {
   const count = new Map<string, number>();
   words?.forEach((w) => count.set(w.level_id, (count.get(w.level_id) ?? 0) + 1));
   return (
-    <div className="space-y-4">
-      <AdminNav active="levels" />
-      <h1 className="text-2xl font-extrabold text-love-700">Admin – Màn & từ vựng</h1>
+    <>
+      <div>
+        <h1 className="text-2xl font-extrabold text-love-700">🗺️ Màn & từ vựng</h1>
+        <p className="text-sm text-love-700/70">Bấm <b>Sửa</b> để đổi chủ đề, số câu, thời gian, thêm từ hoặc nhập từ CSV. Ô đỏ/vàng = màn còn thiếu từ.</p>
+      </div>
       <Card className="overflow-x-auto !p-0">
         <table className="w-full text-sm">
           <thead className="bg-love-50 text-left"><tr>{["Màn", "Chủ đề", "CEFR", "Từ (có/cần)", "Câu", "Giây", "Thưởng", "Trạng thái", ""].map((h) => <th key={h} className="px-3 py-2">{h}</th>)}</tr></thead>
@@ -38,6 +39,6 @@ export default async function AdminLevels() {
           </tbody>
         </table>
       </Card>
-    </div>
+    </>
   );
 }

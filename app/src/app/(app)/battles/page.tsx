@@ -19,7 +19,7 @@ export default async function BattlesPage({ searchParams }: { searchParams: Prom
         <Card key={a.id} className="flex items-center gap-3">
           <div className="text-3xl">{a.attacker_id === me.id ? "⚔️" : "🛡️"}</div>
           <div className="flex-1 text-sm"><div className="font-bold">{name(a.attacker_id)} → {name(a.defender_id)}</div>
-            <div>{a.status === "PENDING" ? "⏳ đang diễn ra…" : a.status === "EXPIRED" ? "🏳️ bỏ dở — không gây sát thương" : <>−{a.damage} HP · {a.loot} xu · còn {a.defender_hp_after} HP{a.defender_hp_after === 0 ? " 💥" : ""}</>}</div>
+            <div>{a.status === "PENDING" ? "⏳ đang diễn ra…" : a.status === "EXPIRED" ? "🏳️ bỏ dở — quân đã về, không gây sát thương" : a.status === "BLOCKED" ? `🛡️ bị khiên chặn — mất ${Object.values((a.army ?? {}) as Record<string, number>).reduce((x, y) => x + y, 0)} lính` : <>−{a.damage} HP · {a.loot} xu · còn {a.defender_hp_after} HP{a.defender_hp_after === 0 ? " 💥" : ""}</>}</div>
             <div className="text-xs text-love-700/60">{new Date(a.created_at).toLocaleString("vi-VN")}</div></div>
           <Link href={`/battle/${a.id}`} className="text-sm font-bold underline text-love-600">Xem</Link>
           {a.defender_id === me.id && <ButtonLink href="/base/partner" ghost>Trả thù</ButtonLink>}

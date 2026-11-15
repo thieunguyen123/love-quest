@@ -89,7 +89,8 @@ export default function World3D(p: WorldProps) {
   const keys = useRef<Keys>({ up: false, down: false, left: false, right: false, brake: false, boost: false });
   const joy = useRef({ x: 0, y: 0 });
   const input = useRef<() => Input>(() => mergeInput(keys.current, joy.current));
-  const start = useMemo(() => spawnAt(p.at), [p.at]);
+  // 2 người cùng xuất phát 1 chỗ → mỗi người lệch 1 bên (theo thứ tự id trong coupleKey), xe không chồng lên nhau
+  const start = useMemo(() => spawnAt(p.at, p.coupleKey.startsWith(p.meId) ? -1 : 1), [p.at, p.coupleKey, p.meId]);
   const pose = useRef<CarPose>({ ...start, speed: 0 });
   const remote = useRef<Remote | null>(null);
   const cam = useRef<{ mode: CamMode; zoom: number }>({ mode: "iso", zoom: 1 });

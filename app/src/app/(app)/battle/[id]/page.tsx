@@ -25,7 +25,8 @@ export default async function BattlePage({ params }: { params: Promise<{ id: str
     </div>
   );
   if (a.status === "PENDING") return <div className="space-y-3">{head}<Card className="text-center font-bold">⏳ Trận này đang diễn ra — chưa có kết quả.</Card></div>;
-  if (a.status === "EXPIRED") return <div className="space-y-3">{head}<Card className="text-center font-bold">🏳️ Trận bị bỏ dở: không gây sát thương (lượt tấn công vẫn bị trừ).</Card></div>;
+  if (a.status === "BLOCKED") return <div className="space-y-3">{head}<Card className="text-center font-bold">🛡️ Nhà đang có khiên: toàn bộ {Object.values((a.army ?? {}) as Record<string, number>).reduce((x, y) => x + y, 0)} lính mang đi đã bị tiêu diệt, không có trận.</Card></div>;
+  if (a.status === "EXPIRED") return <div className="space-y-3">{head}<Card className="text-center font-bold">🏳️ Trận bị bỏ dở: quân đã trở về, không gây sát thương (lượt tấn công vẫn bị trừ).</Card></div>;
 
   const defenderBase = await loadBase(supabase, a.defender_id);
   const maxHp = defenderBase.house?.max_hp ?? 1;

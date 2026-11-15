@@ -28,7 +28,18 @@ export function baseItems(b: Base) {
 }
 
 /** Ảnh chụp trận: căn cứ `defender` (đủ bẫy) + quân `attacker`. Thứ tự vật giống baseSceneData để autoPlace ra cùng kết quả với màn hình. */
-export async function battleSnapshot(sb: SupabaseClient, attacker: string, defender: string): Promise<{ snap: Snapshot; cfg: Cfg; atk: number; def: number } | { error: string }> {
+/** Quân người đánh chọn mang đi: {mã lính: số} — chỉ giữ số nguyên dương */
+export function parseArmy(v: unknown): Record<string, number> | null {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  const out: Record<string, number> = {};
+  for (const [k, n] of Object.entries(v as Record<string, unknown>)) {
+    if (typeof n !== "number" || !Number.isInteger(n) || n < 0 || n > 100000 || !/^[a-z0-9_]{1,40}$/.test(k)) return null;
+    if (n > 0) out[k] = n;
+  }
+  return out;
+}
+
+export async function battleSnapshot(sb: SupabaseClient, attacker: string, defender: string, pick?: Record<string, number>): Promise<{ snap: Snapshot; cfg: Cfg; atk: number; def: number } | { error: string }> {
   // lính đã luyện xong của cả 2 bên vào quân trước khi chụp căn cứ (BASE-04)
   await Promise.all([sb.rpc("_collect_training", { p_user: attacker }), sb.rpc("_collect_training", { p_user: defender })]);
   const [mine, theirs, cfg] = await Promise.all([loadBase(sb, attacker), loadBase(sb, defender), loadConfig(sb)]);
@@ -39,7 +50,10 @@ export async function battleSnapshot(sb: SupabaseClient, attacker: string, defen
   const houseSize = Number(theirs.byCode.get(`house_${theirs.house.level}`)?.stats?.size ?? 2 + theirs.house.level);
   const { placed } = autoPlace(theirs.layout, items, grid, houseSize, obstacleRects(theirs.obstacles));   // giống hệt màn hình (baseSceneData + BaseScene)
   const def = Number(theirs.houseDef?.stats?.def ?? 0) + petBuff(theirs, "def_per_level");
-  const army = mine.army.filter((a: any) => a.quantity > 0).map((a: any) => ({ unit: a.unit_code as string, qty: a.quantity as number, stats: (mine.byCode.get(a.unit_code)?.stats ?? {}) as Record<string, unknown> }));
+  // chỉ số quân người đánh đã chọn (BTL-01); không chọn = cả đội (dùng cho test cũ)
+  for (const [u, n] of Object.entries(pick ?? {})) if (n > (mine.army.find((a: any) => a.unit_code === u)?.quantity ?? 0)) return { error: "INVALID_ARMY" };
+  const army = mine.army.map((a: any) => ({ unit: a.unit_code as string, qty: (pick ? pick[a.unit_code] ?? 0 : a.quantity) as number, stats: (mine.byCode.get(a.unit_code)?.stats ?? {}) as Record<string, unknown> })).filter((a) => a.qty > 0);
+  if (!army.length) return { error: "NO_ARMY" };
   const snap = buildSnapshot(
     { houseLevel: theirs.house.level, houseHp: theirs.house.hp, houseMaxHp: theirs.house.max_hp, houseSize, def, armyLevel: theirs.profile?.army_level ?? 0,
       placed: placed.map((p) => { const it = byKey.get(keyOf(p))!; return { ...p, code: it.code, size: it.size, stats: it.stats, qty: it.qty }; }) },
@@ -62,13 +76,19 @@ export async function battleSnapshot(sb: SupabaseClient, attacker: string, defen
 
 type Reply = { status: number; body: Record<string, unknown> };
 /** Bắt đầu trận: `sb` phải là service client */
-export async function beginBattle(sb: SupabaseClient, me: string, partner: string | null): Promise<Reply> {
+/**
+ * Xuất quân: `pick` = quân người đánh chọn mang đi (không truyền = cả đội). Quân mang đi rời căn cứ ở `_attack_begin`.
+ * Người ấy có khiên (bí mật) → `blocked: true`, mất toàn bộ quân đã chọn, không có ảnh chụp trận.
+ */
+export async function beginBattle(sb: SupabaseClient, me: string, partner: string | null, pick?: Record<string, number>): Promise<Reply> {
   if (!partner) return { status: 400, body: { error: "INVALID_TARGET" } };
-  const built = await battleSnapshot(sb, me, partner);
+  const built = await battleSnapshot(sb, me, partner, pick);
   if ("error" in built) return { status: 400, body: { error: built.error } };
-  const { data, error } = await sb.rpc("_attack_begin", { p_attacker: me, p_defender: partner, p_snapshot: built.snap, p_atk: built.atk, p_def: built.def });
+  const army = Object.fromEntries(built.snap.army.map((u) => [u.unit, u.qty]));
+  const { data, error } = await sb.rpc("_attack_begin", { p_attacker: me, p_defender: partner, p_snapshot: built.snap, p_atk: built.atk, p_def: built.def, p_army: army });
   if (error) return { status: 400, body: { error: error.message } };
-  return { status: 200, body: { id: data.id, snapshot: data.snapshot, shieldBroken: data.shield_broken } };
+  if (data.blocked) return { status: 200, body: { id: data.id, blocked: true, lost: data.lost, shieldBroken: data.shield_broken } };
+  return { status: 200, body: { id: data.id, snapshot: data.snapshot, shieldBroken: data.shield_broken, blocked: false } };
 }
 
 const fin = (v: unknown) => typeof v === "number" && Number.isFinite(v);

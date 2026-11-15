@@ -4,7 +4,7 @@
 // Chạy: bật server test :3101 rồi `npm run test:e2e9`. XOÁ dữ liệu game của DB test.
 import path from "node:path";
 import { admin, resetGame, moheoLogin, utdacLogin, ensureOnboarded } from "./it-lib";
-import { BASE, SHOTS, check, context, finish, launch, sessionCookies, watchErrors } from "./e2e-lib";
+import { BASE, SHOTS, check, context, finish, launch, sessionCookies, watchErrors, pickAllAndGo } from "./e2e-lib";
 import type { Page } from "playwright";
 
 const shot = (p: Page, name: string) => p.screenshot({ path: path.join(SHOTS, `p9-${name}.png`) });
@@ -97,6 +97,7 @@ async function main() {
   check("TC-34 do thám: thấy tháp, KHÔNG thấy bẫy", seen.includes("DEFENSE") && !seen.includes("TRAP"), seen);
   await pu.waitForTimeout(2500); await shot(pu, "3-scout");
   await pu.getByTestId("attack-btn").click();
+  await pickAllAndGo(pu);
   await pu.getByTestId("troop-bar").waitFor({ timeout: 120000 });
   await pu.waitForFunction(() => !!(window as any).__base?.sim, null, { timeout: 60000 });
   const b2 = await canvasBox(pu, "base-scene");

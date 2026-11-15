@@ -2,7 +2,7 @@
   {
     "key": "TIMEZONE",
     "value": "Asia/Ho_Chi_Minh",
-    "unit": "",
+    "unit": null,
     "description": "Múi giờ tính 'ngày' (reset khiên, lượt tấn công, trần xu…) – 00:00 giờ VN"
   },
   {
@@ -158,7 +158,7 @@
   {
     "key": "TYPING_ALLOW_NO_DIACRITICS",
     "value": true,
-    "unit": "",
+    "unit": null,
     "description": "Cho phép gõ tiếng Việt không dấu (vd 'tam biet' = 'tạm biệt')"
   },
   {
@@ -238,6 +238,12 @@
     "value": 8,
     "unit": "giờ",
     "description": "Hiệu lực khiên kể từ lúc bật"
+  },
+  {
+    "key": "SHIELD_AUTO_NEXT",
+    "value": 1,
+    "unit": "",
+    "description": "Khiên đang bật chặn 1 đợt tấn công rồi mất; 1 = khiên kế tiếp trong kho tự bật (hết khiên → bị tấn công được), 0 = phải tự bật lại"
   },
   {
     "key": "SHIELD_PRICE",

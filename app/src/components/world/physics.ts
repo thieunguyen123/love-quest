@@ -51,7 +51,13 @@ export function nearestZone(x: number, z: number): Zone | null {
 }
 
 // Điểm xuất phát: mặc định giữa làng; ?at=home|partner|arena... xuất hiện gần nơi đó, quay mặt về phía đó
-export function spawnAt(at?: string | null): { x: number; z: number; h: number } {
+/** Điểm xuất phát. `side` (−1 / +1) dịch ngang 2,5 m để 2 người cùng vào làng không bị xe chồng lên nhau (0 = đúng tâm) */
+export function spawnAt(at?: string | null, side = 0): { x: number; z: number; h: number } {
+  const p = spawnBase(at);
+  const off = side * 2.5;   // vuông góc với hướng mũi xe
+  return { x: p.x + Math.cos(p.h) * off, z: p.z - Math.sin(p.h) * off, h: p.h };
+}
+function spawnBase(at?: string | null): { x: number; z: number; h: number } {
   if (at === "ramp") return { x: RAMP.x, z: RAMP.z - 16, h: 0 };   // đứng trước dốc nhảy, mũi xe hướng lên dốc
   const target = at === "home" ? MY_HOUSE : at === "partner" ? PARTNER_HOUSE : ZONES.find((z) => z.id === at);
   if (!target) return { x: SPAWN.x, z: SPAWN.z, h: Math.PI };

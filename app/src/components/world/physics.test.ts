@@ -45,9 +45,16 @@ describe("lái xe 3D (W3D-01)", () => {
 
 describe("bản đồ", () => {
   it("điểm xuất phát mặc định và ?at=... không đè lên vật cản", () => {
-    for (const at of [undefined, "home", "partner", "arena", "library", "market", "ramp"]) {
-      const s = spawnAt(at);
-      expect(OBSTACLES.every((o) => Math.hypot(o.x - s.x, o.z - s.z) > o.r + 1.5), `spawn ${at}`).toBe(true);
+    for (const at of [undefined, "home", "partner", "arena", "library", "market", "ramp"]) for (const side of [-1, 0, 1]) {
+      const s = spawnAt(at, side);
+      expect(OBSTACLES.every((o) => Math.hypot(o.x - s.x, o.z - s.z) > o.r + 1.5), `spawn ${at} side ${side}`).toBe(true);
+    }
+  });
+  it("2 người cùng điểm xuất phát → 2 xe cách nhau ≥ 4 m, cùng hướng", () => {
+    for (const at of [undefined, "home", "library", "ramp"]) {
+      const a = spawnAt(at, -1), b = spawnAt(at, 1);
+      expect(Math.hypot(a.x - b.x, a.z - b.z)).toBeGreaterThanOrEqual(4.9);
+      expect(a.h).toBe(b.h);
     }
   });
   it("cây không mọc trên đường, dốc, khu bowling, chồng thùng; nằm trong bản đồ", () => {

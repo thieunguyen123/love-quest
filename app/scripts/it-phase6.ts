@@ -25,8 +25,11 @@ async function main() {
   // ---- khiên của người phòng thủ chặn tấn công ----
   ok(await err(m.c.rpc("activate_shield")) === undefined, "BTL-04 bật khiên miễn phí");
   ok(await err(m.c.rpc("activate_shield")) === "SHIELD_ACTIVE", "Không bật khiên khi đang có khiên");
-  ok((await begin()).body.error === "TARGET_SHIELDED", "TC-24 đối thủ có khiên → bị chặn");
+  const blk = await begin();
+  ok(blk.status === 200 && blk.body.blocked === true, "TC-24/TC-63 đối thủ có khiên (bí mật) → khiên chặn, không có trận", blk.body);
+  ok(((await admin.from("user_army").select("quantity").eq("user_id", u.id).single()).data!.quantity) === 0, "Khiên tiêu diệt toàn bộ 10 lính mang đi");
   ok(await hp(m.id) === 500, "HP không đổi khi bị chặn");
+  await refill();
   await admin.from("shields").update({ expires_at: new Date(Date.now() - 1000).toISOString() }).eq("user_id", m.id);
   ok(await err(m.c.rpc("activate_shield")) === "NO_SHIELD", "Hết khiên miễn phí trong ngày → NO_SHIELD");
   const c0 = await coins(m.id);
@@ -45,7 +48,7 @@ async function main() {
   const u0 = await coins(u.id), m1 = await coins(m.id);
   const b1 = await begin();
   ok(b1.status === 200 && (b1.body.snapshot as any).house.hp === 500 && (b1.body.snapshot as any).army[0].qty === 10, "BTL-07 bắt đầu trận: có ảnh chụp, HP nhà 500, 10 lính", b1);
-  ok((await admin.from("daily_counters").select("attacks_used").eq("user_id", u.id).single()).data!.attacks_used === 1 && await hp(m.id) === 500, "Bấm Tấn công là trừ lượt; HP chưa đổi");
+  ok((await admin.from("daily_counters").select("attacks_used").eq("user_id", u.id).single()).data!.attacks_used === 2 && await hp(m.id) === 500, "Bấm Tấn công là trừ lượt (lần bị khiên chặn cũng tính); HP chưa đổi");
   const fake = await finishBattle(admin, u.id, { id: b1.body.id as string, deploys: [{ t: 0, unit: "sword", n: 999, x: 15, z: 0 }], endTick: null });
   ok(fake.status === 400 && fake.body.error === "INVALID_LOG" && await hp(m.id) === 500, "TC-36 nhật ký giả (999 lính) → 400, HP không đổi", fake);
   const close = await finishBattle(admin, u.id, { id: b1.body.id as string, deploys: [{ t: 0, unit: "sword", n: 5, x: 4, z: -1 }], endTick: null });
@@ -57,8 +60,8 @@ async function main() {
   ok(await coins(u.id) === u0 + 56 && await coins(m.id) === m1, "Người đánh +56 xu; người bị đánh KHÔNG bị trừ xu");
   ok((await finishBattle(admin, u.id, { id: b1.body.id as string, deploys: two, endTick: null })).status === 409 && await coins(u.id) === u0 + 56, "Gửi kết thúc lần 2 → 409, không cộng xu lần nữa");
   ok((await admin.from("notifications").select("id").eq("user_id", m.id).eq("type", "ATTACKED")).data!.length === 1, "BTL-05 thông báo bị tấn công");
-  const row = (await m.c.from("attacks").select("status,deploys,snapshot,stats,hp_before")).data!;
-  ok(row.length === 1 && (await u.c.from("attacks").select("id")).data!.length === 1 && row[0].status === "DONE" && row[0].deploys.list.length === 2 && row[0].hp_before === 500, "Nhật ký trận: cả 2 bên thấy, có nhật ký rải quân để xem lại", row);
+  const row = (await m.c.from("attacks").select("status,deploys,snapshot,stats,hp_before").neq("status", "BLOCKED")).data!;
+  ok(row.length === 1 && (await u.c.from("attacks").select("id").neq("status", "BLOCKED")).data!.length === 1 && row[0].status === "DONE" && row[0].deploys.list.length === 2 && row[0].hp_before === 500, "Nhật ký trận: cả 2 bên thấy, có nhật ký rải quân để xem lại", row);
   ok((await begin()).body.error === "TARGET_PROTECTED", "Bảo hộ 1 giờ sau khi bị đánh");
 
   // ---- lượt thứ 2: có tháp canh + bẫy + đội gác ----
